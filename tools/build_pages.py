@@ -40,9 +40,9 @@ FAQ = [('Нужна ли физическая подготовка?', 'Нет. �
        ('С какого возраста можно?', 'Взрослая пробная тренировка — с 16 лет. Для детей от 6 лет есть детские пробные тренировки и секция.'),
        ('Можно ли перенести или отменить запись?', '[Условия переноса и отмены уточняются.]'),
        ('Что делать после пробной тренировки?', 'Тренер подскажет следующий формат: базовые курсы, групповые тренировки или самостоятельные посещения.')]
-GAL = [('k2-12.jpg', 'Вместе на скалодроме'), ('k2-11.jpg', 'Первые трассы на стене'), ('k2-hall.jpg', 'Зал скалодрома К2'),
-       ('k2-02.jpg', 'Скалолазка на деревянной стене'), ('k2-10.jpg', 'Яркая стена для боулдеринга'), ('k2-05.jpg', 'Магнезия перед трассой'),
-       ('k2-00.jpg', 'Лазание на «клине»'), ('k2-13.jpg', 'Зацепы на стене'), ('k2-01.jpg', 'Скалолаз под нависанием')]
+GAL = [('p-blue.jpg', 'Синяя стена с нависанием'), ('p-mat.jpg', 'Отдых на матах'), ('p-cave.jpg', 'Под нависанием'),
+       ('k2-first-1.jpg', 'Боулдеринг в зале'), ('p-roof.jpg', 'Лазание по потолку'), ('k2-first-2.jpg', 'Трасса на нависании'),
+       ('k2-hall.jpg', 'Зал скалодрома К2'), ('p-dyno.jpg', 'Прыжок к зацепу'), ('k2-first-3.jpg', 'Вместе на скалодроме')]
 SUBNAV = [('who', 'Кому подойдёт'), ('how', 'Как проходит'), ('video', 'Видео'), ('formats', 'Форматы и цены'),
           ('bring', 'Что взять'), ('coaches', 'Тренеры'), ('reviews', 'Отзывы'), ('faq', 'Вопросы')]
 
@@ -63,7 +63,7 @@ body = '''<main class="lp">
       <div class="btns reveal"><button class="btn btn--primary js-book" type="button">Выбрать формат и записаться</button></div>
     </div>
     <figure class="lp-hero__img reveal">
-      <img src="assets/img/k2-12.jpg" alt="Новички на скалодроме" fetchpriority="high">
+      <img src="assets/img/p-focus.jpg" alt="Скалолазка на стене" fetchpriority="high">
       <!-- Нужно фото: взрослый новичок на доступной трассе, рядом тренер объясняет, лицо видно, чувствуется масштаб зала -->
       <figcaption class="lp-hero__cap"><span class="occ-line js-occ-line" role="button" tabindex="0" aria-controls="occ"><i aria-hidden="true"></i><span>Загруженность зала</span></span></figcaption>
     </figure>
@@ -105,17 +105,17 @@ body = '''<main class="lp">
       </div>
       <div class="lp-hour__g">
         <div class="lp-hour__pics reveal" aria-hidden="true">
-          <img class="is-on" src="assets/img/k2-03.jpg" alt="" loading="lazy">
-          <img src="assets/img/k2-05.jpg" alt="" loading="lazy">
-          <img src="assets/img/k2-11.jpg" alt="" loading="lazy">
-          <img src="assets/img/k2-first-3.jpg" alt="" loading="lazy">
+          <img class="is-on" src="assets/img/p-gear.jpg" alt="" loading="lazy">
+          <img src="assets/img/p-fun.jpg" alt="" loading="lazy">
+          <img src="assets/img/p-wall.jpg" alt="" loading="lazy">
+          <img src="assets/img/p-smile.jpg" alt="" loading="lazy">
           <span class="lp-hour__badge"><i></i><span>Шаг 01 · ~10 мин</span></span>
         </div>
         <ol class="lp-hour__steps">
-          <li class="is-on" data-from="0" data-to="10"><img class="lp-hour__ph" src="assets/img/k2-03.jpg" alt="" loading="lazy"><button type="button"><span class="lp-hour__n d">01</span><span><b>Знакомство и&nbsp;экипировка</b><small>~10 мин</small></span></button><p>Тренер уточнит ваш опыт, расскажет о&nbsp;занятии и&nbsp;поможет подобрать необходимое снаряжение.</p></li>
-          <li data-from="10" data-to="20"><img class="lp-hour__ph" src="assets/img/k2-05.jpg" alt="" loading="lazy"><button type="button"><span class="lp-hour__n d">02</span><span><b>Инструктаж и&nbsp;разминка</b><small>~10 мин</small></span></button><p>Вы познакомитесь с&nbsp;основными правилами безопасности и&nbsp;подготовитесь к&nbsp;лазанию.</p></li>
-          <li data-from="20" data-to="55"><img class="lp-hour__ph" src="assets/img/k2-11.jpg" alt="" loading="lazy"><button type="button"><span class="lp-hour__n d">03</span><span><b>Первые трассы</b><small>~35 мин</small></span></button><p>Тренер покажет базовые движения, поможет работать ногами и&nbsp;подберёт трассы подходящего уровня. Сначала полазаем на&nbsp;<span class="term" data-term="bould">боулдеринге</span> (низкий скалодром), а&nbsp;потом перейдём на&nbsp;<span class="term" data-term="lead">трудность</span> (высокий скалодром).</p></li>
-          <li data-from="55" data-to="60"><img class="lp-hour__ph" src="assets/img/k2-first-3.jpg" alt="" loading="lazy"><button type="button"><span class="lp-hour__n d">04</span><span><b>Обратная связь</b><small>~5 мин</small></span></button><p>В&nbsp;конце занятия тренер ответит на&nbsp;вопросы и&nbsp;подскажет, какой формат выбрать дальше.</p></li>
+          <li class="is-on" data-from="0" data-to="10"><img class="lp-hour__ph" src="assets/img/p-gear.jpg" alt="" loading="lazy"><button type="button"><span class="lp-hour__n d">01</span><span><b>Знакомство и&nbsp;экипировка</b><small>~10 мин</small></span></button><p>Тренер уточнит ваш опыт, расскажет о&nbsp;занятии и&nbsp;поможет подобрать необходимое снаряжение.</p></li>
+          <li data-from="10" data-to="20"><img class="lp-hour__ph" src="assets/img/p-fun.jpg" alt="" loading="lazy"><button type="button"><span class="lp-hour__n d">02</span><span><b>Инструктаж и&nbsp;разминка</b><small>~10 мин</small></span></button><p>Вы познакомитесь с&nbsp;основными правилами безопасности и&nbsp;подготовитесь к&nbsp;лазанию.</p></li>
+          <li data-from="20" data-to="55"><img class="lp-hour__ph" src="assets/img/p-wall.jpg" alt="" loading="lazy"><button type="button"><span class="lp-hour__n d">03</span><span><b>Первые трассы</b><small>~35 мин</small></span></button><p>Тренер покажет базовые движения, поможет работать ногами и&nbsp;подберёт трассы подходящего уровня. Сначала полазаем на&nbsp;<span class="term" data-term="bould">боулдеринге</span> (низкий скалодром), а&nbsp;потом перейдём на&nbsp;<span class="term" data-term="lead">трудность</span> (высокий скалодром).</p></li>
+          <li data-from="55" data-to="60"><img class="lp-hour__ph" src="assets/img/p-smile.jpg" alt="" loading="lazy"><button type="button"><span class="lp-hour__n d">04</span><span><b>Обратная связь</b><small>~5 мин</small></span></button><p>В&nbsp;конце занятия тренер ответит на&nbsp;вопросы и&nbsp;подскажет, какой формат выбрать дальше.</p></li>
         </ol>
       </div>
       <div class="lp-hour__bar reveal" aria-hidden="true">
@@ -144,7 +144,7 @@ body = '''<main class="lp">
     <div class="sechead"><div><h2 class="d h2 reveal">Как проходит пробная тренировка</h2><p class="lead muted reveal">Короткий видеообзор: от&nbsp;знакомства с&nbsp;тренером до&nbsp;первых трасс</p></div></div>
     <!-- В MODX: ссылка на ролик (TV). Пока роликa нет — показывается обложка с пометкой «Видео скоро» -->
     <div class="lp-video reveal" data-video="">
-      <img src="assets/img/k2-hall.jpg" alt="" loading="lazy">
+      <picture><source media="(max-width: 767px)" srcset="assets/img/p-forest.jpg"><img src="assets/img/p-chalk.jpg" alt="" loading="lazy"></picture>
       <span class="lp-video__shade"></span>
       <button class="lp-video__play" type="button" aria-label="Смотреть видеообзор пробной тренировки"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
       <span class="lp-video__soon">Видео скоро</span>
@@ -202,7 +202,7 @@ body = '''<main class="lp">
 
 <!-- 6. Почему К2: фото на весь экран с параллаксом, крупные цифры (набегают от нуля), шкала 0 → 13 м справа. Логика — js/landing.js (setupWhy) -->
 <section class="lp-why2 dark" id="why">
-  <div class="lp-why2__bg" aria-hidden="true"><img src="assets/img/k2-rock.jpg" alt="" loading="lazy"></div>
+  <div class="lp-why2__bg" aria-hidden="true"><picture><source media="(max-width: 767px)" srcset="assets/img/p-dyno.jpg"><img src="assets/img/k2-rock.jpg" alt="" loading="lazy"></picture></div>
   <div class="lp-why2__meter" aria-hidden="true">
     <span class="lp-why2__tick" style="--h:0">0</span><span class="lp-why2__tick" style="--h:5">5</span><span class="lp-why2__tick" style="--h:10">10</span><span class="lp-why2__tick" style="--h:13">13 м</span>
     <i class="lp-why2__fill"></i><span class="lp-why2__dot"><b>0.0</b> м</span>
@@ -266,8 +266,8 @@ body = '''<main class="lp">
     <div class="sechead"><h2 class="d h2 reveal">Полезно перед первым занятием</h2><a class="btn btn--sec reveal" href="blog/index.html">Все статьи</a></div>
     <div class="posts lp-posts">
       <a class="post reveal" href="blog/kak-ustroen-skalodrom-k2.html"><span class="post__img"><img src="assets/img/k2-hall.jpg" alt="" loading="lazy"></span><span class="post__b"><span class="badges"><span class="badge">Наш клуб</span></span><span class="post__t">Как устроен скалодром К2</span><span class="post__m">[дата] · 2 мин чтения</span></span></a>
-      <a class="post reveal" href="blog/snaryazhenie-vybor-i-uhod.html"><span class="post__img"><img src="assets/img/k2-03.jpg" alt="" loading="lazy"></span><span class="post__b"><span class="badges"><span class="badge">Снаряжение</span></span><span class="post__t">Скальники, система, магнезия: как выбрать и хранить снаряжение</span><span class="post__m">[дата] · 2 мин чтения</span></span></a>
-      <a class="post reveal" href="blog/kak-ustroena-trenirovka.html"><span class="post__img"><img src="assets/img/k2-04.jpg" alt="" loading="lazy"></span><span class="post__b"><span class="badges"><span class="badge">Тренировки</span></span><span class="post__t">Сила, выносливость, техника: как устроена тренировка скалолаза</span><span class="post__m">[дата] · 2 мин чтения</span></span></a>
+      <a class="post reveal" href="blog/snaryazhenie-vybor-i-uhod.html"><span class="post__img"><img src="assets/img/p-mat.jpg" alt="" loading="lazy"></span><span class="post__b"><span class="badges"><span class="badge">Снаряжение</span></span><span class="post__t">Скальники, система, магнезия: как выбрать и хранить снаряжение</span><span class="post__m">[дата] · 2 мин чтения</span></span></a>
+      <a class="post reveal" href="blog/kak-ustroena-trenirovka.html"><span class="post__img"><img src="assets/img/p-chalk.jpg" alt="" loading="lazy"></span><span class="post__b"><span class="badges"><span class="badge">Тренировки</span></span><span class="post__t">Сила, выносливость, техника: как устроена тренировка скалолаза</span><span class="post__m">[дата] · 2 мин чтения</span></span></a>
     </div>
   </div>
 </section>

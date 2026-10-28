@@ -644,3 +644,20 @@ a.chip{display:inline-flex;align-items:center;text-decoration:none}
 }
 /* телефон: меню разделов страницы не показываем вовсе */
 @media (max-width:767px){.lp-sub{display:none}}
+
+/* ===== Рамки под ориентацию фото (28.10.2026): вертикальные фото — только в вертикальных рамках ===== */
+/* «60 минут»: фото шага — вертикальная рамка 4:5 */
+.lp-hour__pics{grid-column:1/span 5;aspect-ratio:4/5;width:100%;max-width:480px;justify-self:start}
+.lp-hour__steps{grid-column:6/-1}
+.lp-hour.is-scroll .lp-hour__pics{aspect-ratio:4/5;height:clamp(300px,calc(100vh - 300px),600px);width:auto;max-width:none}
+@media (max-width:1040px){
+  .lp-hour__pics{grid-column:1/-1;max-width:420px;aspect-ratio:4/5}
+  .lp-hour__steps{grid-column:1/-1}
+  .lp-hero__img{aspect-ratio:4/5;max-width:480px}
+}
+@media (max-width:767px){
+  .lp-hero__img{max-width:none}
+  .lp-hour.is-swipe .lp-hour__ph{aspect-ratio:4/5}
+}
+/* <picture> с отдельным фото для телефона ведёт себя как обычная картинка в рамке */
+.lp-video picture,.lp-why2__bg picture{display:block;width:100%;height:100%}

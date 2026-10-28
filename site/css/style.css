@@ -1101,3 +1101,4 @@ html.has-cur.lb-open button{cursor:pointer!important}
 }
 @media (max-width:767px){.mmenu__box .msg{gap:4px}.mmenu__box .hold-btn{padding:0 9px}}
 @media (max-width:767px){.foot__giant{overflow:hidden;padding-bottom:28px}}
+.choice picture{display:contents}
