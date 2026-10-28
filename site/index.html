@@ -1,0 +1,645 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Скалодром К2 — новый скалодром в центре Санкт-Петербурга</title>
+<meta name="description" content="Новый скалодром в центре Санкт-Петербурга: боулдеринг и трудность, 13 метров, 1300 м², 7 минут от м. Площадь Ленина. Для взрослых и детей.">
+<link rel="stylesheet" href="css/style.css?v=112">
+</head>
+<body class="is-loading">
+
+<!-- Прелоадер: «камни» К и 2 падают и складываются в логотип -->
+<div class="loader" aria-hidden="true">
+  <svg class="loader__logo" viewBox="19 24 698 322">
+    <path class="loader__k" d="M167.4,167.2l23.7-143h146.3v4l-24,145h24v171H190.8l-23.3-141v141h-148v-320h148V167.2z"/>
+    <path class="loader__2" d="M716.4,59.9v89l-90,62.4l90-1v133.8h-347V219.8l90-35.4l-90-35.4V24.5h257L716.4,59.9z"/>
+  </svg>
+  <div class="loader__bar"><span></span></div>
+</div>
+
+<!-- Шкала высоты 0 → 13 м -->
+<!-- Шкала 0 → 13 м: показывает прокрутку и сама является навигацией — клик, перетаскивание, стрелки -->
+<div class="gauge" role="slider" tabindex="0" aria-label="Высота на странице: перетащите, чтобы быстро прокрутить" aria-valuemin="0" aria-valuemax="13" aria-valuenow="0" aria-valuetext="0 метров">
+  <div class="gauge__track"><div class="gauge__fill"></div></div>
+  <ol class="gauge__marks" aria-hidden="true"></ol>
+  <div class="gauge__hold" aria-hidden="true"><span class="gauge__val">0.0</span><small>м</small></div>
+  <span class="gauge__tip" aria-hidden="true"></span>
+</div>
+
+<canvas class="chalk" aria-hidden="true"></canvas>
+
+<!-- 01 Промобар -->
+
+<!-- 02 Хедер -->
+<header class="hdr dark" id="hdr">
+<!-- Промобар: цвет фона (--promo-bg), плашка, текст и ссылка меняются из админки -->
+  <div class="promo" id="promo" role="region" aria-label="Акция">
+  <a class="promo__in" href="detskaya-sekciya.html">
+    <span class="promo__tag"><i></i>Новая группа</span>
+    <span class="promo__txt">Детская секция для&nbsp;6⁠–⁠9&nbsp;лет&nbsp;— <b>старт [дата]</b></span>
+    <span class="promo__go">Подробнее<svg class="ico" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+  </a>
+  <button class="promo__x" type="button" aria-label="Закрыть"><svg class="ico" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+</div>
+  <div class="hdr__in wrap">
+    <a class="logo" href="#top" aria-label="Скалодром К2 — на главную">
+      <svg viewBox="19 24 698 322" aria-hidden="true"><path d="M716.4,59.9v89l-90,62.4l90-1v133.8h-347V219.8l90-35.4l-90-35.4V24.5h257L716.4,59.9z"/><path d="M167.4,167.2l23.7-143h146.3v4l-24,145h24v171H190.8l-23.3-141v141h-148v-320h148V167.2z"/></svg>
+    </a>
+    <nav class="nav" aria-label="Основное меню">
+      <a href="pervyj-raz.html">первый раз</a>
+      <div class="dd">
+        <button type="button" class="dd__btn" aria-expanded="false">для&nbsp;взрослых<svg class="ico" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>
+        <div class="dd__menu"><a href="dlya-vzroslyh.html">Все направления</a><a href="pervyj-raz.html">Начинающим</a><a href="bazovye-kursy.html">Базовые курсы</a><a href="shkola.html">Школа скалолазания</a><a href="individualnye.html">Индивидуальные тренировки</a><a href="samostoyatelno.html">Самостоятельные посещения</a></div>
+      </div>
+      <div class="dd">
+        <button type="button" class="dd__btn" aria-expanded="false">для&nbsp;детей<svg class="ico" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>
+        <div class="dd__menu"><a href="dlya-detej.html">Все направления</a><a href="detskaya-sekciya.html">Детская секция</a><a href="deti-pervyj-raz.html">Пробная тренировка</a><a href="meropriyatiya.html#kids">Мероприятия для&nbsp;детей</a></div>
+      </div>
+      <a href="ceny.html">цены</a>
+      <div class="dd">
+        <button type="button" class="dd__btn" aria-expanded="false">о&nbsp;нас<svg class="ico" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>
+        <div class="dd__menu"><a href="o-skalodrome.html">О&nbsp;скалодроме</a><a href="trenery.html">Тренеры</a><a href="meropriyatiya.html">Мероприятия</a><a href="blog/index.html">Блог</a><a href="o-skalodrome.html#reviews">Отзывы</a><a href="dokumenty.html">Документы</a><a href="vakansii.html">Вакансии</a></div>
+      </div>
+      <a href="kontakty.html">контакты</a>
+    </nav>
+    <div class="hdr__aside">
+      <a class="meta loc" href="kontakty.html#route"><svg class="ico" viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg><span>м. Площадь Ленина</span></a>
+      <button class="occ-chip js-occ" type="button" aria-controls="occ" aria-expanded="false" data-level="low"><span class="occ-chip__dot" aria-hidden="true"></span><b class="occ-chip__n">—</b><span class="occ-chip__t">в&nbsp;зале</span></button>
+      <button class="ibtn js-search" type="button" aria-label="Поиск по сайту"><svg class="ico" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></button>
+      <a class="meta phone" href="tel:+78120000000"><span><b>+7 (812) 000-00-00</b><small>звонки [с&nbsp;__:__ до&nbsp;__:__]</small></span></a>
+      <button class="btn btn--sec btn--sm hdr__cta js-join" type="button" aria-haspopup="dialog" aria-controls="join" data-join-title="Запись на&nbsp;тренировку">Записаться на&nbsp;тренировку</button>
+      <button class="ibtn burger" type="button" aria-label="Открыть меню" aria-expanded="false"><span></span><span></span></button>
+    </div>
+  </div>
+</header>
+
+<!-- Мобильное меню -->
+<div class="mmenu dark" id="mmenu" aria-hidden="true">
+  <nav class="mmenu__nav" aria-label="Мобильное меню">
+    <a href="pervyj-raz.html">Первый раз</a>
+    <a href="dlya-vzroslyh.html">Для&nbsp;взрослых</a>
+    <a href="dlya-detej.html">Для&nbsp;детей</a>
+    <a href="ceny.html">Цены</a>
+    <a href="o-skalodrome.html">О&nbsp;нас</a>
+    <a href="blog/index.html">Блог</a>
+    <a href="kontakty.html">Контакты</a>
+  </nav>
+  <div class="mmenu__box">
+    <a class="mmenu__phone" href="tel:+78120000000">+7 (812) 000-00-00</a>
+    <small>звонки [с&nbsp;__:__ до&nbsp;__:__] · работаем [график]</small>
+    <div class="msg"><a class="hold-btn hold-btn--1 hold-btn--tg" href="https://t.me/" target="_blank" rel="noopener"><span>Telegram</span><svg class="ico" viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8"/></svg></a><a class="hold-btn hold-btn--2 hold-btn--max" href="https://max.ru/" target="_blank" rel="noopener"><span>Max</span><svg class="ico" viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8"/></svg></a><a class="hold-btn hold-btn--3 hold-btn--wa" href="https://wa.me/78120000000" target="_blank" rel="noopener"><span>WhatsApp</span><svg class="ico" viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8"/></svg></a><a class="hold-btn hold-btn--4 hold-btn--mail" href="mailto:[почта]"><span>Почта</span><svg class="ico" viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8"/></svg></a></div>
+    <button class="btn btn--light js-join" type="button" aria-haspopup="dialog" aria-controls="join" data-join-title="Обратный звонок">Заказать обратный звонок</button>
+    <small>[Адрес], 7&nbsp;минут от&nbsp;м. Площадь Ленина · <a href="kontakty.html#route">Как добраться</a></small>
+  </div>
+</div>
+
+<!-- Поиск -->
+<div class="search" id="search" aria-hidden="true">
+  <form class="search__box" role="search" onsubmit="return false">
+    <label class="sr" for="q">Поиск по&nbsp;сайту</label>
+    <input id="q" type="search" placeholder="Например, «пробная тренировка»" autocomplete="off">
+    <button type="button" class="ibtn js-search-close" aria-label="Закрыть поиск"><svg class="ico" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  </form>
+</div>
+
+<main>
+<!-- 03 Hero -->
+<section class="hero dark" id="top">
+  <div class="wrap hero__text">
+    <h1 class="d h1 hero__title">Новый <span class="hl">скалодром</span> в&nbsp;центре Санкт-⁠Петербурга: для&nbsp;взрослых и&nbsp;детей</h1>
+    <p class="lead reveal">Всё, что вам нужно: <span class="term" data-term="bould">боулдеринг</span>, <span class="term" data-term="lead">трудность</span>, та&nbsp;самая атмосфера</p>
+    <div class="btns reveal">
+      <button class="btn btn--primary js-chalk js-join" type="button" aria-haspopup="dialog" aria-controls="join" data-join-title="Запись на&nbsp;тренировку">Записаться на&nbsp;тренировку</button>
+      <a class="btn btn--sec" href="#prices">Посмотреть цены</a>
+    </div>
+  </div>
+  <div class="hero__stage">
+    <div class="hero__media">
+      <img src="assets/img/k2-01.jpg" alt="Скалолаз на стене скалодрома" fetchpriority="high">
+      <!-- Фоновое видео: без звука, по кругу. Пока грузится — виден кадр-заставка -->
+      <video class="hero__video" muted loop playsinline preload="none" poster="assets/video/hero-poster.jpg" aria-hidden="true" data-src="assets/video/hero.mp4"></video>
+      <div class="hero__shade" aria-hidden="true"></div>
+    </div>
+  </div>
+  <div class="wrap">
+    <div class="stats">
+      <div class="stat reveal">
+        <span class="stat__ic"><svg class="ico" viewBox="0 0 24 24"><path d="M12 21V3M7 8l5-5 5 5M4 21h16"/></svg></span>
+        <span class="stat__v"><span class="count" data-to="13">0</span><span class="stat__u">м</span></span>
+        <span class="stat__l">Высота стен</span>
+        <span class="stat__d">Зона трудности&nbsp;— длинные трассы со&nbsp;страховкой</span>
+      </div>
+      <div class="stat reveal">
+        <span class="stat__ic"><svg class="ico" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M4 9h16M9 9v11"/></svg></span>
+        <span class="stat__v"><span class="count" data-to="1300">0</span><span class="stat__u">м²</span></span>
+        <span class="stat__l">Площадь зала</span>
+        <span class="stat__d">Боулдеринг и&nbsp;трудность под&nbsp;одной крышей</span>
+      </div>
+      <div class="stat reveal">
+        <span class="stat__ic"><svg class="ico" viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg></span>
+        <span class="stat__v"><span class="count" data-to="7">0</span><span class="stat__u">мин</span></span>
+        <span class="stat__l">От&nbsp;м. Площадь Ленина</span>
+        <span class="stat__d">В&nbsp;самом центре Петербурга</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 04 Первый раз -->
+<section class="first dark" id="first">
+  <div class="wrap">
+    <div class="first__grid">
+      <div>
+        <span class="mark reveal">Новичкам</span>
+        <h2 class="d h2 h2--xl js-split">Первый раз? Сейчас разберёмся!</h2>
+      </div>
+      <p class="lead muted reveal">Выберите свой вариант&nbsp;— подскажем, с&nbsp;чего начать и&nbsp;что выбрать дальше.</p>
+    </div>
+    <div class="choices">
+      <a class="choice tilt reveal" href="pervyj-raz.html">
+        <span class="choice__num">01</span>
+        <img class="choice__img" src="assets/img/k2-first-1.jpg" style="object-position:60% 60%" alt="" loading="lazy">
+        <span class="choice__b"><span><span class="choice__t">Я взрослый</span><span class="choice__s">Мне больше 16&nbsp;лет</span></span><span class="go"><svg class="ico" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></span>
+      </a>
+      <a class="choice tilt reveal" href="deti-pervyj-raz.html">
+        <span class="choice__num">02</span>
+        <img class="choice__img" src="assets/img/k2-first-2.jpg" style="object-position:45% 45%" alt="" loading="lazy">
+        <span class="choice__b"><span><span class="choice__t">Для&nbsp;ребёнка</span><span class="choice__s">Ребёнку до&nbsp;16&nbsp;лет</span></span><span class="go"><svg class="ico" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></span>
+      </a>
+      <a class="choice tilt reveal" href="deti-pervyj-raz.html#family">
+        <span class="choice__num">03</span>
+        <img class="choice__img" src="assets/img/k2-first-3.jpg" style="object-position:66% 55%" alt="" loading="lazy">
+        <span class="choice__b"><span><span class="choice__t">Взрослый + ребёнок</span><span class="choice__s">Лазаем всей семьёй</span></span><span class="go"><svg class="ico" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></span>
+      </a>
+    </div>
+    <ul class="facts reveal">
+      <li><svg class="ico" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Для&nbsp;любого уровня подготовки</li>
+      <li><svg class="ico" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Всё снаряжение выдаём&nbsp;— <span class="term" data-term="shoes">скальники</span>, система, <span class="term" data-term="chalk">магнезия</span></li>
+      <li><svg class="ico" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Инструктор рядом всё занятие</li>
+    </ul>
+  </div>
+</section>
+
+<!-- 05 Промолайн: красная лента — переход из тёмного блока в светлый -->
+<div class="xband" aria-label="Особенности скалодрома">
+  <div class="mq mq--front"><div class="mq__t" data-dir="1"><div class="mq__i"><span>7 дней в&nbsp;неделю</span><svg class="chev" viewBox="0 0 16 26"><path d="M0 0l16 13L0 26V17l5-4-5-4z"/></svg><span>Прокат всего снаряжения</span><svg class="chev" viewBox="0 0 16 26"><path d="M0 0l16 13L0 26V17l5-4-5-4z"/></svg><span>PRO-⁠команда тренеров</span><svg class="chev" viewBox="0 0 16 26"><path d="M0 0l16 13L0 26V17l5-4-5-4z"/></svg><span>Детские тренеры</span><svg class="chev" viewBox="0 0 16 26"><path d="M0 0l16 13L0 26V17l5-4-5-4z"/></svg><span>[N] трасс боулдеринга</span><svg class="chev" viewBox="0 0 16 26"><path d="M0 0l16 13L0 26V17l5-4-5-4z"/></svg><span>[N] трасс трудности</span><svg class="chev" viewBox="0 0 16 26"><path d="M0 0l16 13L0 26V17l5-4-5-4z"/></svg></div></div></div>
+</div>
+
+<!-- 06 К2: фото внутри логотипа + слоганы -->
+<section class="sec neutral why" id="about">
+  <div class="wrap">
+    <div class="why__top">
+      <div class="biglogo" role="img" aria-label="Логотип К2, внутри — фото зала">
+        <!-- Фото внутри букв: меняется при наведении на «Атмосфера / Возможности / Люди» -->
+        <div class="biglogo__photo is-on" data-i="0"></div>
+        <div class="biglogo__photo" data-i="1" style="background-image:url('assets/img/k2-01.jpg')"></div>
+        <div class="biglogo__photo" data-i="2" style="background-image:url('assets/img/k2-12.jpg')"></div>
+      </div>
+      <div class="stair">
+        <span class="d stair__w" data-i="0">Атмосфера</span>
+        <span class="d stair__w" data-i="1">Возможности</span>
+        <span class="d stair__w" data-i="2">Люди</span>
+        <button class="btn btn--primary stair__btn reveal js-join" type="button" aria-haspopup="dialog" aria-controls="join">Присоединяйтесь</button>
+      </div>
+    </div>
+
+    <!-- 07 УТП + фото: сетка-«стена» -->
+    <div class="sechead"><h2 class="d h2 js-split">Почему нужно лазать в&nbsp;К2</h2><p class="muted reveal hint">Нажмите на&nbsp;фото&nbsp;— откроется галерея</p></div>
+    <div class="wall">
+      <div class="wall__col" data-speed="-0.06">
+        <div class="cell h-l"><img src="assets/img/k2-10.jpg" alt="Скалолазка на яркой стене" loading="lazy"></div>
+        <div class="tile  h-s"><svg class="chev" viewBox="0 0 16 26"><path d="M0 0l16 13L0 26V17l5-4-5-4z"/></svg><div><p class="tile__t">13&nbsp;метров вверх</p><p class="tile__s">Зона <span class="term term--light" data-term="lead">трудности</span>&nbsp;— есть куда расти</p></div></div>
+        <div class="cell h-m"><img src="assets/img/k2-08.jpg" alt="Рука на скальном зацепе" loading="lazy"></div>
+      </div>
+      <div class="wall__col" data-speed="0.05">
+        <div class="tile tile--g h-m"><svg class="chev" viewBox="0 0 16 26"><path d="M0 0l16 13L0 26V17l5-4-5-4z"/></svg><div><p class="tile__t">Только открылись</p><p class="tile__s">Новые стены, свежие зацепы и&nbsp;новое снаряжение</p></div></div>
+        <div class="cell h-l"><img src="assets/img/k2-01.jpg" alt="Скалолаз под нависанием" loading="lazy"></div>
+        <div class="cell h-s"><img src="assets/img/k2-04.jpg" alt="Хват за фингерборд" loading="lazy"></div>
+      </div>
+      <div class="wall__col" data-speed="-0.03">
+        <div class="cell h-m"><img src="assets/img/k2-03.jpg" alt="Страховочный узел на верёвке" loading="lazy"></div>
+        <div class="tile tile--w h-s"><svg class="chev" viewBox="0 0 16 26"><path d="M0 0l16 13L0 26V17l5-4-5-4z"/></svg><div><p class="tile__t">Центр города</p><p class="tile__s">7&nbsp;минут пешком от&nbsp;м. Площадь Ленина&nbsp;— удобно после работы</p></div></div>
+        <div class="cell h-l"><img src="assets/img/k2-09.jpg" alt="Скалолазка у красного зацепа" loading="lazy"></div>
+      </div>
+      <div class="wall__col" data-speed="0.08">
+        <div class="tile tile--g h-s"><svg class="chev" viewBox="0 0 16 26"><path d="M0 0l16 13L0 26V17l5-4-5-4z"/></svg><div><p class="tile__t">Просторно</p><p class="tile__s">1300&nbsp;м²&nbsp;— места хватит всем</p></div></div>
+        <div class="cell h-l"><img src="assets/img/k2-07.jpg" alt="Подъём на скалу вдвоём" loading="lazy"></div>
+        <div class="tile  h-m"><svg class="chev" viewBox="0 0 16 26"><path d="M0 0l16 13L0 26V17l5-4-5-4z"/></svg><div><p class="tile__t">Приходите налегке</p><p class="tile__s">Скальники, система, магнезия&nbsp;— выдадим на&nbsp;месте</p></div></div>
+      </div>
+    </div>
+
+    <!-- Ещё фото атмосферы: раскрываются по кнопке. В MODX — галерея (MIGX) -->
+    <div class="more" id="more-photos" hidden>
+      <div class="cell more__cell wide" style="--i:0"><img src="assets/img/k2-00.jpg" alt="Скалолазка на зелёном «клине»" loading="lazy"></div>
+      <div class="cell more__cell " style="--i:1"><img src="assets/img/k2-02.jpg" alt="Скалолазка на деревянной стене" loading="lazy"></div>
+      <div class="cell more__cell " style="--i:2"><img src="assets/img/k2-05.jpg" alt="Магнезия на руках перед трассой" loading="lazy"></div>
+      <div class="cell more__cell " style="--i:3"><img src="assets/img/k2-06.jpg" alt="Улыбка после трассы" loading="lazy"></div>
+      <div class="cell more__cell " style="--i:4"><img src="assets/img/k2-11.jpg" alt="Боулдеринг на яркой стене" loading="lazy"></div>
+      <div class="cell more__cell wide" style="--i:5"><img src="assets/img/k2-12.jpg" alt="Вместе на скалодроме" loading="lazy"></div>
+    </div>
+    <div class="more__btn">
+      <button class="btn btn--sec js-more" type="button" aria-expanded="false" aria-controls="more-photos"><span class="js-more-t">Ещё атмосферы</span><svg class="ico more__ico" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>
+    </div>
+  </div>
+</section>
+
+<!-- 08 Для любых целей -->
+<section class="sec dark stack" id="goals">
+  <div class="wrap">
+    <div class="sechead"><div><h2 class="d h2 js-split">Скалодром для&nbsp;любых целей</h2><p class="lead muted reveal">От&nbsp;первой пробы до&nbsp;регулярных тренировок&nbsp;— выберите свой формат.</p></div></div>
+    <div class="goals">
+      <div class="card g6 r2 reveal">
+        <img src="assets/img/k2-05.jpg" alt="" loading="lazy"><div class="scrim"></div>
+        <div><p class="card__t">Для&nbsp;взрослых</p><p class="card__s">От&nbsp;16&nbsp;лет, любой уровень подготовки</p></div>
+        <div class="links">
+          <a class="lnk" href="pervyj-raz.html"><span><b>Начинающим</b><small>Пробная тренировка и&nbsp;базовые курсы</small></span><i><svg class="ico" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></i></a>
+          <a class="lnk" href="shkola.html"><span><b>В&nbsp;группах с&nbsp;тренером</b><small>Школа скалолазания, регулярные тренировки</small></span><i><svg class="ico" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></i></a>
+          <a class="lnk" href="samostoyatelno.html"><span><b>Самостоятельно</b><small>Разовые посещения и&nbsp;абонементы</small></span><i><svg class="ico" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></i></a>
+        </div>
+      </div>
+      <div class="card g6 reveal" id="kids">
+        <img src="assets/img/k2-02.jpg" alt="" loading="lazy"><div class="scrim"></div>
+        <div><p class="card__t">Для&nbsp;детей</p><p class="card__s">Для&nbsp;детей от&nbsp;6&nbsp;лет</p></div>
+        <div class="links links--row">
+          <a class="lnk" href="detskaya-sekciya.html"><span><b>Спортивная секция</b><small>Постоянные тренировки</small></span><i><svg class="ico" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></i></a>
+          <a class="lnk" href="deti-pervyj-raz.html"><span><b>Просто полазать</b><small>Пробная тренировка</small></span><i><svg class="ico" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></i></a>
+        </div>
+      </div>
+      <a class="card g3 reveal" href="individualnye.html">
+        <img src="assets/img/k2-00.jpg" alt="" loading="lazy"><div class="scrim"></div>
+        <div><p class="card__t card__t--s">Индивидуальные тренировки</p><p class="card__s">Персонально с&nbsp;тренером</p></div>
+        <span class="arr"><svg class="ico" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+      </a>
+      <a class="card card--raised g3 reveal" href="ceny.html#abonementy">
+        <svg class="card__deco" viewBox="0 0 16 26" aria-hidden="true"><path d="M0 0l16 13L0 26V17l5-4-5-4z"/></svg>
+        <div><p class="card__t card__t--s">Абонементы</p><p class="card__s">Для&nbsp;тех, кто лазает регулярно</p></div>
+        <span class="arr"><svg class="ico" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+      </a>
+      <div class="card g12 cert reveal">
+        <div class="cert__chevs" aria-hidden="true"></div>
+        <p class="card__t">Подарочные сертификаты</p>
+        <p class="card__s">Подарите впечатление, а&nbsp;не&nbsp;вещь: пробная тренировка с&nbsp;инструктором</p>
+        <a class="btn btn--light" href="sertifikaty.html">Выбрать сертификат</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 09 Цены -->
+<section class="sec neutral stack" id="prices">
+  <div class="wrap">
+    <div class="sechead"><div><h2 class="d h2 js-split">Цены скалодрома К2</h2><p class="lead muted reveal">Самое популярное&nbsp;— коротко. Весь прайс&nbsp;— по&nbsp;кнопке ниже</p></div></div>
+    <div class="prices__grid">
+      <div class="prices__main">
+        <div class="plist reveal">
+          <div class="prow"><p class="prow__n">Пробная тренировка в&nbsp;группе</p><p class="prow__d">60&nbsp;минут, группа до&nbsp;8&nbsp;человек, снаряжение включено</p><p class="prow__v">[___] ₽</p></div>
+          <div class="prow"><p class="prow__n">Персональная пробная тренировка</p><p class="prow__d">60&nbsp;минут, для&nbsp;1⁠–⁠3&nbsp;участников</p><p class="prow__v">[___] ₽</p></div>
+          <div class="prow"><p class="prow__n">Детская пробная тренировка</p><p class="prow__d">Для&nbsp;детей от&nbsp;6&nbsp;лет</p><p class="prow__v">[___] ₽</p></div>
+          <div class="prow"><p class="prow__n">Разовое посещение</p><p class="prow__d">Самостоятельно, боулдеринг и&nbsp;трудность</p><p class="prow__v">[___] ₽</p></div>
+          <div class="prow"><p class="prow__n">Абонемент [на&nbsp;месяц]</p><p class="prow__d">Самостоятельные посещения</p><p class="prow__v">[___] ₽</p></div>
+          <div class="prow"><p class="prow__n">Индивидуальная тренировка</p><p class="prow__d">С&nbsp;тренером</p><p class="prow__v">[___] ₽</p></div>
+          <div class="prow"><p class="prow__n">Детская секция</p><p class="prow__d">Абонемент на&nbsp;[__] занятий</p><p class="prow__v">[___] ₽</p></div>
+          <div class="prow"><p class="prow__n">Прокат снаряжения</p><p class="prow__d">Скальники, страховочная система</p><p class="prow__v">[___] ₽</p></div>
+        </div>
+        <div class="prices__all reveal"><a class="btn btn--sec" href="ceny.html">Все цены</a></div>
+      </div>
+      <aside class="prices__aside">
+        <div class="pdf reveal">
+          <span class="pdf__ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/></svg><i>PDF</i></span>
+          <b>Полный прайс</b>
+          <p>Все тренировки, абонементы, пакеты и&nbsp;прокат&nbsp;— одним файлом</p>
+          <a class="btn btn--sec" href="assets/docs/k2-ceny.pdf" download><svg class="ico" viewBox="0 0 24 24"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>Скачать PDF</a>
+        </div>
+        <div class="note reveal" id="signup">
+          <b>Первый раз?</b>
+          <p>Начните с&nbsp;пробной тренировки: инструктор всё покажет, снаряжение выдаём.</p>
+          <button class="btn btn--primary js-chalk js-join" type="button" aria-haspopup="dialog" aria-controls="join" data-join-title="Запись на&nbsp;пробную тренировку" data-join-topic="trial">Записаться на&nbsp;тренировку</button>
+        </div>
+      </aside>
+    </div>
+
+    <!-- 10 Пакеты -->
+    <div class="sechead sechead--gap">
+      <div><h2 class="d h2 js-split">Поможем достичь целей!</h2><p class="lead muted reveal">Готовые пакеты тренировок под&nbsp;любые задачи!</p></div>
+      <div class="tabs reveal" role="tablist" aria-label="Пакеты тренировок">
+        <button class="tabs__b" type="button" role="tab" aria-selected="true" aria-controls="packs-start" id="tab-start">Новичкам</button>
+        <button class="tabs__b" type="button" role="tab" aria-selected="false" aria-controls="packs-more" id="tab-more">Продолжающим</button>
+      </div>
+    </div>
+    <div class="packs reveal" id="packs-start" role="tabpanel" aria-labelledby="tab-start">
+      <a class="pack" href="pakety.html#start"><span class="pack__img"><img src="assets/img/k2-10.jpg" alt="" loading="lazy"></span><span class="pack__b"><span class="pack__t">Старт</span><span class="pack__d">Первые шаги: правила безопасности и&nbsp;базовая техника</span><span class="badges"><span class="badge">3&nbsp;тренировки</span><span class="badge">боулдеринг</span></span><span class="pack__f"><span class="price" data-price="" data-price-old=""><s class="price__old"><span class="sr">Старая цена: </span>[____]&nbsp;₽</s><b class="price__new"><span class="sr">Цена: </span>[____]&nbsp;₽</b></span><span class="go go--s"><svg class="ico" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></span></span></a>
+      <a class="pack" href="pakety.html#baza"><span class="pack__img"><img src="assets/img/k2-02.jpg" alt="" loading="lazy"><span class="pack__hit">Чаще всего выбирают</span></span><span class="pack__b"><span class="pack__t">База</span><span class="pack__d">Осваиваем автостраховку&nbsp;— дальше ходите в&nbsp;зал сами</span><span class="badges"><span class="badge">4&nbsp;тренировки</span><span class="badge">2 боулдеринг</span><span class="badge">2 трудность</span></span><span class="pack__f"><span class="price" data-price="" data-price-old=""><s class="price__old"><span class="sr">Старая цена: </span>[____]&nbsp;₽</s><b class="price__new"><span class="sr">Цена: </span>[____]&nbsp;₽</b></span><span class="go go--s"><svg class="ico" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></span></span></a>
+      <a class="pack" href="pakety.html#rasshirennyj"><span class="pack__img"><img src="assets/img/k2-03.jpg" alt="" loading="lazy"></span><span class="pack__b"><span class="pack__t">Расширенный</span><span class="pack__d">Верхняя страховка и&nbsp;лазание в&nbsp;паре: страхуете друг друга сами</span><span class="badges"><span class="badge">6&nbsp;тренировок</span><span class="badge">2 боулдеринг</span><span class="badge">4 трудность</span></span><span class="pack__f"><span class="price" data-price="" data-price-old=""><s class="price__old"><span class="sr">Старая цена: </span>[____]&nbsp;₽</s><b class="price__new"><span class="sr">Цена: </span>[____]&nbsp;₽</b></span><span class="go go--s"><svg class="ico" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></span></span></a>
+    </div>
+    <div class="packs" id="packs-more" role="tabpanel" aria-labelledby="tab-more" hidden>
+      <a class="pack" href="pakety.html#nizhnyaya-strahovka"><span class="pack__img"><img src="assets/img/k2-00.jpg" alt="" loading="lazy"></span><span class="pack__b"><span class="pack__t"><span class="term" data-term="belay">Нижняя страховка</span></span><span class="pack__d">Учимся страховать и&nbsp;безопасно срываться. Со&nbsp;скидкой после стартового пакета</span><span class="badges"><span class="badge">группа с&nbsp;тренером</span><span class="badge">месяц</span></span><span class="pack__f"><span class="price" data-price="" data-price-old=""><s class="price__old"><span class="sr">Старая цена: </span>[____]&nbsp;₽</s><b class="price__new"><span class="sr">Цена: </span>[____]&nbsp;₽</b></span><span class="go go--s"><svg class="ico" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></span></span></a>
+      <a class="pack" href="pakety.html#uroven"><span class="pack__img"><img src="assets/img/k2-05.jpg" alt="" loading="lazy"></span><span class="pack__b"><span class="pack__t">Уровень</span><span class="pack__d">Следующий уровень: ОФП, СФП и&nbsp;ЛФК, вводная с&nbsp;тренером и&nbsp;персональное занятие</span><span class="badges"><span class="badge">3&nbsp;месяца</span></span><span class="pack__f"><span class="price" data-price="" data-price-old=""><s class="price__old"><span class="sr">Старая цена: </span>[____]&nbsp;₽</s><b class="price__new"><span class="sr">Цена: </span>[____]&nbsp;₽</b></span><span class="go go--s"><svg class="ico" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></span></span></a>
+      <a class="pack" href="pakety.html#sila"><span class="pack__img"><img src="assets/img/k2-04.jpg" alt="" loading="lazy"></span><span class="pack__b"><span class="pack__t">Сила</span><span class="pack__d">Программа на&nbsp;силу&nbsp;— чтобы проходить трассы сложнее</span><span class="badges"><span class="badge">программа тренировок</span></span><span class="pack__f"><span class="price" data-price="" data-price-old=""><s class="price__old"><span class="sr">Старая цена: </span>[____]&nbsp;₽</s><b class="price__new"><span class="sr">Цена: </span>[____]&nbsp;₽</b></span><span class="go go--s"><svg class="ico" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></span></span></a>
+      <a class="pack" href="pakety.html#vynoslivost"><span class="pack__img"><img src="assets/img/k2-01.jpg" alt="" loading="lazy"></span><span class="pack__b"><span class="pack__t">Выносливость</span><span class="pack__d">Программа на&nbsp;выносливость&nbsp;— чтобы хватало сил на&nbsp;длинные трассы</span><span class="badges"><span class="badge">программа тренировок</span></span><span class="pack__f"><span class="price" data-price="" data-price-old=""><s class="price__old"><span class="sr">Старая цена: </span>[____]&nbsp;₽</s><b class="price__new"><span class="sr">Цена: </span>[____]&nbsp;₽</b></span><span class="go go--s"><svg class="ico" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></span></span></a>
+      <a class="pack" href="pakety.html#skaly"><span class="pack__img"><img src="assets/img/k2-07.jpg" alt="" loading="lazy"></span><span class="pack__b"><span class="pack__t">Скалы</span><span class="pack__d">Безопасно готовимся к&nbsp;выезду на&nbsp;скалы: ОФП, СФП и&nbsp;задачи на&nbsp;бордах</span><span class="badges"><span class="badge">подготовка к&nbsp;выезду</span></span><span class="pack__f"><span class="price" data-price="" data-price-old=""><s class="price__old"><span class="sr">Старая цена: </span>[____]&nbsp;₽</s><b class="price__new"><span class="sr">Цена: </span>[____]&nbsp;₽</b></span><span class="go go--s"><svg class="ico" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></span></span></a>
+      <a class="pack" href="pakety.html#tehnika"><span class="pack__img"><img src="assets/img/k2-11.jpg" alt="" loading="lazy"></span><span class="pack__b"><span class="pack__t">Техника</span><span class="pack__d">Прокачиваем одно умение: прыжки или&nbsp;работу ног</span><span class="badges"><span class="badge">прыжки</span><span class="badge">работа ног</span></span><span class="pack__f"><span class="price" data-price="" data-price-old=""><s class="price__old"><span class="sr">Старая цена: </span>[____]&nbsp;₽</s><b class="price__new"><span class="sr">Цена: </span>[____]&nbsp;₽</b></span><span class="go go--s"><svg class="ico" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></span></span></a>
+    </div>
+    <div class="packs__more reveal"><a class="btn btn--sec" href="pakety.html">Все пакеты и&nbsp;цены</a></div>
+  </div>
+</section>
+
+<!-- 11 Видео: лента как шортсы, тянется мышью -->
+<section class="sec dark videos stack">
+  <div class="wrap">
+    <div class="sechead"><h2 class="d h2 js-split">Видео со&nbsp;скалодрома</h2><div class="sechead__ctl reveal"><button class="ibtn ibtn--line js-prev" type="button" aria-label="Назад"><svg class="ico" viewBox="0 0 24 24"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></button><button class="ibtn ibtn--line js-next" type="button" aria-label="Вперёд"><svg class="ico" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button><a class="btn btn--sec" href="video.html">Все видео</a></div></div>
+  </div>
+  <div class="shorts" tabindex="0" aria-label="Лента видео, листается">
+    <a class="short" href="video.html#obzor"><img src="assets/img/k2-01.jpg" alt="" loading="lazy"><span class="scrim"></span><span class="play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span><span class="short__c"><b>Обзор скалодрома</b><small>[0:45]</small></span></a>
+    <a class="short" href="video.html#sovety"><img src="assets/img/k2-13.jpg" alt="" loading="lazy"><span class="scrim"></span><span class="play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span><span class="short__c"><b>Советы новичку</b><small>[0:45]</small></span></a>
+    <a class="short" href="video.html#deti"><img src="assets/img/k2-10.jpg" alt="" loading="lazy"><span class="scrim"></span><span class="play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span><span class="short__c"><b>Детская секция</b><small>[0:45]</small></span></a>
+    <a class="short" href="video.html#razminka"><img src="assets/img/k2-07.jpg" alt="" loading="lazy"><span class="scrim"></span><span class="play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span><span class="short__c"><b>Разминка и&nbsp;заминка</b><small>[0:45]</small></span></a>
+    <a class="short" href="video.html#fan"><img src="assets/img/k2-06.jpg" alt="" loading="lazy"><span class="scrim"></span><span class="play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span><span class="short__c"><b>[Фан со&nbsp;скалодрома]</b><small>[0:45]</small></span></a>
+    <a class="short" href="video.html#more"><img src="assets/img/k2-12.jpg" alt="" loading="lazy"><span class="scrim"></span><span class="play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span><span class="short__c"><b>[Видео]</b><small>[0:45]</small></span></a>
+  </div>
+</section>
+
+<!-- 12 Блог -->
+<section class="sec neutral stack" id="blog">
+  <div class="wrap">
+    <div class="sechead"><h2 class="d h2 js-split">Блог о&nbsp;скалолазании</h2><a class="btn btn--sec reveal" href="blog/index.html">Все статьи</a></div>
+    <div class="chips reveal" role="group" aria-label="Рубрики блога">
+      <button type="button" class="chip" aria-pressed="true" data-f="all">Все статьи</button>
+      <button type="button" class="chip" aria-pressed="false" data-f="travel">Путешествия</button>
+      <button type="button" class="chip" aria-pressed="false" data-f="train">Тренировки</button>
+      <button type="button" class="chip" aria-pressed="false" data-f="gear">Снаряжение</button>
+      <button type="button" class="chip" aria-pressed="false" data-f="club">Наш клуб</button>
+    </div>
+    <div class="posts">
+      <a class="post reveal" href="blog/pervyj-vyezd-na-skaly.html" data-cat="travel"><span class="post__img"><img src="assets/img/k2-07.jpg" alt="" loading="lazy"></span><span class="post__b"><span class="badges"><span class="badge">Путешествия</span></span><span class="post__t">Первый выезд на&nbsp;скалы: как подготовиться</span><span class="post__m">[дата] · 2&nbsp;мин чтения</span></span></a>
+      <a class="post reveal" href="blog/kak-ustroena-trenirovka.html" data-cat="train"><span class="post__img"><img src="assets/img/k2-04.jpg" alt="" loading="lazy"></span><span class="post__b"><span class="badges"><span class="badge">Тренировки</span></span><span class="post__t">Сила, выносливость, техника: как устроена тренировка скалолаза</span><span class="post__m">[дата] · 2&nbsp;мин чтения</span></span></a>
+      <a class="post reveal" href="blog/snaryazhenie-vybor-i-uhod.html" data-cat="gear"><span class="post__img"><img src="assets/img/k2-03.jpg" alt="" loading="lazy"></span><span class="post__b"><span class="badges"><span class="badge">Снаряжение</span></span><span class="post__t">Скальники, система, магнезия: как выбрать и&nbsp;хранить снаряжение</span><span class="post__m">[дата] · 2&nbsp;мин чтения</span></span></a>
+      <a class="post reveal" href="blog/kak-ustroen-skalodrom-k2.html" data-cat="club"><span class="post__img"><img src="assets/img/k2-hall.jpg" alt="" loading="lazy"></span><span class="post__b"><span class="badges"><span class="badge">Наш клуб</span></span><span class="post__t">Как устроен скалодром К2</span><span class="post__m">[дата] · 2&nbsp;мин чтения</span></span></a>
+    </div>
+
+    <!-- 13 Отзывы -->
+    <div class="sechead sechead--gap" id="reviews"><h2 class="d h2 js-split">Отзывы</h2></div>
+    <div class="widget reveal"><b>[Виджет отзывов]</b><span>Подтягивается с&nbsp;внешнего сервиса&nbsp;— [Яндекс Карты / 2ГИС]</span></div>
+  </div>
+</section>
+
+<!-- 14 Связь -->
+<section class="sec neutral sec--flush" id="contacts">
+  <div class="wrap">
+    <div class="contact reveal">
+      <div class="contact__head">
+        <h2 class="d h2">Нужно связаться с&nbsp;нами?</h2>
+        <!-- Часы работы — заглушка: поменять data-open / data-close -->
+        <p class="status" data-open="08:00" data-close="23:00" aria-live="polite"><span class="status__dot"></span><span class="status__t">Ежедневно 8:00⁠–⁠23:00</span></p>
+      </div>
+
+      <div class="contact__grid">
+        <!-- Единая форма заявки. Отправку в CRM подключит разработчик (обработчик submit в main.js) -->
+        <form class="cform" id="cform" novalidate>
+          <div class="cform__body">
+            <div class="cform__top">
+              <h3 class="cform__t">Оставить заявку</h3>
+              <p class="cform__s">Перезвоним в&nbsp;рабочее время, ответим на&nbsp;вопросы и&nbsp;подберём тренировку</p>
+            </div>
+
+            <div class="cform__main">
+            <fieldset class="cform__set">
+              <legend>Что вас интересует?</legend>
+              <div class="pick">
+                <label><input type="radio" name="topic" value="trial" checked><span>Пробная тренировка</span></label>
+                <label><input type="radio" name="topic" value="kids"><span>Для&nbsp;ребёнка</span></label>
+                <label><input type="radio" name="topic" value="sub"><span>Абонемент</span></label>
+                <label><input type="radio" name="topic" value="gift"><span>Сертификат</span></label>
+                <label><input type="radio" name="topic" value="other"><span>Другое</span></label>
+              </div>
+            </fieldset>
+
+            <div class="cform__row">
+              <div class="field">
+                <input id="f-name" name="name" type="text" autocomplete="given-name" placeholder=" " required>
+                <label for="f-name">Ваше имя</label>
+                <span class="field__err">Как к&nbsp;вам обращаться?</span>
+              </div>
+              <div class="field">
+                <input id="f-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder=" " required>
+                <label for="f-phone">Телефон</label>
+                <span class="field__err">Проверьте номер&nbsp;— нужно 10 цифр после +7</span>
+              </div>
+            </div>
+
+            <fieldset class="cform__set">
+              <legend>Как удобнее связаться?</legend>
+              <div class="seg">
+                <label><input type="radio" name="via" value="call" checked><span>Звонок</span></label>
+                <label><input type="radio" name="via" value="tg"><span>Telegram</span></label>
+                <label><input type="radio" name="via" value="max"><span>Max</span></label>
+                <label><input type="radio" name="via" value="wa"><span>WhatsApp</span></label>
+              </div>
+            </fieldset>
+
+            <div class="cform__foot">
+            <div class="cform__agree">
+            <label class="agree"><input type="checkbox" name="agree" required><span class="agree__box"></span><span>Согласен на <a href="dokumenty.html#privacy">обработку персональных данных</a></span></label>
+            <span class="field__err field__err--agree">Нужно согласие, чтобы мы могли перезвонить</span>
+            </div>
+            <button class="btn btn--primary cform__go" type="submit">Отправить заявку</button>
+            </div>
+            </div>
+          </div>
+
+          <div class="cform__done" aria-live="polite" hidden>
+            <svg class="done__ic" viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="29"/><path d="M19 33l9 9 17-19"/></svg>
+            <h3 class="cform__t">Заявка отправлена</h3>
+            <p class="cform__s done__msg">Перезвоним в&nbsp;рабочее время.</p>
+            <button class="btn btn--sec js-again" type="button">Отправить ещё одну</button>
+          </div>
+        </form>
+
+        <div class="cside">
+          <div class="ccard">
+            <p class="ccard__k">Позвонить</p>
+            <div class="ccard__line">
+              <a class="ccard__big" href="tel:+78120000000">+7 (812) 000-00-00</a>
+              <button class="copy" type="button" data-copy="+7 (812) 000-00-00" aria-label="Скопировать номер"><svg class="ico" viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg><span>Скопировать</span></button>
+            </div>
+            <p class="ccard__n">Звонки [с&nbsp;__:__ до&nbsp;__:__]</p>
+          </div>
+
+          <div class="ccard">
+            <p class="ccard__k">Написать</p>
+            <div class="msg"><a class="hold-btn hold-btn--1 hold-btn--tg" href="https://t.me/" target="_blank" rel="noopener"><span>Telegram</span><svg class="ico" viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8"/></svg></a><a class="hold-btn hold-btn--2 hold-btn--max" href="https://max.ru/" target="_blank" rel="noopener"><span>Max</span><svg class="ico" viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8"/></svg></a><a class="hold-btn hold-btn--3 hold-btn--wa" href="https://wa.me/78120000000" target="_blank" rel="noopener"><span>WhatsApp</span><svg class="ico" viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8"/></svg></a></div>
+            <div class="ccard__line">
+              <a class="ccard__mid" href="mailto:[почта]">[почта]</a>
+              <button class="copy" type="button" data-copy="[почта]" aria-label="Скопировать почту"><svg class="ico" viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg><span>Скопировать</span></button>
+            </div>
+          </div>
+
+          <div class="ccard ccard--map">
+            <div class="ccard__mapt">
+              <div>
+                <p class="ccard__k">Зайти к&nbsp;нам</p>
+                <p class="ccard__mid">[Адрес]</p>
+                <button class="occ-line js-occ-line" type="button" aria-controls="occ" aria-expanded="false"><i aria-hidden="true"></i><span>Загруженность зала</span><svg class="ico" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></button>
+              </div>
+              <a class="btn btn--sec btn--sm" href="kontakty.html#route"><svg class="ico" viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>Как добраться</a>
+            </div>
+            <!-- Схема пути от метро — условная, не карта -->
+            <div class="route" aria-label="Схема: 7 минут пешком от м. Площадь Ленина до К2">
+              <svg viewBox="0 0 440 200" aria-hidden="true">
+                <defs><pattern id="dots" width="16" height="16" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.2"/></pattern></defs>
+                <rect class="route__grid" width="440" height="200" fill="url(#dots)"/>
+                <path class="route__street" d="M0 150 H440 M0 70 H440 M120 0 V200 M300 0 V200"/>
+                <path class="route__line" id="routePath" d="M58 150 H120 V70 H300 V40 H372"/>
+                <g class="route__metro" transform="translate(58 150)"><circle r="16"/><text y="5" text-anchor="middle">М</text></g>
+                <circle class="route__dot" r="7" cx="0" cy="0"><animateMotion id="walk" dur="5s" begin="indefinite" fill="freeze" calcMode="spline" keyTimes="0;1" keySplines=".45 0 .55 1"><mpath href="#routePath"/></animateMotion></circle>
+                <g class="route__pin" transform="translate(372 40)"><circle class="route__ping" r="20"/><circle r="20"/><text y="5" text-anchor="middle">К2</text></g>
+              </svg>
+              <span class="route__tag"><b class="route__min">7</b> мин пешком</span>
+              <span class="route__from">м. Площадь Ленина</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 15 SEO + FAQ -->
+    <div class="sechead sechead--gap"><h2 class="d h2 js-split">Частые вопросы</h2></div>
+    <div class="faq">
+      <div class="faq__col">
+        <details class="reveal" open><summary>Нужен ли&nbsp;опыт, чтобы прийти?<i></i></summary><div class="faq__a"><p>Нет. Начните с&nbsp;пробной тренировки: инструктор всё объяснит и&nbsp;подберёт трассы под&nbsp;вас. Снаряжение выдадим.</p></div></details>
+        <details class="reveal"><summary>Сколько длится пробная тренировка?<i></i></summary><div class="faq__a"><p>Час. Можно в&nbsp;группе до&nbsp;8&nbsp;человек или&nbsp;персонально&nbsp;— на&nbsp;1⁠–⁠3&nbsp;участников.</p></div></details>
+        <details class="reveal"><summary>Можно ли&nbsp;лазать самостоятельно?<i></i></summary><div class="faq__a"><p>Да, если вы уже умеете лазать и&nbsp;страховать: есть разовые посещения и&nbsp;абонементы. [Условия допуска уточняются.]</p></div></details>
+        <details class="reveal"><summary>Что взять с&nbsp;собой?<i></i></summary><div class="faq__a"><p>[Ответ уточняется.]</p></div></details>
+      </div>
+      <div class="faq__col">
+        <details class="reveal"><summary>С&nbsp;какого возраста можно ребёнку?<i></i></summary><div class="faq__a"><p>С&nbsp;6&nbsp;лет: есть детские пробные тренировки и&nbsp;регулярная секция.</p></div></details>
+        <details class="reveal"><summary>Чем боулдеринг отличается от&nbsp;трудности?<i></i></summary><div class="faq__a"><p>Боулдеринг&nbsp;— короткие невысокие трассы без&nbsp;верёвки, внизу мягкие маты. Трудность&nbsp;— длинные трассы на&nbsp;высокой стене со&nbsp;страховкой, у&nbsp;нас до&nbsp;13&nbsp;метров.</p></div></details>
+        <details class="reveal"><summary>Есть ли&nbsp;подарочные сертификаты?<i></i></summary><div class="faq__a"><p>Да&nbsp;— на&nbsp;пробную тренировку с&nbsp;инструктором. Хороший подарок тому, кто давно хотел попробовать.</p></div></details>
+        <details class="reveal"><summary>Есть ли&nbsp;парковка?<i></i></summary><div class="faq__a"><p>[Ответ уточняется.]</p></div></details>
+      </div>
+    </div>
+    <p class="seo">Скалодром К2&nbsp;— новый скалодром в&nbsp;центре Санкт-⁠Петербурга, в&nbsp;7 минутах пешком от&nbsp;метро «Площадь Ленина». На&nbsp;1300&nbsp;м²&nbsp;— зона боулдеринга и&nbsp;зона трудности со&nbsp;стенами высотой 13&nbsp;метров. Для&nbsp;новичков&nbsp;— пробные тренировки с&nbsp;инструктором и&nbsp;базовые курсы, для&nbsp;тех, кто уже лазает,&nbsp;— школа скалолазания, индивидуальные тренировки и&nbsp;самостоятельные посещения. Для&nbsp;детей от&nbsp;6&nbsp;лет работает детская секция. Всё снаряжение выдаём на&nbsp;месте.</p>
+  </div>
+</section>
+</main>
+
+<!-- 16 Подвал -->
+<footer class="foot dark stack">
+  <!-- Наведите на «К» — внутри, как под фонариком, проступает фото -->
+  <div class="foot__giant" aria-hidden="true">
+    <svg viewBox="19 24 698 322">
+      <defs>
+        <clipPath id="kShape"><path d="M167.4,167.2l23.7-143h146.3v4l-24,145h24v171H190.8l-23.3-141v141h-148v-320h148V167.2z"/></clipPath>
+        <radialGradient id="torchGlow"><stop offset="0" stop-color="#fff"/><stop offset=".55" stop-color="#fff" stop-opacity=".9"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
+        <mask id="torch" maskUnits="userSpaceOnUse" x="0" y="0" width="760" height="380"><circle class="torch__c" cx="-200" cy="-200" r="0" fill="url(#torchGlow)"/></mask>
+      </defs>
+      <path class="g2" d="M716.4,59.9v89l-90,62.4l90-1v133.8h-347V219.8l90-35.4l-90-35.4V24.5h257L716.4,59.9z"/>
+      <g class="gk">
+        <path d="M167.4,167.2l23.7-143h146.3v4l-24,145h24v171H190.8l-23.3-141v141h-148v-320h148V167.2z"/>
+        <g clip-path="url(#kShape)">
+          <image href="assets/img/k2-09.jpg" x="19" y="24" width="320" height="322" preserveAspectRatio="xMidYMid slice" mask="url(#torch)"/>
+        </g>
+      </g>
+    </svg>
+  </div>
+  <div class="wrap">
+    <div class="foot__g">
+      <div>
+        <p class="foot__tag">Скалодром на&nbsp;пл. Ленина</p>
+        <button class="btn btn--primary js-chalk js-join" type="button" aria-haspopup="dialog" aria-controls="join" data-join-title="Запись на&nbsp;тренировку">Записаться на&nbsp;тренировку</button>
+      </div>
+      <div><h4>Скалодром</h4><ul><li><a href="pervyj-raz.html">Первый раз</a></li><li><a href="dlya-vzroslyh.html">Для&nbsp;взрослых</a></li><li><a href="dlya-detej.html">Для&nbsp;детей</a></li><li><a href="ceny.html">Цены</a></li><li><a href="sertifikaty.html">Сертификаты</a></li><li><a href="o-skalodrome.html">О&nbsp;скалодроме</a></li></ul></div>
+      <div><h4>О&nbsp;нас</h4><ul><li><a href="trenery.html">Тренеры</a></li><li><a href="meropriyatiya.html">Мероприятия</a></li><li><a href="blog/index.html">Блог</a></li><li><a href="video.html">Видео</a></li><li><a href="o-skalodrome.html#reviews">Отзывы</a></li><li><a href="vakansii.html">Вакансии</a></li></ul></div>
+      <div><h4>Документы</h4><ul><li><a href="dokumenty.html#pravila">Правила посещения</a></li><li><a href="dokumenty.html#tb">Техника безопасности</a></li><li><a href="dokumenty.html#oferta">Договор оферты</a></li><li><a href="dokumenty.html#privacy">Политика обработки персональных данных</a></li></ul></div>
+      <div><h4>Контакты</h4><ul><li><a href="tel:+78120000000">+7 (812) 000-00-00</a></li><li><a href="mailto:[почта]">[почта]</a></li><li><a href="kontakty.html#route">[Адрес], м. Площадь Ленина</a></li><li>[График работы]</li></ul><div class="msg"><a class="hold-btn hold-btn--1 hold-btn--tg" href="https://t.me/" target="_blank" rel="noopener"><span>Telegram</span><svg class="ico" viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8"/></svg></a><a class="hold-btn hold-btn--2 hold-btn--max" href="https://max.ru/" target="_blank" rel="noopener"><span>Max</span><svg class="ico" viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8"/></svg></a><a class="hold-btn hold-btn--3 hold-btn--wa" href="https://wa.me/78120000000" target="_blank" rel="noopener"><span>WhatsApp</span><svg class="ico" viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8"/></svg></a></div></div>
+    </div>
+    <div class="foot__bottom"><span>© 2026 Скалодром К2</span><a href="#top" class="totop">Спуститься на&nbsp;старт ↑</a><span>[Реквизиты]</span></div>
+  </div>
+</footer>
+
+<!-- Всплывающее окно «Присоединяйтесь»: короткая заявка. Отправку подключит разработчик (FormIt / AjaxForm) -->
+<dialog class="modal" id="join" aria-labelledby="join-t">
+  <div class="modal__card">
+    <div class="modal__img" aria-hidden="true"><img src="assets/img/k2-hall.jpg" alt="" loading="lazy"></div>
+    <form class="cform cform--modal" novalidate>
+      <input type="hidden" name="what" value="">
+      <button class="modal__x js-join-close" type="button" aria-label="Закрыть"><svg class="ico" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+      <div class="cform__body">
+        <div class="cform__top">
+          <h3 class="cform__t" id="join-t">Присоединяйтесь</h3>
+          <p class="cform__s">Оставьте телефон&nbsp;— перезвоним в&nbsp;рабочее время и&nbsp;поможем выбрать тренировку</p>
+        </div>
+        <fieldset class="cform__set">
+          <legend>Что вас интересует?</legend>
+          <div class="pick">
+            <label><input type="radio" name="topic" value="trial" checked><span>Пробная тренировка</span></label>
+            <label><input type="radio" name="topic" value="kids"><span>Для&nbsp;ребёнка</span></label>
+            <label><input type="radio" name="topic" value="sub"><span>Абонемент</span></label>
+          </div>
+        </fieldset>
+        <div class="field">
+          <input id="j-name" name="name" type="text" autocomplete="given-name" placeholder=" " required>
+          <label for="j-name">Ваше имя</label>
+          <span class="field__err">Как к&nbsp;вам обращаться?</span>
+        </div>
+        <div class="field">
+          <input id="j-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder=" " required>
+          <label for="j-phone">Телефон</label>
+          <span class="field__err">Проверьте номер&nbsp;— нужно 10&nbsp;цифр после +7</span>
+        </div>
+        <div class="cform__agree">
+          <label class="agree"><input type="checkbox" name="agree" required><span class="agree__box"></span><span>Согласен на&nbsp;<a href="dokumenty.html#privacy">обработку персональных данных</a></span></label>
+          <span class="field__err field__err--agree">Нужно согласие, чтобы мы могли перезвонить</span>
+        </div>
+        <button class="btn btn--primary cform__go" type="submit">Отправить заявку</button>
+      </div>
+      <div class="cform__done" aria-live="polite" hidden>
+        <svg class="done__ic" viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="29"/><path d="M19 33l9 9 17-19"/></svg>
+        <h3 class="cform__t">Заявка отправлена</h3>
+        <p class="cform__s done__msg">Перезвоним в&nbsp;рабочее время.</p>
+        <button class="btn btn--sec js-join-close" type="button">Закрыть</button>
+      </div>
+    </form>
+  </div>
+</dialog>
+
+<!-- Галерея: открывается по клику на фото в «Почему К2» -->
+<dialog class="lb" id="lb" aria-label="Галерея фото">
+  <div class="lb__top">
+    <span class="lb__count" aria-live="polite"></span>
+    <button class="lb__x" type="button" aria-label="Закрыть галерею"><svg class="ico" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  </div>
+  <div class="lb__stage">
+    <button class="lb__nav lb__nav--prev" type="button" aria-label="Предыдущее фото"><svg class="ico" viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg></button>
+    <figure class="lb__fig"><img class="lb__img" alt=""><figcaption class="lb__cap"></figcaption></figure>
+    <button class="lb__nav lb__nav--next" type="button" aria-label="Следующее фото"><svg class="ico" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></button>
+  </div>
+  <div class="lb__thumbs" role="list"></div>
+</dialog>
+
+<!-- Загруженность зала: онлайн из CRM. data-endpoint — адрес JSON на своём сервере (сниппет MODX), без ключей на странице -->
+<div class="occ" id="occ" role="dialog" aria-label="Загруженность зала" data-endpoint="" data-capacity="120" data-refresh="60" hidden>
+  <div class="occ__head">
+    <p class="occ__k">Загруженность зала</p>
+    <button class="occ__x" type="button" aria-label="Закрыть"><svg class="ico" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  </div>
+  <div class="occ__now">
+    <span class="occ__n">—</span>
+    <span class="occ__meta"><b class="occ__lvl"></b><span class="occ__unit"></span></span>
+  </div>
+  <div class="occ__bar" aria-hidden="true"><i></i></div>
+  <p class="occ__cap"></p>
+  <p class="occ__desc"></p>
+  <p class="occ__k occ__k--chart">Обычно сегодня</p>
+  <ol class="occ__chart" aria-hidden="true"></ol>
+  <p class="occ__tip"></p>
+  <p class="occ__upd"><span class="occ__live" aria-hidden="true"></span><span></span></p>
+</div>
+
+<!-- Словарик: всплывающая подсказка -->
+<div class="tip" id="tip" role="tooltip" aria-hidden="true"><b class="tip__t"></b><span class="tip__d"></span></div>
+
+<script src="js/search.js?v=112"></script>
+<script src="js/main.js?v=112"></script>
+</body>
+</html>
