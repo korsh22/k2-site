@@ -661,3 +661,8 @@ a.chip{display:inline-flex;align-items:center;text-decoration:none}
 }
 /* <picture> с отдельным фото для телефона ведёт себя как обычная картинка в рамке */
 .lp-video picture,.lp-why2__bg picture{display:block;width:100%;height:100%}
+
+/* «60 минут»: сноска про распределение времени */
+.lp-hour__star{font-size:.5em;vertical-align:super;line-height:0;color:var(--stone-400)}
+.lp-hour__note{margin:6px 0 0;font-size:var(--t-caption);line-height:var(--l-caption);color:var(--stone-400)}
+.lp-hour__bar{padding-bottom:22px}

@@ -100,7 +100,7 @@ body = '''<main class="lp">
   <div class="lp-hour__track">
     <div class="lp-hour__stage wrap">
       <div class="lp-hour__head">
-        <h2 class="d h2 reveal">Что будет происходить 60&nbsp;минут?</h2>
+        <h2 class="d h2 reveal">Что будет происходить 60&nbsp;минут?<sup class="lp-hour__star">*</sup></h2>
         <p class="lp-hour__clock reveal" aria-hidden="true"><b class="d">00</b><span>мин<br>из&nbsp;60</span></p>
       </div>
       <div class="lp-hour__g">
@@ -109,19 +109,20 @@ body = '''<main class="lp">
           <img src="assets/img/p-fun.jpg" alt="" loading="lazy">
           <img src="assets/img/p-wall.jpg" alt="" loading="lazy">
           <img src="assets/img/p-smile.jpg" alt="" loading="lazy">
-          <span class="lp-hour__badge"><i></i><span>Шаг 01 · ~10 мин</span></span>
+          <span class="lp-hour__badge"><i></i><span>Шаг 01 · ~5 мин</span></span>
         </div>
         <ol class="lp-hour__steps">
-          <li class="is-on" data-from="0" data-to="10"><img class="lp-hour__ph" src="assets/img/p-gear.jpg" alt="" loading="lazy"><button type="button"><span class="lp-hour__n d">01</span><span><b>Знакомство и&nbsp;экипировка</b><small>~10 мин</small></span></button><p>Тренер уточнит ваш опыт, расскажет о&nbsp;занятии и&nbsp;поможет подобрать необходимое снаряжение.</p></li>
-          <li data-from="10" data-to="20"><img class="lp-hour__ph" src="assets/img/p-fun.jpg" alt="" loading="lazy"><button type="button"><span class="lp-hour__n d">02</span><span><b>Инструктаж и&nbsp;разминка</b><small>~10 мин</small></span></button><p>Вы познакомитесь с&nbsp;основными правилами безопасности и&nbsp;подготовитесь к&nbsp;лазанию.</p></li>
-          <li data-from="20" data-to="55"><img class="lp-hour__ph" src="assets/img/p-wall.jpg" alt="" loading="lazy"><button type="button"><span class="lp-hour__n d">03</span><span><b>Первые трассы</b><small>~35 мин</small></span></button><p>Тренер покажет базовые движения, поможет работать ногами и&nbsp;подберёт трассы подходящего уровня. Сначала полазаем на&nbsp;<span class="term" data-term="bould">боулдеринге</span> (низкий скалодром), а&nbsp;потом перейдём на&nbsp;<span class="term" data-term="lead">трудность</span> (высокий скалодром).</p></li>
+          <li class="is-on" data-from="0" data-to="5"><img class="lp-hour__ph" src="assets/img/p-gear.jpg" alt="" loading="lazy"><button type="button"><span class="lp-hour__n d">01</span><span><b>Знакомство и&nbsp;экипировка</b><small>~5 мин</small></span></button><p>Тренер уточнит ваш опыт, расскажет о&nbsp;занятии и&nbsp;поможет подобрать необходимое снаряжение.</p></li>
+          <li data-from="5" data-to="15"><img class="lp-hour__ph" src="assets/img/p-fun.jpg" alt="" loading="lazy"><button type="button"><span class="lp-hour__n d">02</span><span><b>Инструктаж и&nbsp;разминка</b><small>~10 мин</small></span></button><p>Вы познакомитесь с&nbsp;основными правилами безопасности и&nbsp;подготовитесь к&nbsp;лазанию.</p></li>
+          <li data-from="15" data-to="55"><img class="lp-hour__ph" src="assets/img/p-wall.jpg" alt="" loading="lazy"><button type="button"><span class="lp-hour__n d">03</span><span><b>Лазаем первые трассы</b><small>~40 мин</small></span></button><p>Тренер покажет базовые движения, поможет работать ногами и&nbsp;подберёт трассы подходящего уровня. Сначала полазаем на&nbsp;<span class="term" data-term="bould">боулдеринге</span> (низкий скалодром), а&nbsp;потом перейдём на&nbsp;<span class="term" data-term="lead">трудность</span> (высокий скалодром).</p></li>
           <li data-from="55" data-to="60"><img class="lp-hour__ph" src="assets/img/p-smile.jpg" alt="" loading="lazy"><button type="button"><span class="lp-hour__n d">04</span><span><b>Обратная связь</b><small>~5 мин</small></span></button><p>В&nbsp;конце занятия тренер ответит на&nbsp;вопросы и&nbsp;подскажет, какой формат выбрать дальше.</p></li>
         </ol>
       </div>
       <div class="lp-hour__bar reveal" aria-hidden="true">
-        <span style="--w:10"></span><span style="--w:10"></span><span style="--w:35"></span><span style="--w:5"></span>
-        <small style="--x:0">0</small><small style="--x:10">10</small><small style="--x:20">20</small><small style="--x:55">55</small><small style="--x:60">60 мин</small>
+        <span style="--w:5"></span><span style="--w:10"></span><span style="--w:40"></span><span style="--w:5"></span>
+        <small style="--x:0">0</small><small style="--x:5">5</small><small style="--x:15">15</small><small style="--x:55">55</small><small style="--x:60">60 мин</small>
       </div>
+      <p class="lp-hour__note reveal">* Распределение времени может отличаться на&nbsp;усмотрение инструктора.</p>
     </div>
   </div>
   <div class="wrap">
