@@ -666,3 +666,9 @@ a.chip{display:inline-flex;align-items:center;text-decoration:none}
 .lp-hour__star{font-size:.5em;vertical-align:super;line-height:0;color:var(--stone-400)}
 .lp-hour__note{margin:6px 0 0;font-size:var(--t-caption);line-height:var(--l-caption);color:var(--stone-400)}
 .lp-hour__bar{padding-bottom:22px}
+
+/* «Выберите удобный формат»: главное слово карточки — Групповая / Персональная */
+.lp-f__top{align-self:stretch;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.lp-f__k{font:500 var(--t-small)/var(--l-small) var(--font-text);color:var(--grey-600)}
+.lp-f--dark .lp-f__k{color:var(--stone-300)}
+.lp-fmt .lp-f__t--big{margin-top:-6px;font-size:min(52px,9.6cqi);line-height:1.05;letter-spacing:-.02em}

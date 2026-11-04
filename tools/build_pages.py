@@ -160,15 +160,15 @@ body = '''<main class="lp">
     <div class="sechead"><div><h2 class="d h2 reveal">Выберите удобный формат</h2><p class="lead muted reveal">Оба варианта подходят для первого знакомства со скалолазанием. Отличаются размер группы, количество внимания тренера и стоимость.</p></div></div>
     <div class="lp-formats">
       <article class="lp-f reveal">
-        <span class="badge">Группа до 8 человек</span>
-        <h3 class="d lp-f__t">Пробная тренировка в&nbsp;группе</h3>
+        <div class="lp-f__top"><span class="lp-f__k">Пробная тренировка</span><span class="badge">Группа до 8 человек</span></div>
+        <h3 class="d lp-f__t lp-f__t--big">Групповая</h3>
         <ul class="lp-list lp-list--dark">%(F1)s</ul>
         <p class="lp-f__d">Подойдёт, если хочется попробовать скалолазание в&nbsp;живой атмосфере и&nbsp;познакомиться с&nbsp;другими новичками. Тренер объясняет общую базу и&nbsp;помогает каждому участнику.</p>
         <div class="lp-f__foot">%(PRICE)s<button class="btn btn--primary js-book" type="button" data-book-type="group">Записаться</button></div>
       </article>
       <article class="lp-f lp-f--dark reveal">
-        <span class="badge badge--dark">1–3 участника</span>
-        <h3 class="d lp-f__t">Персональная пробная тренировка</h3>
+        <div class="lp-f__top"><span class="lp-f__k">Пробная тренировка</span><span class="badge badge--dark">1–3 участника</span></div>
+        <h3 class="d lp-f__t lp-f__t--big">Персональная</h3>
         <ul class="lp-list">%(F2)s</ul>
         <p class="lp-f__d">Больше внимания тренера и&nbsp;возможность двигаться в&nbsp;своём темпе. Можно прийти одному, вдвоём или втроём.</p>
         <div class="lp-f__foot">%(PRICE)s<button class="btn btn--primary js-book" type="button" data-book-type="personal">Записаться</button></div>
