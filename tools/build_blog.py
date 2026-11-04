@@ -3,9 +3,9 @@
 Шапка, меню, поиск и подвал берутся из site/index.html, ссылки переписываются на ../
 Запуск:  python tools/build_blog.py
 """
-import io, os, re, html, sys
+import io, json, os, re, html, sys
 sys.path.insert(0, os.path.dirname(__file__))
-from blog_content import ARTICLES, AUTHORS, CATEGORIES
+from blog_content import ARTICLES, AUTHORS, CATEGORIES, TAGS
 from typograph import process as typograph
 
 ROOT = os.path.join(os.path.dirname(__file__), '..', 'site')
@@ -57,11 +57,11 @@ def page(title, desc, body, extra_class=''):
 ''' % (esc(title), esc(desc), VER, VER, extra_class, HEADER, MMENU, SEARCH, body, FOOTER, OCC, JOIN, VER, VER, VER)
 
 def card(a, big=False):
-    return ('<a class="bcard%s reveal" href="%s.html" data-cat="%s">'
+    return ('<a class="bcard%s reveal" href="%s.html" data-cat="%s" data-tags="%s">'
             '<span class="bcard__img"><img src="../assets/img/%s" alt="" loading="lazy"></span>'
             '<span class="bcard__b"><span class="badge">%s</span><span class="bcard__t">%s</span>'
             '<span class="bcard__l">%s</span><span class="bcard__m">%s · %d мин чтения</span></span></a>') % (
-        ' bcard--big' if big else '', a['slug'], a['cat'], a['cover'], CATNAME[a['cat']], esc(a['title']),
+        ' bcard--big' if big else '', a['slug'], a['cat'], ' '.join([a['cat']] + a['tags']), a['cover'], CATNAME[a['cat']], esc(a['title']),
         esc(a['lead']) if big else '', a['date'], minutes(a))
 
 def render_body(a):
@@ -84,6 +84,17 @@ def render_body(a):
             out.append('<figure class="art__fig"><img src="../assets/img/%s" alt="%s" loading="lazy"><figcaption>%s</figcaption></figure>' % (b[1], esc(b[2]), esc(b[2])))
     return '\n        '.join(out), toc
 
+def tags_block(a):
+    # теги статьи: первый — основной (рубрика); по клику — подборка на странице блога
+    items = [(a['cat'], CATNAME[a['cat']])] + [(t, TAGS[t]) for t in a['tags']]
+    return '<div class="art__tags" aria-label="Теги статьи">%s</div>' % ''.join('<a class="art__tag" href="index.html#%s">%s</a>' % (k, esc(v)) for k, v in items)
+
+def services_block(a):
+    # услуги по теме: задаются у статьи; нет ссылок — нет и блока
+    if not a.get('services'): return ''
+    return ('<section class="art__svc"><h2 class="art__svc-t">Услуги по теме</h2><div class="art__svc-list">%s</div></section>'
+            % ''.join('<a href="%s">%s%s</a>' % (h, esc(t), ARROW) for t, h in a['services']))
+
 def author_block(a):
     # автор под статьёй: аватарка, имя и до 4 других его статей короткими заголовками
     au = AUTHORS[a['author']]
@@ -103,7 +114,7 @@ for idx, a in enumerate(ARTICLES):
   <header class="art__head dark">
     <div class="wrap">
       <nav class="crumbs" aria-label="Хлебные крошки"><a href="../index.html">Главная</a><span>/</span><a href="index.html">Блог</a><span>/</span><a href="index.html#%s">%s</a></nav>
-      <span class="badge badge--dark">%s</span>
+      <a class="badge badge--dark art__main-tag" href="index.html#%s">%s</a>
       <h1 class="d art__t">%s</h1>
       <p class="art__lead">%s</p>
       <p class="art__meta">%s · %d мин чтения</p>
@@ -119,6 +130,8 @@ for idx, a in enumerate(ARTICLES):
     <div class="art__body">
         %s
       %s
+      %s
+      %s
       <div class="art__cta">
         <div><b>Попробуйте сами</b><p>Пробная тренировка с инструктором — для любого уровня подготовки, всё снаряжение выдаём.</p></div>
         <a class="btn btn--primary" href="../pervyj-raz.html">Записаться на тренировку</a>
@@ -133,8 +146,8 @@ for idx, a in enumerate(ARTICLES):
     <div class="bgrid bgrid--3">%s</div>
   </div>
 </section>
-</main>''' % (a['cat'], CATNAME[a['cat']], CATNAME[a['cat']], esc(a['title']), esc(a['lead']), a['date'], minutes(a),
-              a['cover'], toc_html, content, author_block(a), ''.join(card(x) for x in others))
+</main>''' % (a['cat'], CATNAME[a['cat']], a['cat'], CATNAME[a['cat']], esc(a['title']), esc(a['lead']), a['date'], minutes(a),
+              a['cover'], toc_html, content, tags_block(a), services_block(a), author_block(a), ''.join(card(x) for x in others))
     doc = page(a['title'] + ' — блог скалодрома К2', a['lead'], body, 'page--art')
     io.open(os.path.join(OUT, a['slug'] + '.html'), 'w', encoding='utf-8').write(typograph(doc))
     print('статья:', a['slug'])
@@ -153,11 +166,12 @@ body = '''<main>
 </section>
 <section class="sec neutral blog-list">
   <div class="wrap">
+    <div class="bpick" hidden data-names='%s'><span>Подборка: <b></b></span><a href="index.html">Все статьи</a></div>
     <div class="bgrid">%s</div>
     <p class="bempty" hidden>В этой рубрике пока нет статей</p>
   </div>
 </section>
-</main>''' % (chips, card(ARTICLES[0], big=True) + ''.join(card(x) for x in ARTICLES[1:]))
+</main>''' % (chips, esc(json.dumps(dict(CATEGORIES, **TAGS), ensure_ascii=False), quote=True).replace('&#x27;', "'"), card(ARTICLES[0], big=True) + ''.join(card(x) for x in ARTICLES[1:]))
 doc = page('Блог о скалолазании — скалодром К2', 'Статьи о тренировках, снаряжении, путешествиях и жизни скалодрома К2', body, 'page--list')
 io.open(os.path.join(OUT, 'index.html'), 'w', encoding='utf-8').write(typograph(doc))
 print('список статей: blog/index.html')

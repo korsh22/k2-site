@@ -16,9 +16,15 @@ AUTHORS = {
     'k2': {'name': '[Имя Фамилия]', 'photo': 'coach-1.jpg'},
 }
 
+# Дополнительные теги (основной тег статьи — её рубрика). По клику — подборка: blog/index.html#ключ
+TAGS = {'novichkam': 'Новичкам', 'skaly': 'Скалы', 'tehnika': 'Техника', 'sila': 'Сила', 'vynoslivost': 'Выносливость',
+        'skalniki': 'Скальники', 'bouldering': 'Боулдеринг', 'trudnost': 'Трудность'}
+
 ARTICLES = [
     {
         'slug': 'pervyj-vyezd-na-skaly',
+        'tags': ['skaly', 'novichkam'],
+        'services': [('Пакет «Скалы»', '../pakety.html#skaly'), ('Базовые курсы', '../bazovye-kursy.html'), ('Школа скалолазания', '../shkola.html')],
         'short': 'Первый выезд на скалы',
         'author': 'k2',
         'cat': 'travel',
@@ -55,6 +61,8 @@ ARTICLES = [
     },
     {
         'slug': 'kak-ustroena-trenirovka',
+        'tags': ['sila', 'vynoslivost', 'tehnika'],
+        'services': [('Школа скалолазания', '../shkola.html'), ('Индивидуальные тренировки', '../individualnye.html'), ('Пакеты тренировок', '../pakety.html')],
         'short': 'Как устроена тренировка',
         'author': 'k2',
         'cat': 'train',
@@ -82,6 +90,8 @@ ARTICLES = [
     },
     {
         'slug': 'snaryazhenie-vybor-i-uhod',
+        'tags': ['skalniki', 'novichkam'],
+        'services': [('Пробная тренировка', '../pervyj-raz.html'), ('Самостоятельные посещения', '../samostoyatelno.html'), ('Прокат снаряжения', '../ceny.html#prokat')],
         'short': 'Как выбрать снаряжение',
         'author': 'k2',
         'cat': 'gear',
@@ -115,6 +125,8 @@ ARTICLES = [
     },
     {
         'slug': 'kak-ustroen-skalodrom-k2',
+        'tags': ['bouldering', 'trudnost', 'novichkam'],
+        'services': [('Пробная тренировка', '../pervyj-raz.html'), ('Базовые курсы', '../bazovye-kursy.html'), ('О скалодроме', '../o-skalodrome.html')],
         'short': 'Как устроен скалодром К2',
         'author': 'k2',
         'cat': 'club',

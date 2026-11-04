@@ -105,18 +105,24 @@
     else { var t = document.createElement('textarea'); t.value = location.href; document.body.appendChild(t); t.select(); try { document.execCommand('copy'); } catch (e) {} t.remove(); done(); }
   });
 
-  /* Фильтр рубрик на странице списка (рубрику можно открыть ссылкой: blog/index.html#train) */
-  var chips = $$('.chip'), cards = $$('.bcard'), empty = $('.bempty');
+  /* Фильтр на странице списка: рубрика или подборка по тегу (открывается ссылкой: blog/index.html#train, #skaly) */
+  var chips = $$('.chip'), cards = $$('.bcard'), empty = $('.bempty'), pick = $('.bpick');
+  var names = pick ? JSON.parse(pick.dataset.names) : {};
   function filter(f) {
     chips.forEach(function (c) { c.setAttribute('aria-pressed', String(c.dataset.f === f)); });
     var shown = 0;
-    cards.forEach(function (c) { var on = f === 'all' || c.dataset.cat === f; c.hidden = !on; if (on) { shown++; c.classList.add('in'); } });
+    cards.forEach(function (c) { var on = f === 'all' || (c.dataset.tags || c.dataset.cat).split(' ').indexOf(f) >= 0; c.hidden = !on; if (on) { shown++; c.classList.add('in'); } });
     if (empty) empty.hidden = shown > 0;
+    if (pick) { pick.hidden = f === 'all'; $('b', pick).textContent = names[f] || ''; }
   }
   if (chips.length && cards.length) {
     chips.forEach(function (c) { c.addEventListener('click', function () { filter(c.dataset.f); history.replaceState(null, '', c.dataset.f === 'all' ? location.pathname : '#' + c.dataset.f); }); });
-    var h = location.hash.slice(1);
-    if (h && chips.some(function (c) { return c.dataset.f === h; })) filter(h);
+    var fromHash = function () {
+      var h = location.hash.slice(1);
+      if (h && (names[h] || chips.some(function (c) { return c.dataset.f === h; }))) filter(h); else if (!h) filter('all');
+    };
+    window.addEventListener('hashchange', fromHash);
+    fromHash();
   }
 })();
 
