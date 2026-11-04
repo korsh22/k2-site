@@ -350,6 +350,23 @@
     window.addEventListener('scroll', function () { if (tipFor) hideTip(); }, { passive: true });
   }
 
+  /* ---------- Переключатели: [data-tabs="имя"] показывает [data-tab-of="имя"] с нужным data-t; ссылка [data-tab-go="имя:значение"] выбирает вкладку ---------- */
+  function tabSelect(name, t) {
+    $$('[data-tabs="' + name + '"] [data-t]').forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.t === t)); });
+    $$('[data-tab-of="' + name + '"]').forEach(function (el) { el.hidden = el.dataset.t !== t; });
+  }
+  $$('[data-tabs]').forEach(function (box) {
+    $$('[data-t]', box).forEach(function (b) { b.addEventListener('click', function () { tabSelect(box.dataset.tabs, b.dataset.t); }); });
+  });
+  $$('[data-tab-go]').forEach(function (a) {
+    a.addEventListener('click', function () { var p = a.dataset.tabGo.split(':'); tabSelect(p[0], p[1]); });
+  });
+
+  /* ---------- Абонементы: карточка переворачивается по клику ---------- */
+  $$('.abo').forEach(function (c) {
+    c.addEventListener('click', function () { c.setAttribute('aria-pressed', String(c.getAttribute('aria-pressed') !== 'true')); });
+  });
+
   /* ---------- Галерея ---------- */
   var lb = $('#lb'), gal = $('.lp-gal');
   if (lb && lb.showModal && gal) {
@@ -360,23 +377,28 @@
       t.innerHTML = '<img src="' + it.src + '" alt="" loading="lazy">'; t.addEventListener('click', function () { gShow(i); }); gThumbs.appendChild(t);
     });
     var gTh = $$('.lb__th', gThumbs);
+    // в галерее с переключателями листаем только фото выбранной вкладки
+    var gBtns = $$('.lp-gal__i', gal);
+    var gVis = function () { return gItems.map(function (_, i) { return i; }).filter(function (i) { return !gBtns[i].hidden; }); };
+    var gStep = function (d) { var a = gVis(); gShow(a[(a.indexOf(gCur) + d + a.length) % a.length]); };
     var gShow = function (i) {
       gCur = (i + gItems.length) % gItems.length;
       gImg.classList.remove('is-in'); void gImg.offsetWidth; gImg.src = gItems[gCur].src; gImg.alt = gItems[gCur].alt; gImg.classList.add('is-in');
-      gCap.textContent = gItems[gCur].alt; gCount.textContent = (gCur + 1) + ' / ' + gItems.length;
-      gTh.forEach(function (t, n) { t.setAttribute('aria-current', String(n === gCur)); });
+      var act = gVis();
+      gCap.textContent = gItems[gCur].alt; gCount.textContent = (act.indexOf(gCur) + 1) + ' / ' + act.length;
+      gTh.forEach(function (t, n) { t.setAttribute('aria-current', String(n === gCur)); t.hidden = act.indexOf(n) < 0; });
     };
     var gClose = function () { if (lb.open) lb.close(); document.documentElement.classList.remove('lb-open'); };
     $$('.lp-gal__i', gal).forEach(function (b, i) { b.addEventListener('click', function () { document.documentElement.classList.add('lb-open'); lb.showModal(); gShow(i); }); });
     $('.lb__x', lb).addEventListener('click', gClose);
-    $('.lb__nav--prev', lb).addEventListener('click', function () { gShow(gCur - 1); });
-    $('.lb__nav--next', lb).addEventListener('click', function () { gShow(gCur + 1); });
-    lb.addEventListener('keydown', function (e) { if (e.key === 'ArrowRight') gShow(gCur + 1); if (e.key === 'ArrowLeft') gShow(gCur - 1); });
+    $('.lb__nav--prev', lb).addEventListener('click', function () { gStep(-1); });
+    $('.lb__nav--next', lb).addEventListener('click', function () { gStep(1); });
+    lb.addEventListener('keydown', function (e) { if (e.key === 'ArrowRight') gStep(1); if (e.key === 'ArrowLeft') gStep(-1); });
     lb.addEventListener('close', function () { document.documentElement.classList.remove('lb-open'); });
     lb.addEventListener('click', function (e) { if (e.target === lb || e.target.classList.contains('lb__stage') || e.target.classList.contains('lb__fig')) gClose(); });
     var sx = null;
     lb.addEventListener('touchstart', function (e) { sx = e.touches[0].clientX; }, { passive: true });
-    lb.addEventListener('touchend', function (e) { if (sx === null) return; var dx = e.changedTouches[0].clientX - sx; sx = null; if (Math.abs(dx) > 50) gShow(gCur + (dx < 0 ? 1 : -1)); });
+    lb.addEventListener('touchend', function (e) { if (sx === null) return; var dx = e.changedTouches[0].clientX - sx; sx = null; if (Math.abs(dx) > 50) gStep(dx < 0 ? 1 : -1); });
     var more = $('.js-gal-more');
     if (more) more.addEventListener('click', function () {
       var all = gal.classList.toggle('is-all');

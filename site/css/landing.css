@@ -704,3 +704,89 @@ a.chip{display:inline-flex;align-items:center;text-decoration:none}
 @media (max-width:359px){.pnav__in{gap:4px;padding-top:6px;padding-bottom:6px}.pnav .chip{height:28px;padding:0 9px;font-size:12px}}
 .pnav__in{margin:0 auto}
 .note--light p{color:var(--grey-600)}
+
+/* ===== Детская секция (по ТЗ) ===== */
+.ktabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:var(--g)}
+[data-tab-of][hidden]{display:none!important}
+/* промо набора: фото слева, инфо справа */
+.kpromo{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);border-radius:var(--r-xl);overflow:hidden;background:var(--graphite);color:var(--white)}
+.kpromo__img{position:relative;margin:0;min-height:100%;aspect-ratio:3/2}
+.kpromo__img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.kpromo__tag{position:absolute;left:20px;top:20px;padding:8px 16px;border-radius:var(--pill);background:var(--red);color:var(--on-red);font:700 var(--t-small)/1 var(--font-display)}
+.kpromo__b{padding:var(--pad);display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:18px;container-type:inline-size}
+.kpromo__b .h2{font-size:min(var(--t-h2),9.4cqi)}
+.kpromo__b .lp-list .ico{color:var(--red)}
+.kpromo__k{margin:0;color:var(--stone-300);font-size:var(--t-small);line-height:var(--l-small)}
+/* группы */
+.kgrp{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--g)}
+.kgrp__c{display:flex;flex-direction:column;gap:10px;padding:var(--pad);border-radius:var(--r-xl);background:var(--white);container-type:inline-size}
+.kgrp__top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.kgrp__age{font-size:min(44px,13cqi);line-height:1.05;letter-spacing:-.02em}
+.kgrp__who{margin:0;font:600 var(--t-body)/var(--l-body) var(--font-text)}
+.kgrp__d{margin:0 0 8px;color:var(--grey-600);font-size:var(--t-body);line-height:var(--l-body)}
+.kgrp__go{margin-top:auto;padding-top:14px;border-top:1px solid var(--grey-100);display:flex;justify-content:space-between;align-items:center;gap:12px;color:var(--graphite);text-decoration:none;font:500 var(--t-small)/1.35 var(--font-text);transition:color .2s}
+.kgrp__go .ico{flex:none;width:18px;height:18px;color:var(--red);transition:transform .3s var(--ease)}
+.kgrp__go:hover{color:var(--red)}
+.kgrp__go:hover .ico{transform:translateX(3px)}
+#groups,#schedule{scroll-margin-top:calc(var(--hdr) + 24px)}
+/* абонементы: переворот */
+.abos{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--g)}
+.abo{all:unset;box-sizing:border-box;display:block;cursor:pointer;perspective:1200px;border-radius:var(--r-xl)}
+.abo:focus-visible{outline:2px solid var(--white);outline-offset:3px}
+.abo__in{display:grid;transform-style:preserve-3d;transition:transform .7s var(--ease)}
+.abo[aria-pressed="true"] .abo__in{transform:rotateY(180deg)}
+.abo__s{grid-area:1/1;display:flex;flex-direction:column;gap:10px;padding:var(--pad);border-radius:var(--r-xl);background:var(--white);color:var(--graphite);-webkit-backface-visibility:hidden;backface-visibility:hidden}
+.abo__r{transform:rotateY(180deg);background:var(--graphite-raised);color:var(--white)}
+.abo__t{font-size:var(--t-h4);line-height:var(--l-h4)}
+.abo__g{color:var(--grey-600);font-size:var(--t-small);line-height:var(--l-small)}
+.abo__p{margin-top:8px;font-size:var(--t-h3);line-height:var(--l-h3)}
+.abo__n{color:var(--grey-600);font-size:var(--t-small);line-height:var(--l-small)}
+.abo__turn{margin-top:auto;padding-top:12px;display:inline-flex;align-items:center;gap:8px;font:500 var(--t-small)/1 var(--font-text)}
+.abo__turn .ico{width:16px;height:16px;color:var(--red)}
+.abo__row{display:flex;flex-direction:column;gap:2px;font-size:var(--t-small);line-height:var(--l-small);color:var(--stone-300)}
+.abo__row b{color:var(--white);font-weight:600}
+/* навыки */
+.kskill__q{margin-top:auto!important;padding-top:10px;color:var(--graphite)!important;font-weight:600}
+.kskill{min-height:0}
+.kskill .lp-c__n{margin-bottom:8px}
+/* пробная */
+.ktrial{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:var(--g);align-items:center;margin-bottom:var(--g)}
+.ktrial__img{grid-column:1/span 5;margin:0;aspect-ratio:4/5;border-radius:var(--r-xl);overflow:hidden}
+.ktrial__img img{width:100%;height:100%;object-fit:cover}
+.ktrial__b{grid-column:7/-1;display:flex;flex-direction:column;align-items:flex-start;gap:16px}
+.ktrial__b .lp-k{margin:0}
+.ktrial__mark{margin:0;padding:12px 16px;border-radius:var(--r-md);border-left:4px solid var(--red);background:var(--white);font:600 var(--t-body)/var(--l-body) var(--font-text)}
+.ktrial__list{margin:0;align-self:stretch;display:flex;flex-direction:column}
+.ktrial__list > div{display:flex;justify-content:space-between;align-items:baseline;gap:var(--g);padding:12px 0;border-bottom:1px solid var(--stone-300)}
+.ktrial__list dt{color:var(--grey-600);font-size:var(--t-small);line-height:var(--l-small)}
+.ktrial__list dd{margin:0;text-align:right;font:500 var(--t-body)/var(--l-body) var(--font-text)}
+.ktrial__list .price{align-items:flex-end}
+/* документы */
+.kdocs{display:flex;flex-wrap:wrap;gap:8px}
+.kdocs a{display:inline-flex;align-items:center;gap:10px;min-height:52px;padding:0 20px;border-radius:var(--r-md);background:var(--white);color:var(--graphite);text-decoration:none;font:500 var(--t-body)/1.25 var(--font-text);transition:background-color .2s,color .2s}
+.kdocs a .ico{flex:none;width:16px;height:16px;color:var(--red)}
+.kdocs a:hover{background:var(--graphite);color:var(--white)}
+.kdocs a:hover .ico{color:var(--white)}
+/* галерея с вкладками: вертикальные фото — в высоких ячейках */
+.lp-gal--tabs .lp-gal__i{grid-row:auto}
+.lp-gal--tabs .lp-gal__i--v{grid-row:span 2}
+.lb__th[hidden]{display:none}
+.kreviews{margin-top:var(--g);color:var(--stone-300)}
+.kreviews b{color:var(--white)}
+@media (max-width:1040px){
+  .kpromo{grid-template-columns:1fr}
+  .kpromo__img{min-height:0;aspect-ratio:16/10}
+  .kgrp,.abos{grid-template-columns:1fr}
+  .ktrial__img{grid-column:1/-1;max-width:420px}
+  .ktrial__b{grid-column:1/-1}
+}
+@media (max-width:767px){
+  .kdocs{flex-direction:column}
+  .kdocs a{justify-content:space-between}
+  .ktrial__img{max-width:none}
+  .ktrial__b .btn{width:100%}
+  .ktrial__b > div:last-child{align-self:stretch}
+  .kpromo__b .btn{width:100%}
+  .kpromo__b{padding:var(--pad-s)}
+}
+@media (prefers-reduced-motion:reduce){.abo__in{transition:none}}
