@@ -398,6 +398,24 @@
     });
   });
 
+  /* ---------- Цены: закреплённое меню разделов прилипает под шапкой и подсвечивает текущий раздел ---------- */
+  var pnav = $('.pnav');
+  if (pnav) {
+    var pHdr = $('#hdr'), pTick = false;
+    var pLinks = $$('a[href^="#"]', pnav), pSecs = pLinks.map(function (a) { return document.getElementById(a.getAttribute('href').slice(1)); });
+    var pFrame = function () {
+      if (pHdr) pnav.style.setProperty('--pnav-top', (pHdr.classList.contains('is-hidden') ? 0 : pHdr.offsetHeight) + 'px');
+      var line = innerHeight * 0.4, cur = -1;
+      pSecs.forEach(function (sec, i) { if (sec && sec.getBoundingClientRect().top < line) cur = i; });
+      pLinks.forEach(function (a, i) { if (i === cur) a.setAttribute('aria-current', 'true'); else a.removeAttribute('aria-current'); });
+      pTick = false;
+    };
+    window.addEventListener('scroll', function () { if (!pTick) { pTick = true; requestAnimationFrame(pFrame); } }, { passive: true });
+    window.addEventListener('resize', pFrame);
+    if (pHdr) new MutationObserver(pFrame).observe(pHdr, { attributes: true, attributeFilter: ['class'] });
+    pFrame();
+  }
+
   /* ---------- Липкое меню разделов и плавающая кнопка ---------- */
   var sub = $('.lp-sub'), hdr = $('#hdr'), fab = $('.lp-fab'), hero = $('.lp-hero');
   var links = sub ? $$('a', sub) : [];

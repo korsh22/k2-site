@@ -105,7 +105,11 @@ def steps(items):
     return '<ol class="lp-steps">%s</ol>' % ''.join('<li class="reveal"><span class="lp-steps__n">%02d</span><b>%s</b><p>%s</p></li>' % (i + 1, t, d) for i, (t, d) in enumerate(items))
 
 def plist(rows):
-    return '<div class="plist reveal">%s</div>' % ''.join('<div class="prow"><p class="prow__n">%s</p><p class="prow__d">%s</p><p class="prow__v">%s</p></div>' % r for r in rows)
+    # строка: (название, пояснение, цена[, ссылка на услугу]); нет ссылки — нет и «Подробнее»
+    def row(r):
+        go = '<a class="prow__go" href="%s">Подробнее%s</a>' % (r[3], ARROW) if len(r) > 3 and r[3] else ''
+        return '<div class="prow%s"><p class="prow__n">%s</p><p class="prow__d">%s</p>%s<p class="prow__v">%s</p></div>' % (' prow--link' if go else '', r[0], r[1], go, r[2])
+    return '<div class="plist reveal">%s</div>' % ''.join(row(r) for r in rows)
 
 def faq(items):
     h = (len(items) + 1) // 2
@@ -367,24 +371,26 @@ page('deti-pervyj-raz.html', 'Детская пробная тренировка
 
 
 # ======================= ЦЕНЫ =======================
-GROUPS = [('probnye', 'Пробные тренировки', [('Пробная тренировка в группе', '60 минут, группа до 8 человек, снаряжение включено', '[___] ₽'),
-                                             ('Персональная пробная тренировка', '60 минут, для 1–3 участников', '[___] ₽'),
-                                             ('Детская пробная тренировка', 'Для детей от 6 лет', '[___] ₽')]),
-          ('razovye', 'Разовые посещения', [('Разовое посещение', 'Самостоятельно, боулдеринг и трудность', '[___] ₽'), ('Разовое посещение [выходные]', '[Условия уточняются]', '[___] ₽')]),
-          ('abonementy', 'Абонементы', [('Абонемент [на месяц]', 'Самостоятельные посещения', '[___] ₽'), ('Абонемент [на __ посещений]', 'Самостоятельные посещения', '[___] ₽'),
-                                         ('Абонемент в школу', '[__] групповых тренировок', '[___] ₽')]),
-          ('trener', 'Тренировки с тренером', [('Индивидуальная тренировка', 'С тренером', '[___] ₽'), ('Базовый курс', '3–5 тренировок', 'от [___] ₽')]),
-          ('deti', 'Для детей', [('Детская секция', 'Абонемент на [__] занятий', '[___] ₽'), ('Взрослый + ребёнок', 'Пробная тренировка', '[___] ₽')]),
+GROUPS = [('probnye', 'Пробные тренировки', [('Пробная тренировка в группе', '60 минут, группа до 8 человек, снаряжение включено', '[___] ₽', 'pervyj-raz.html#formats'),
+                                             ('Персональная пробная тренировка', '60 минут, для 1–3 участников', '[___] ₽', 'pervyj-raz.html#formats'),
+                                             ('Детская пробная тренировка', 'Для детей от 6 лет', '[___] ₽', 'deti-pervyj-raz.html')]),
+          ('razovye', 'Разовые посещения', [('Разовое посещение', 'Самостоятельно, боулдеринг и трудность', '[___] ₽', 'samostoyatelno.html'), ('Разовое посещение [выходные]', '[Условия уточняются]', '[___] ₽')]),
+          ('abonementy', 'Абонементы', [('Абонемент [на месяц]', 'Самостоятельные посещения', '[___] ₽', 'samostoyatelno.html#prices'), ('Абонемент [на __ посещений]', 'Самостоятельные посещения', '[___] ₽', 'samostoyatelno.html#prices'),
+                                         ('Абонемент в школу', '[__] групповых тренировок', '[___] ₽', 'shkola.html')]),
+          ('trener', 'Тренировки с тренером', [('Индивидуальная тренировка', 'С тренером', '[___] ₽', 'individualnye.html'), ('Базовый курс', '3–5 тренировок', 'от [___] ₽', 'bazovye-kursy.html')]),
+          ('deti', 'Для детей', [('Детская секция', 'Абонемент на [__] занятий', '[___] ₽', 'detskaya-sekciya.html'), ('Взрослый + ребёнок', 'Пробная тренировка', '[___] ₽', 'deti-pervyj-raz.html#family')]),
           ('prokat', 'Прокат и услуги', [('Прокат снаряжения', 'Скальники, страховочная система', '[___] ₽'), ('Аренда полотенца', '', '[___] ₽'),
-                                         ('Подарочный сертификат', 'На пробную тренировку', '[___] ₽')])]
-chips = ''.join('<a class="chip" href="#%s">%s</a>' % (g, t) for g, t, _ in GROUPS) + '<a class="chip" href="pakety.html">Пакеты</a>'
-body = head([('Цены', '')], 'Цены скалодрома К2', 'Все тренировки, абонементы и прокат на одной странице. Пакеты — отдельно, там выгоднее.', '<div class="chips chips--dark">%s</div>' % chips)
+                                         ('Подарочный сертификат', 'На пробную тренировку', '[___] ₽', 'sertifikaty.html')])]
+SHORT = {'probnye': 'Пробные', 'razovye': 'Разовые', 'abonementy': 'Абонементы', 'trener': 'С тренером', 'deti': 'Детям', 'prokat': 'Прокат'}
+chips = ''.join('<a class="chip" href="#%s"><span class="pnav__l">%s</span><span class="pnav__s">%s</span></a>' % (g, t, SHORT[g]) for g, t, _ in GROUPS) + '<a class="chip" href="pakety.html">Пакеты</a>'
+body = head([('Цены', '')], 'Цены скалодрома К2', 'Все тренировки, абонементы и прокат на одной странице. Пакеты — отдельно, там выгоднее.')
+body += '<div class="pnav-wrap"><nav class="pnav" aria-label="Разделы цен"><div class="wrap chips chips--dark pnav__in">%s</div></nav>' % chips
 body += sec('<div class="prices__grid"><div class="prices__main">' + ''.join(
     '<div class="pgroup" id="%s"><h2 class="d h3 pgroup__t reveal">%s</h2>%s</div>' % (g, t, plist(rows)) for g, t, rows in GROUPS) +
     '</div><aside class="prices__aside"><div class="pdf reveal"><span class="pdf__ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/></svg><i>PDF</i></span>'
     '<b>Полный прайс</b><p>Все тренировки, абонементы, пакеты и прокат — одним файлом</p><a class="btn btn--sec" href="assets/docs/k2-ceny.pdf" download>' + ico('<path d="M12 4v11M7 10l5 5 5-5M5 20h14"/>') + 'Скачать PDF</a></div>'
     '<div class="note reveal"><b>Пакеты тренировок</b><p>Готовые программы под задачу — выгоднее разовых занятий.</p>' + link_btn('Смотреть пакеты', 'pakety.html', 'btn btn--light') + '</div>'
-    '<div class="note note--light reveal"><b>Первый раз?</b><p>Начните с пробной тренировки: инструктор всё покажет, снаряжение выдаём.</p>' + link_btn('Пробная тренировка', 'pervyj-raz.html', 'btn btn--primary') + '</div></aside></div>', 'prices')
+    '<div class="note note--light reveal"><b>Первый раз?</b><p>Начните с пробной тренировки: инструктор всё покажет, снаряжение выдаём.</p>' + link_btn('Пробная тренировка', 'pervyj-raz.html', 'btn btn--primary') + '</div></aside></div>', 'prices') + '</div>'
 body += CONTACT
 page('ceny.html', 'Цены — скалодром К2', 'Цены на пробные тренировки, разовые посещения, абонементы, тренировки с тренером, детскую секцию и прокат снаряжения. Скалодром К2.', body)
 
@@ -527,7 +533,7 @@ import subprocess, tempfile, pathlib
 CHROME = r'C:\Program Files\Google\Chrome\Application\chrome.exe'
 LOGO = re.search(r'<svg viewBox="19 24 698 322" aria-hidden="true">.*?</svg>', MAIN, re.S).group(0)
 fonts = pathlib.Path(ROOT, 'assets', 'fonts').as_uri()
-rows = ''.join('<h2>%s</h2><table>%s</table>' % (t, ''.join('<tr><td><b>%s</b><small>%s</small></td><td class="v">%s</td></tr>' % r for r in rs)) for _, t, rs in GROUPS)
+rows = ''.join('<h2>%s</h2><table>%s</table>' % (t, ''.join('<tr><td><b>%s</b><small>%s</small></td><td class="v">%s</td></tr>' % r[:3] for r in rs)) for _, t, rs in GROUPS)
 sheet = '''<!doctype html><html lang="ru"><head><meta charset="utf-8"><style>
 @font-face{font-family:U;src:url("%(F)s/Unbounded.woff2")}@font-face{font-family:O;src:url("%(F)s/Onest.woff2")}
 @page{size:A4;margin:16mm 16mm 18mm}

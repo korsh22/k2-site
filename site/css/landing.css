@@ -672,3 +672,35 @@ a.chip{display:inline-flex;align-items:center;text-decoration:none}
 .lp-f__k{font:500 var(--t-small)/var(--l-small) var(--font-text);color:var(--grey-600)}
 .lp-f--dark .lp-f__k{color:var(--stone-300)}
 .lp-fmt .lp-f__t--big{margin-top:-6px;font-size:min(52px,9.6cqi);line-height:1.05;letter-spacing:-.02em}
+
+/* ---------- Цены: необязательная ссылка на услугу между названием и ценой ---------- */
+.prow--link{grid-template-columns:minmax(0,1fr) auto minmax(120px,auto)}
+.prow--link .prow__v{grid-column:3;justify-self:end}
+.prow__go{grid-column:2;grid-row:1/span 2;align-self:center;display:inline-flex;align-items:center;gap:6px;min-height:40px;padding:0 14px;border-radius:var(--pill);border:1px solid var(--stone-300);color:var(--graphite);text-decoration:none;white-space:nowrap;font:500 var(--t-small)/1 var(--font-text);transition:background-color .2s,border-color .2s,color .2s}
+.prow__go .ico{width:16px;height:16px;color:var(--red);transition:transform .3s var(--ease),color .2s}
+.prow__go:hover{background:var(--graphite);border-color:var(--graphite);color:var(--white)}
+.prow__go:hover .ico{transform:translateX(3px);color:var(--white)}
+.prow__go:focus-visible{outline:2px solid var(--graphite);outline-offset:2px}
+
+/* ---------- Цены: меню разделов закреплено, пока идёт прайс ---------- */
+.page--ceny .blog-head{padding-bottom:20px}
+.pnav{position:sticky;top:var(--pnav-top,0px);z-index:45;background:rgba(32,32,32,.96);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);transition:top .45s var(--ease)}
+.pnav__in{margin:0;padding-top:10px;padding-bottom:10px;gap:8px}
+.pnav .chip{display:inline-flex;align-items:center;white-space:nowrap}
+.pnav .chip[aria-current="true"]{background:var(--white);border-color:var(--white);color:var(--graphite)}
+.pnav__s{display:none}
+.page--ceny .pgroup{scroll-margin-top:calc(var(--hdr) + 84px)}
+.page--ceny .prices__aside{top:calc(var(--hdr) + 84px)}
+@media (max-width:767px){
+  .prow--link{grid-template-columns:minmax(0,1fr) auto}
+  .prow--link .prow__v{grid-column:2;grid-row:1/span 3;align-self:start}
+  .prow__go{grid-column:1;grid-row:3;justify-self:start;margin-top:6px;min-height:36px;padding:0 12px}
+  .pnav__l{display:none}
+  .pnav__s{display:inline}
+  .pnav__in{gap:6px;padding-top:8px;padding-bottom:8px}
+  .pnav .chip{height:32px;padding:0 12px;font-size:13px}
+  .page--ceny .pgroup{scroll-margin-top:calc(var(--hdr) + 100px)}
+}
+@media (max-width:359px){.pnav__in{gap:4px;padding-top:6px;padding-bottom:6px}.pnav .chip{height:28px;padding:0 9px;font-size:12px}}
+.pnav__in{margin:0 auto}
+.note--light p{color:var(--grey-600)}
