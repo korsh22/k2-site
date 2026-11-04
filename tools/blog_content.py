@@ -16,14 +16,21 @@ AUTHORS = {
     'k2': {'name': '[Имя Фамилия]', 'photo': 'coach-1.jpg'},
 }
 
-# Дополнительные теги (основной тег статьи — её рубрика). По клику — подборка: blog/index.html#ключ
-TAGS = {'novichkam': 'Новичкам', 'skaly': 'Скалы', 'tehnika': 'Техника', 'sila': 'Сила', 'vynoslivost': 'Выносливость',
-        'skalniki': 'Скальники', 'bouldering': 'Боулдеринг', 'trudnost': 'Трудность'}
+# Темы (дополнительные теги). По клику — подборка: blog/index.html#ключ
+TAGS = {'skaly': 'Скалы', 'vyezd': 'Первый выезд',
+        'novichkam': 'Новичкам', 'tehnika': 'Техника', 'sila': 'Сила', 'vynoslivost': 'Выносливость', 'razminka': 'Разминка',
+        'skalniki': 'Скальники', 'sistema': 'Страховочная система', 'magneziya': 'Магнезия', 'uhod': 'Хранение и уход',
+        'skalodrom': 'Скалодром К2', 'bouldering': 'Боулдеринг', 'trudnost': 'Трудность'}
+# Фильтр в шапке блога: раздел (рубрика) и темы внутри него
+TOPICS = {'travel': ['skaly', 'vyezd'],
+          'train': ['novichkam', 'tehnika', 'sila', 'vynoslivost', 'razminka'],
+          'gear': ['skalniki', 'sistema', 'magneziya', 'uhod'],
+          'club': ['skalodrom', 'bouldering', 'trudnost']}
 
 ARTICLES = [
     {
         'slug': 'pervyj-vyezd-na-skaly',
-        'tags': ['skaly', 'novichkam'],
+        'tags': ['skaly', 'vyezd', 'novichkam'],
         'services': [('Пакет «Скалы»', '../pakety.html#skaly'), ('Базовые курсы', '../bazovye-kursy.html'), ('Школа скалолазания', '../shkola.html')],
         'short': 'Первый выезд на скалы',
         'author': 'k2',
@@ -61,7 +68,7 @@ ARTICLES = [
     },
     {
         'slug': 'kak-ustroena-trenirovka',
-        'tags': ['sila', 'vynoslivost', 'tehnika'],
+        'tags': ['sila', 'vynoslivost', 'tehnika', 'razminka'],
         'services': [('Школа скалолазания', '../shkola.html'), ('Индивидуальные тренировки', '../individualnye.html'), ('Пакеты тренировок', '../pakety.html')],
         'short': 'Как устроена тренировка',
         'author': 'k2',
@@ -90,7 +97,7 @@ ARTICLES = [
     },
     {
         'slug': 'snaryazhenie-vybor-i-uhod',
-        'tags': ['skalniki', 'novichkam'],
+        'tags': ['skalniki', 'sistema', 'magneziya', 'uhod', 'novichkam'],
         'services': [('Пробная тренировка', '../pervyj-raz.html'), ('Самостоятельные посещения', '../samostoyatelno.html'), ('Прокат снаряжения', '../ceny.html#prokat')],
         'short': 'Как выбрать снаряжение',
         'author': 'k2',
@@ -125,7 +132,7 @@ ARTICLES = [
     },
     {
         'slug': 'kak-ustroen-skalodrom-k2',
-        'tags': ['bouldering', 'trudnost', 'novichkam'],
+        'tags': ['skalodrom', 'bouldering', 'trudnost', 'novichkam'],
         'services': [('Пробная тренировка', '../pervyj-raz.html'), ('Базовые курсы', '../bazovye-kursy.html'), ('О скалодроме', '../o-skalodrome.html')],
         'short': 'Как устроен скалодром К2',
         'author': 'k2',

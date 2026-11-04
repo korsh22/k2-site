@@ -5,7 +5,7 @@
 """
 import io, json, os, re, html, sys
 sys.path.insert(0, os.path.dirname(__file__))
-from blog_content import ARTICLES, AUTHORS, CATEGORIES, TAGS
+from blog_content import ARTICLES, AUTHORS, CATEGORIES, TAGS, TOPICS
 from typograph import process as typograph
 
 ROOT = os.path.join(os.path.dirname(__file__), '..', 'site')
@@ -153,25 +153,30 @@ for idx, a in enumerate(ARTICLES):
     print('статья:', a['slug'])
 
 # ---------- Список статей ----------
-chips = '<button type="button" class="chip" aria-pressed="true" data-f="all">Все статьи</button>' + ''.join(
-    '<button type="button" class="chip" aria-pressed="false" data-f="%s">%s</button>' % (k, v) for k, v in CATEGORIES)
+def tag_count(k): return sum(1 for x in ARTICLES if k == x['cat'] or k in x['tags'])
+CHEVRON = '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>'
+def filter_group(cat, name):
+    items = ''.join('<label class="bf__i"><input type="checkbox" value="%s"><span class="bf__box"></span><span>%s <small>(%d)</small></span></label>' % (t, esc(TAGS[t]), tag_count(t)) for t in TOPICS[cat])
+    return ('<div class="bf__g"><div class="bf__h"><button class="bf__name" type="button" data-f="%s" aria-pressed="false">%s <small>(%d)</small></button>'
+            '<button class="bf__x" type="button" aria-expanded="true" aria-label="Темы раздела «%s»">%s</button></div><div class="bf__list">%s</div></div>') % (cat, esc(name), tag_count(cat), esc(name), CHEVRON, items)
+bfilter = '<div class="bf" role="group" aria-label="Темы блога">%s</div>' % ''.join(filter_group(k, v) for k, v in CATEGORIES)
 body = '''<main>
 <section class="blog-head dark">
   <div class="wrap">
     <nav class="crumbs" aria-label="Хлебные крошки"><a href="../index.html">Главная</a><span>/</span><span>Блог</span></nav>
     <h1 class="d h1 blog-head__t">Блог о&nbsp;скалолазании</h1>
     <p class="lead blog-head__l">Тренировки, снаряжение, путешествия и&nbsp;жизнь клуба</p>
-    <div class="chips chips--dark" role="group" aria-label="Рубрики блога">%s</div>
+    %s
   </div>
 </section>
 <section class="sec neutral blog-list">
   <div class="wrap">
-    <div class="bpick" hidden data-names='%s'><span>Подборка: <b></b></span><a href="index.html">Все статьи</a></div>
+    <div class="bpick" hidden data-names='%s'><span>Подборка: <b></b></span><button class="bpick__x" type="button">Все статьи</button></div>
     <div class="bgrid">%s</div>
     <p class="bempty" hidden>В этой рубрике пока нет статей</p>
   </div>
 </section>
-</main>''' % (chips, esc(json.dumps(dict(CATEGORIES, **TAGS), ensure_ascii=False), quote=True).replace('&#x27;', "'"), card(ARTICLES[0], big=True) + ''.join(card(x) for x in ARTICLES[1:]))
+</main>''' % (bfilter, esc(json.dumps(dict(CATEGORIES, **TAGS), ensure_ascii=False), quote=True).replace('&#x27;', "'"), card(ARTICLES[0], big=True) + ''.join(card(x) for x in ARTICLES[1:]))
 doc = page('Блог о скалолазании — скалодром К2', 'Статьи о тренировках, снаряжении, путешествиях и жизни скалодрома К2', body, 'page--list')
 io.open(os.path.join(OUT, 'index.html'), 'w', encoding='utf-8').write(typograph(doc))
 print('список статей: blog/index.html')

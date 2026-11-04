@@ -105,21 +105,44 @@
     else { var t = document.createElement('textarea'); t.value = location.href; document.body.appendChild(t); t.select(); try { document.execCommand('copy'); } catch (e) {} t.remove(); done(); }
   });
 
-  /* Фильтр на странице списка: рубрика или подборка по тегу (открывается ссылкой: blog/index.html#train, #skaly) */
-  var chips = $$('.chip'), cards = $$('.bcard'), empty = $('.bempty'), pick = $('.bpick');
+  /* Фильтр статей: можно отметить несколько тем сразу; подборка открывается и ссылкой (blog/index.html#train, #skaly или #skaly,sila).
+     Кнопки-рубрики (.chip) — на странице мероприятий: там выбор один */
+  var chips = $$('.chip[data-f]'), cards = $$('.bcard'), empty = $('.bempty'), pick = $('.bpick');
+  var boxes = $$('.bf input'), heads = $$('.bf__name');
   var names = pick ? JSON.parse(pick.dataset.names) : {};
-  function filter(f) {
-    chips.forEach(function (c) { c.setAttribute('aria-pressed', String(c.dataset.f === f)); });
+  var known = function (k) { return !!names[k] || chips.some(function (c) { return c.dataset.f === k && k !== 'all'; }); };
+  function show(sel, keepHash) {
+    boxes.forEach(function (b) { b.checked = sel.indexOf(b.value) >= 0; });
+    heads.forEach(function (h) { h.setAttribute('aria-pressed', String(sel.indexOf(h.dataset.f) >= 0)); });
+    chips.forEach(function (c) { c.setAttribute('aria-pressed', String(sel.length ? sel.indexOf(c.dataset.f) >= 0 : c.dataset.f === 'all')); });
     var shown = 0;
-    cards.forEach(function (c) { var on = f === 'all' || (c.dataset.tags || c.dataset.cat).split(' ').indexOf(f) >= 0; c.hidden = !on; if (on) { shown++; c.classList.add('in'); } });
+    cards.forEach(function (c) {
+      var tags = (c.dataset.tags || c.dataset.cat).split(' ');
+      var on = !sel.length || sel.some(function (k) { return tags.indexOf(k) >= 0; });
+      c.hidden = !on;
+      if (on) { shown++; c.classList.add('in'); }
+    });
     if (empty) empty.hidden = shown > 0;
-    if (pick) { pick.hidden = f === 'all'; $('b', pick).textContent = names[f] || ''; }
+    if (pick) { pick.hidden = !sel.length; $('b', pick).textContent = sel.map(function (k) { return names[k]; }).join(', '); }
+    if (!keepHash) history.replaceState(null, '', sel.length ? '#' + sel.join(',') : location.pathname);
   }
-  if (chips.length && cards.length) {
-    chips.forEach(function (c) { c.addEventListener('click', function () { filter(c.dataset.f); history.replaceState(null, '', c.dataset.f === 'all' ? location.pathname : '#' + c.dataset.f); }); });
+  var current = function () {
+    return boxes.filter(function (b) { return b.checked; }).map(function (b) { return b.value; })
+      .concat(heads.filter(function (h) { return h.getAttribute('aria-pressed') === 'true'; }).map(function (h) { return h.dataset.f; }));
+  };
+  if (cards.length && (chips.length || boxes.length)) {
+    chips.forEach(function (c) { c.addEventListener('click', function () { show(c.dataset.f === 'all' ? [] : [c.dataset.f]); }); });
+    boxes.forEach(function (b) { b.addEventListener('change', function () { show(current()); }); });
+    heads.forEach(function (h) { h.addEventListener('click', function () { h.setAttribute('aria-pressed', String(h.getAttribute('aria-pressed') !== 'true')); show(current()); }); });
+    if (pick) $('.bpick__x', pick).addEventListener('click', function () { show([]); });
+    // телефон: разделы свёрнуты, темы раскрываются по стрелке; раздел с выбранной темой открыт
+    var groups = $$('.bf__g');
+    var setOpen = function (g, open) { g.classList.toggle('is-closed', !open); $('.bf__x', g).setAttribute('aria-expanded', String(open)); };
+    groups.forEach(function (g) { $('.bf__x', g).addEventListener('click', function () { setOpen(g, g.classList.contains('is-closed')); }); });
     var fromHash = function () {
-      var h = location.hash.slice(1);
-      if (h && (names[h] || chips.some(function (c) { return c.dataset.f === h; }))) filter(h); else if (!h) filter('all');
+      var sel = location.hash.slice(1).split(',').map(decodeURIComponent).filter(known);
+      show(sel, true);
+      groups.forEach(function (g) { setOpen(g, $$('input', g).some(function (b) { return b.checked; })); });
     };
     window.addEventListener('hashchange', fromHash);
     fromHash();
