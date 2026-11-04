@@ -44,7 +44,7 @@ def build(page):
     used = set(re.findall(r'(?:href|src)="((?:css|js)/[^"?]+)', html))
     html = re.sub(r'((?:css|js)/[^"?]+)\?v=\d+', r'\1', html)
     html = clean_text(html)
-    os.makedirs(out)
+    os.makedirs(out, exist_ok=True)
     io.open(os.path.join(out, os.path.basename(page)), 'w', encoding='utf-8').write(html)
     assets = set(re.findall(r'(assets/[^"\')\s?,]+)', html))
     for rel in sorted(used):
