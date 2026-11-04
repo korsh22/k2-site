@@ -37,7 +37,7 @@ FAQ = [('Нужна ли физическая подготовка?', 'Нет. �
        ('Можно ли прийти одному?', 'Да. В групповой тренировке вы познакомитесь с другими новичками, а персонально можно прийти одному, вдвоём или втроём.'),
        ('Что взять с собой?', 'Только удобную спортивную форму. Скальные туфли, страховочную систему и магнезию выдадим на месте.'),
        ('Когда приходить?', 'Лучше за 10–15 минут до начала тренировки, чтобы спокойно переодеться и подобрать снаряжение.'),
-       ('С какого возраста можно?', 'Взрослая пробная тренировка — с 16 лет. Для детей от 6 лет есть детские пробные тренировки и секция.'),
+       ('С какого возраста можно?', 'Взрослая пробная тренировка — с 16 лет. Для детей от 5 лет есть детские пробные тренировки и секция.'),
        ('Можно ли перенести или отменить запись?', '[Условия переноса и отмены уточняются.]'),
        ('Что делать после пробной тренировки?', 'Тренер подскажет следующий формат: базовые курсы, групповые тренировки или самостоятельные посещения.')]
 GAL = [('p-blue.jpg', 'Синяя стена с нависанием'), ('p-mat.jpg', 'Отдых на матах'), ('p-cave.jpg', 'Под нависанием'),
@@ -338,7 +338,7 @@ BOOK = '''<!-- ЕДИНАЯ форма бронирования с кальку�
           <legend>Кто придёт</legend>
           <div class="book__counts">
             <div class="book__count" data-k="adults"><span><b>Взрослые</b><small>от 16 лет</small></span><div class="step"><button type="button" class="step__b" data-d="-1" aria-label="Меньше взрослых">−</button><output class="step__v">1</output><button type="button" class="step__b" data-d="1" aria-label="Больше взрослых">+</button></div></div>
-            <div class="book__count" data-k="kids"><span><b>Дети</b><small>6–15 лет</small></span><div class="step"><button type="button" class="step__b" data-d="-1" aria-label="Меньше детей">−</button><output class="step__v">0</output><button type="button" class="step__b" data-d="1" aria-label="Больше детей">+</button></div></div>
+            <div class="book__count" data-k="kids"><span><b>Дети</b><small>5–16 лет</small></span><div class="step"><button type="button" class="step__b" data-d="-1" aria-label="Меньше детей">−</button><output class="step__v">0</output><button type="button" class="step__b" data-d="1" aria-label="Больше детей">+</button></div></div>
           </div>
           <p class="book__limit" aria-live="polite"></p>
         </fieldset>
