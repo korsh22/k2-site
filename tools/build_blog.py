@@ -5,7 +5,7 @@
 """
 import io, os, re, html, sys
 sys.path.insert(0, os.path.dirname(__file__))
-from blog_content import ARTICLES, CATEGORIES
+from blog_content import ARTICLES, AUTHORS, CATEGORIES
 from typograph import process as typograph
 
 ROOT = os.path.join(os.path.dirname(__file__), '..', 'site')
@@ -84,6 +84,15 @@ def render_body(a):
             out.append('<figure class="art__fig"><img src="../assets/img/%s" alt="%s" loading="lazy"><figcaption>%s</figcaption></figure>' % (b[1], esc(b[2]), esc(b[2])))
     return '\n        '.join(out), toc
 
+def author_block(a):
+    # автор под статьёй: аватарка, имя и до 4 других его статей короткими заголовками
+    au = AUTHORS[a['author']]
+    others = [x for x in ARTICLES if x['author'] == a['author'] and x['slug'] != a['slug']][:4]
+    links = ''.join('<li><a href="%s.html">%s%s</a></li>' % (x['slug'], esc(x['short']), ARROW) for x in others)
+    more = '<div class="art__author-more"><p class="art__author-k">Другие статьи автора</p><ul>%s</ul></div>' % links if others else ''
+    return ('<aside class="art__author"><div class="art__author-who"><img src="../assets/img/%s" alt="" loading="lazy">'
+            '<div><p class="art__author-k">Автор</p><p class="art__author-n">%s</p></div></div>%s</aside>') % (au['photo'], esc(au['name']), more)
+
 # ---------- Страницы статей ----------
 for idx, a in enumerate(ARTICLES):
     content, toc = render_body(a)
@@ -109,6 +118,7 @@ for idx, a in enumerate(ARTICLES):
     </aside>
     <div class="art__body">
         %s
+      %s
       <div class="art__cta">
         <div><b>Попробуйте сами</b><p>Пробная тренировка с инструктором — для любого уровня подготовки, всё снаряжение выдаём.</p></div>
         <a class="btn btn--primary" href="../pervyj-raz.html">Записаться на тренировку</a>
@@ -124,7 +134,7 @@ for idx, a in enumerate(ARTICLES):
   </div>
 </section>
 </main>''' % (a['cat'], CATNAME[a['cat']], CATNAME[a['cat']], esc(a['title']), esc(a['lead']), a['date'], minutes(a),
-              a['cover'], toc_html, content, ''.join(card(x) for x in others))
+              a['cover'], toc_html, content, author_block(a), ''.join(card(x) for x in others))
     doc = page(a['title'] + ' — блог скалодрома К2', a['lead'], body, 'page--art')
     io.open(os.path.join(OUT, a['slug'] + '.html'), 'w', encoding='utf-8').write(typograph(doc))
     print('статья:', a['slug'])

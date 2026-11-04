@@ -135,3 +135,19 @@
   .blog-head__t{font-size:min(var(--t-h1),calc((100vw - 32px) / 10.6))}
   .bcard--big .bcard__t{font-size:min(var(--t-h3),8.2cqi)}
 }
+
+/* Автор под статьёй: аватарка, имя, другие статьи автора */
+.art__author{margin-top:56px!important;padding-top:32px;border-top:1px solid var(--stone-300);display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:var(--g);align-items:start}
+.art__author-who{display:flex;align-items:center;gap:16px}
+.art__author-who img{flex:none;width:72px;height:72px;border-radius:50%;object-fit:cover;object-position:50% 30%}
+.art__author-k{margin:0;color:var(--grey-600);font-size:var(--t-small);line-height:var(--l-small)}
+.art__author-n{margin:2px 0 0;font:700 var(--t-h5)/var(--l-h5) var(--font-display)}
+.art__author-more ul{margin:8px 0 0;gap:0}
+.art__author-more li{padding:0}
+.art__author-more li::before{content:none}
+.art__author-more a{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:40px;border-bottom:1px solid var(--stone-300);color:var(--graphite);text-decoration:none;font:500 var(--t-body)/1.3 var(--font-text);transition:color .2s}
+.art__author-more a .ico{flex:none;width:16px;height:16px;color:var(--red);transition:transform .3s var(--ease)}
+.art__author-more a:hover{color:var(--red)}
+.art__author-more a:hover .ico{transform:translateX(3px)}
+.art__author-more a:focus-visible{outline:2px solid var(--graphite);outline-offset:2px}
+@media (max-width:767px){.art__author{grid-template-columns:1fr;margin-top:40px!important;padding-top:24px}.art__author-who img{width:64px;height:64px}}
