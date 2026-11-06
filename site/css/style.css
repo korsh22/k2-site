@@ -176,7 +176,7 @@ button{font:inherit;color:inherit}
 .burger[aria-expanded="true"] span:last-child{transform:translateY(-4px) rotate(-45deg)}
 
 /* Мобильное меню */
-.mmenu{position:fixed;inset:0;z-index:45;background:var(--graphite);color:var(--white);padding:calc(var(--hdr) + 16px) var(--side) 32px;overflow-y:auto;clip-path:circle(0 at calc(100% - 36px) 32px);transition:clip-path .6s var(--ease);visibility:hidden}
+.mmenu{position:fixed;inset:0;z-index:49;background:var(--graphite);color:var(--white);padding:calc(var(--hdr) + 16px) var(--side) 32px;overflow-y:auto;clip-path:circle(0 at calc(100% - 36px) 32px);transition:clip-path .6s var(--ease);visibility:hidden}
 .mmenu.is-open{clip-path:circle(150% at calc(100% - 36px) 32px);visibility:visible}
 .mmenu__nav{display:flex;flex-direction:column}
 .mmenu__nav a{padding:14px 0;border-bottom:1px solid var(--graphite-raised);text-decoration:none;font:700 var(--t-h3)/var(--l-h3) var(--font-display);transform:translateY(20px);opacity:0;transition:transform .5s var(--ease),opacity .4s}

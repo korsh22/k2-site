@@ -164,7 +164,7 @@
     mmenu.setAttribute('aria-hidden', String(!open));
     burger.setAttribute('aria-expanded', String(open));
     burger.setAttribute('aria-label', open ? 'Закрыть меню' : 'Открыть меню');
-    document.body.style.overflow = open ? 'hidden' : '';
+    document.documentElement.style.overflow = open ? 'hidden' : '';
     if (open) { hdr.classList.remove('is-hidden'); mmenu.style.paddingTop = (hdr.offsetHeight + 16) + 'px'; }
   }
   burger.addEventListener('click', function () { setMenu(!mmenu.classList.contains('is-open')); });

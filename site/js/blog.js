@@ -49,7 +49,7 @@
     mmenu.classList.toggle('is-open', open);
     mmenu.setAttribute('aria-hidden', String(!open));
     burger.setAttribute('aria-expanded', String(open));
-    document.body.style.overflow = open ? 'hidden' : '';
+    document.documentElement.style.overflow = open ? 'hidden' : '';
     if (open) { hdr.classList.remove('is-hidden'); mmenu.style.paddingTop = (hdr.offsetHeight + 16) + 'px'; }
   }
   if (burger) burger.addEventListener('click', function () { setMenu(!mmenu.classList.contains('is-open')); });
