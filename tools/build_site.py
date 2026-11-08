@@ -321,11 +321,27 @@ body = hero([('Для детей', '')], 'Скалолазание для дет
             'Можно просто попробовать на пробной тренировке или заниматься регулярно в детской секции. С 5 лет, с детскими тренерами.',
             'k2-02.jpg', [(I_CHILD, 'От 5 лет'), (I_SHIELD, 'Детские тренеры'), (I_GEAR, 'Снаряжение выдаём'), (I_PEOPLE, 'Можно с родителями')],
             join_btn('Подобрать занятие', 'Занятие для ребёнка', 'kids'), 'Скалолазка на стене')
-body += sec(sechead('Выберите формат') + '\n' + tiles([
-    ('Детская секция', 'Регулярные тренировки с тренером', 'detskaya-sekciya.html', 'k2-first-2.jpg', True),
-    ('Пробная тренировка', 'Попробовать и понять, нравится ли', 'deti-pervyj-raz.html', 'p-mat.jpg', True),
-    ('Взрослый + ребёнок', 'Тренировка для всей семьи', 'deti-pervyj-raz.html#family', 'k2-first-3.jpg', True),
-    ('Мероприятия для детей', 'Соревнования и события на скалодроме', 'meropriyatiya.html#kids', 'p-cave.jpg', False)]), 'formats')
+KA = '<svg class="ico" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>'
+klnk = lambda h, t, d: '<a class="lnk" href="%s"><span><b>%s</b><small>%s</small></span><i>%s</i></a>' % (h, t, d, KA)
+# Карточки форматов как блок «Скалодром для любых целей» на главной
+KGOALS = ('<div class="goals">'
+    '<div class="card g6 r2 reveal"><picture><source media="(max-width: 767px)" srcset="assets/img/k2-10.jpg"><img src="assets/img/k2-first-2.jpg" alt="" loading="lazy"></picture><div class="scrim"></div>'
+    '<div><p class="card__t">Детская секция</p><p class="card__s">Регулярные тренировки с&nbsp;тренером, 5–16&nbsp;лет</p></div><div class="links">'
+    + klnk('detskaya-sekciya.html#groups', 'Группы по&nbsp;возрасту', '5–7, 8–10 и&nbsp;11–16&nbsp;лет')
+    + klnk('detskaya-sekciya.html#schedule', 'Расписание и&nbsp;цены', 'Выберите группу и&nbsp;удобные дни')
+    + klnk('detskaya-sekciya.html#abonementy', 'Абонементы', 'Для каждой возрастной группы')
+    + '</div></div>'
+    '<div class="card g6 reveal"><img src="assets/img/p-mat.jpg" alt="" loading="lazy"><div class="scrim"></div>'
+    '<div><p class="card__t">Первый раз</p><p class="card__s">Попробовать и&nbsp;понять, нравится&nbsp;ли</p></div><div class="links links--row">'
+    + klnk('deti-pervyj-raz.html', 'Пробная тренировка', 'Ребёнок с&nbsp;тренером')
+    + klnk('deti-pervyj-raz.html#family', 'Взрослый + ребёнок', 'Тренировка для всей семьи')
+    + '</div></div>'
+    '<a class="card g3 reveal" href="meropriyatiya.html#kids"><img src="assets/img/p-cave.jpg" alt="" loading="lazy"><div class="scrim"></div>'
+    '<div><p class="card__t card__t--s">Мероприятия для&nbsp;детей</p><p class="card__s">Соревнования и&nbsp;события на&nbsp;скалодроме</p></div><span class="arr">' + KA + '</span></a>'
+    '<a class="card card--raised g3 reveal" href="ceny.html#deti"><svg class="card__deco" viewBox="0 0 16 26" aria-hidden="true"><path d="M0 0l16 13L0 26V17l5-4-5-4z"/></svg>'
+    '<div><p class="card__t card__t--s">Цены для&nbsp;детей</p><p class="card__s">Секция, пробные и&nbsp;абонементы</p></div><span class="arr">' + KA + '</span></a>'
+    '</div>')
+body += sec(sechead('Выберите формат') + '\n' + KGOALS, 'formats')
 body += sec(sechead('Почему детям нравится в К2') + '\n' + cards([('Новый скалодром', 'Новые стены, зацепы и снаряжение.'), ('Детские тренеры', 'Объясняют просто, следят за безопасностью и не дают заскучать.'),
                                                                  ('Боулдеринг и трудность', 'Невысокие трассы над матами и высокие стены со страховкой.'), ('7 минут от метро', 'Удобно привозить ребёнка после школы.')]), 'why', 'dark', 'stack')
 body += CONTACT + faq_sec(FAQ_KIDS)

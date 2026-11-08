@@ -329,8 +329,9 @@ main>section,main>.xband{position:relative}
 /* ---------- Для любых целей ---------- */
 .goals{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));grid-auto-rows:280px;gap:var(--g)}
 .card{position:relative;border-radius:var(--r-lg);overflow:hidden;color:var(--white);display:flex;flex-direction:column;justify-content:space-between;padding:var(--pad);text-decoration:none;background:var(--graphite-raised);min-width:0}
-.card>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform 1s var(--ease)}
-.card:hover>img{transform:scale(1.06)}
+.card>picture{display:contents}.card>picture>source{display:none}
+.card>img,.card>picture>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform 1s var(--ease)}
+.card:hover>img,.card:hover>picture>img{transform:scale(1.06)}
 .scrim{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.72) 0%,rgba(0,0,0,.3) 32%,rgba(0,0,0,0) 52%,rgba(0,0,0,.8) 100%)}
 .card>*:not(img):not(.scrim):not(.cert__chevs){position:relative}
 .card__t{font:700 var(--t-h3)/var(--l-h3) var(--font-display);letter-spacing:-.01em}
