@@ -340,6 +340,10 @@ def trial_btn(text='Записать ребёнка на пробное', title=
 KGROUPS = [('5', '5–7 лет', 'дошкольники', '60 минут', 'Знакомство со скалолазанием через понятные задания и игровые упражнения. Учимся двигаться на стене, слушать тренера и соблюдать правила занятия.'),
            ('8', '8–10 лет', 'школьники', '90 минут', 'Осваиваем основные движения, пробуем разные трассы и учимся находить свои решения. Постепенно переходим от первых попыток к более сложным задачам.'),
            ('11', '11–16 лет', 'подростки', '90 минут', 'Работаем над техникой и прохождением трасс. Учимся разбирать свои попытки, выбирать следующий шаг и ставить тренировочные цели.')]
+# Фото над карточками групп (временные; финальные — дети этого возраста на тренировке)
+KPH = {'5': ('k2-first-3.jpg', 'Дошкольники 5–7 лет на тренировке: игровое задание с тренером'),
+       '8': ('k2-first-2.jpg', 'Школьники 8–10 лет: тренер разбирает трассу с группой'),
+       '11': ('k2-first-1.jpg', 'Подросток 11–16 лет проходит трассу на скалодроме')}
 def tabs(name, items):
     return '<div class="ktabs reveal" data-tabs="%s">%s</div>' % (name, ''.join('<button class="chip" type="button" data-t="%s" aria-pressed="%s">%s</button>' % (k, 'true' if i == 0 else 'false', t) for i, (k, t) in enumerate(items)))
 
@@ -355,8 +359,8 @@ body += sec('<div class="kpromo reveal"><figure class="kpromo__img"><img src="as
 # 3. Группы
 body += sec(sechead('Своя группа для каждого возраста', 'В секции три возрастные группы. Для детей 5–7 лет занятие длится 60 минут, для школьников и подростков — 90 минут.') +
             '<div class="kgrp">' + ''.join(
-                '<article class="kgrp__c reveal"><div class="kgrp__top"><b class="d kgrp__age">%s</b><span class="badge">%s</span></div><p class="kgrp__who">%s</p><p class="kgrp__d">%s</p>'
-                '<a class="kgrp__go" href="#schedule" data-tab-go="schedule:%s">Группа %s: расписание и цена%s</a></article>' % (t, m, w, d, k, t, ARROW) for k, t, w, m, d in KGROUPS) + '</div>', 'groups')
+                '<article class="kgrp__c reveal"><span class="kgrp__ph"><img src="assets/img/%s" alt="%s" loading="lazy"></span><div class="kgrp__top"><b class="d kgrp__age">%s</b><span class="badge">%s</span></div><p class="kgrp__who">%s</p><p class="kgrp__d">%s</p>'
+                '<a class="kgrp__go" href="#schedule" data-tab-go="schedule:%s">Группа %s: расписание и цена%s</a></article>' % (KPH[k][0], KPH[k][1], t, m, w, d, k, t, ARROW) for k, t, w, m, d in KGROUPS) + '</div>', 'groups')
 # 4. Расписание (вид пока не определён: виджет или своё)
 body += sec('<p class="lp-k reveal">Расписание</p>' + sechead('Выберите группу и удобное время', 'Регулярные занятия проходят по абонементам. Посмотрите расписание своей возрастной группы и доступное количество тренировок в месяц.') +
             tabs('schedule', [(k, t) for k, t, _, _, _ in KGROUPS]) +

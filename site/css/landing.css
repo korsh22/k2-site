@@ -790,3 +790,9 @@ a.chip{display:inline-flex;align-items:center;text-decoration:none}
   .kpromo__b{padding:var(--pad-s)}
 }
 @media (prefers-reduced-motion:reduce){.abo__in{transition:none}}
+
+/* Детская секция: фото над карточками групп */
+.kgrp__c{overflow:hidden}
+.kgrp__ph{display:block;margin:calc(var(--pad) * -1) calc(var(--pad) * -1) 8px;aspect-ratio:3/2;overflow:hidden}
+.kgrp__ph img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .6s var(--ease)}
+.kgrp__c:hover .kgrp__ph img{transform:scale(1.04)}
