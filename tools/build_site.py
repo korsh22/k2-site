@@ -444,6 +444,20 @@ _sub = ('<nav class="lp-sub" aria-label="Разделы страницы"><butto
         '<span class="lp-sub__more">Разделы<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></span></button><div class="wrap lp-sub__in">'
         + ''.join('<a href="#%s" style="--i:%d">%s<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6"/></svg></a>' % (h, i, t) for i, (h, t) in enumerate(KSUB))
         + '</div></nav>\n')
+# «Почему К2» — как на «Первом разе»: фото на весь экран, цифры, шкала высоты (логика — js/landing.js)
+KWHY = ('<section class="lp-why2 dark" id="why">'
+    '<div class="lp-why2__bg" aria-hidden="true"><picture><source media="(max-width: 767px)" srcset="assets/img/p-dyno.jpg"><img src="assets/img/k2-rock.jpg" alt="" loading="lazy"></picture></div>'
+    '<div class="lp-why2__meter" aria-hidden="true"><span class="lp-why2__tick" style="--h:0">0</span><span class="lp-why2__tick" style="--h:5">5</span>'
+    '<span class="lp-why2__tick" style="--h:10">10</span><span class="lp-why2__tick" style="--h:13">13 м</span><i class="lp-why2__fill"></i><span class="lp-why2__dot"><b>0.0</b> м</span></div>'
+    '<div class="wrap lp-why2__in"><div class="lp-why2__head"><span class="mark reveal">Почему К2</span>'
+    '<h2 class="d lp-why2__t reveal">Почему ребёнку стоит заниматься в&nbsp;К2</h2></div><ul class="lp-why2__stats">'
+    '<li class="reveal"><b class="d"><span data-count="13">13</span><small>м</small></b><span><em>высоты</em> Высокие стены&nbsp;— лазаем только со&nbsp;страховкой.</span></li>'
+    '<li class="reveal"><b class="d"><span data-count="1300">1300</span><small>м²</small></b><span>Боулдеринг и&nbsp;трудность под одной крышей.</span></li>'
+    '<li class="reveal"><b class="d"><span data-count="7">7</span><small>мин</small></b><span><em>от метро</em> Удобно привозить ребёнка после школы.</span></li></ul>'
+    '<div class="lp-why2__cards"><div class="lp-why2__c lp-why2__c--red reveal"><b class="d">Детские тренеры</b><p>Объясняют просто, следят за&nbsp;безопасностью и&nbsp;не&nbsp;дают заскучать.</p></div>'
+    '<div class="lp-why2__c reveal"><b class="d">Новый скалодром</b><p>Новые стены, зацепы и&nbsp;снаряжение.</p></div>'
+    '<div class="lp-why2__go reveal">' + trial_btn(cls='btn btn--light') + '</div></div></div></section>\n')
+body = body.replace('<section class="sec neutral lp-alt" id="trial">', KWHY + '<section class="sec neutral lp-alt" id="trial">', 1)
 _i = body.index('</section>') + len('</section>')
 body = body[:_i] + '\n' + _sub + body[_i:]
 page('detskaya-sekciya.html', 'Детская секция скалолазания от 5 до 16 лет — скалодром К2', 'Регулярные тренировки в трёх возрастных группах: 5–7, 8–10 и 11–16 лет. Занятия 60 или 90 минут, абонементы на месяц. Начните с пробного занятия в секции.', body, gallery=True)
