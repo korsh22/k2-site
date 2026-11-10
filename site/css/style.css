@@ -1120,3 +1120,12 @@ html.has-cur.lb-open button{cursor:pointer!important}
   .cert .card__s{flex:1 1 280px}
   .cert .btn{margin-left:0}
 }
+
+/* UX: зоны нажатия на телефоне не меньше ~44px (ссылки сами по себе мелкие — расширяем область касания, не двигая вёрстку) */
+@media (max-width:767px){
+  .crumbs a,.ccard__big,a.ccard__mid,.page .bf__name,.page a.badge{display:inline-flex;height:auto;padding-top:10px;padding-bottom:10px;margin-top:-10px;margin-bottom:-10px}
+  .page a.badge{min-height:28px;padding-top:6px;padding-bottom:6px;margin:0}
+  .page .tags,.page .badges{gap:10px}
+  .kgrp__go{min-height:44px}
+}
+@media (max-width:767px){.page a.art__main-tag{min-height:36px;padding-top:0;padding-bottom:0;height:36px}}
