@@ -595,9 +595,22 @@ body += '''<section class="lp-why dark" id="why">
     </div>
   </div>
 </section>'''
-body += sec('<div class="lp-bring"><div class="lp-bring__main reveal"><h2 class="d h2">Всё для комфортных тренировок</h2><p class="lead muted">Можно прийти сразу после работы: переодеться, потренироваться и принять душ.</p>'
-            '<p class="lp-bring__note">%s<span>[Ежедневно, __:__–__:__]</span></p></div><div class="lp-bring__side reveal"><p class="lp-k">В К2 есть:</p>' % I_TIME +
-            li(['раздевалки', 'душевые', 'шкафчики', 'аренда полотенец', 'прокат снаряжения', 'парковка — [уточнить]']) + '</div></div>', 'amenities')
+# Удобства: «маршрут вечера» шагами + плитки с иконками
+I_HANGER = ico('<path d="M10 6a2 2 0 1 1 2 2v2"/><path d="M12 10l-8.5 6.5a1 1 0 0 0 .6 1.5h15.8a1 1 0 0 0 .6-1.5z"/>')
+I_SHOWER = ico('<path d="M5 21V9a5 5 0 0 1 9-3"/><path d="M11 9h7l-1.5 2.5h-4z"/><path d="M12.5 14.5l-.6 1.6M15 14.5v1.7M17.5 14.5l.6 1.6M13 19l-.4 1.2M16.6 19l.4 1.2"/>')
+I_LOCK = ico('<rect x="5" y="3" width="14" height="18" rx="2"/><path d="M12 3v18M9.5 10v3M14.5 10v3"/>')
+I_TOWEL = ico('<path d="M3 5h18"/><path d="M7 5v13a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V5"/><path d="M7 14h10M7 16.5h10"/>')
+I_SHOE = ico('<path d="M3 17v-4.5c2-.5 3.5-2 4.5-4l1-2 3 2.5c1.5 1.3 3 2 5 2.3 2.4.4 4.5 1.4 4.5 3.7v2z"/><path d="M3 20h18M9.5 9.5l1.5 1.2M11.5 8l1.5 1.2"/>')
+I_PARK = ico('<rect x="4" y="4" width="16" height="16" rx="4"/><path d="M10 17V7h3a3 3 0 0 1 0 6h-3"/>')
+AM_FLOW = [(I_PIN, 'После работы'), (I_HANGER, 'Переоделись'), (I_UP, 'Тренировка'), (I_SHOWER, 'Душ')]
+AM_TILES = [(I_HANGER, 'Раздевалки', ''), (I_SHOWER, 'Душевые', ''), (I_LOCK, 'Шкафчики', ''),
+            (I_TOWEL, 'Аренда полотенец', ''), (I_SHOE, 'Прокат снаряжения', ''), (I_PARK, 'Парковка', '[уточнить]')]
+body += sec('<div class="am"><div class="am__main reveal"><h2 class="d h2">Всё для&nbsp;комфортных тренировок</h2>'
+            '<p class="lead muted">Можно прийти сразу после работы: переодеться, потренироваться и&nbsp;принять душ.</p>'
+            '<ol class="am__flow" aria-label="Как проходит визит">' + ''.join('<li><span class="am__fi">%s</span><span>%s</span></li>' % x for x in AM_FLOW) + '</ol>'
+            '<p class="lp-bring__note">%s<span>[Ежедневно, __:__–__:__]</span></p></div>' % I_TIME +
+            '<div class="am__side"><p class="lp-k reveal">В&nbsp;К2 есть</p><ul class="am__tiles">' + ''.join(
+                '<li class="reveal"><span class="am__ti">%s</span><b>%s</b>%s</li>' % (ic, t, '<small>%s</small>' % n if n else '') for ic, t, n in AM_TILES) + '</ul></div></div>', 'amenities')
 body += sec(sechead('Атмосфера К2', 'Нажмите на фото — откроется галерея') + '\n' + gal(GAL_HALL), 'photos', cls='lp-alt')
 body += sec(sechead('Команда', '', link_btn('Все тренеры', 'trenery.html', 'btn btn--sec reveal')) + '\n' + coaches(COACH_STUB), 'coaches')
 body += REVIEWS('Отзывы о К2') + CONTACT

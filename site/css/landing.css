@@ -901,3 +901,31 @@ a.chip{display:inline-flex;align-items:center;text-decoration:none}
 @media (prefers-reduced-motion:reduce){.lp-f__play i{animation:none}}
 .lp-f__ps{display:none}
 @media (max-width:767px){.lp-f__pl{display:none}.lp-f__ps{display:inline}.lp-f__play{left:12px;bottom:12px}}
+
+/* О скалодроме: удобства — «маршрут вечера» и плитки с иконками */
+.am{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:calc(var(--g) * 2);align-items:center}
+.am__main{display:flex;flex-direction:column;gap:20px}
+.am__main .lead{margin:0}
+.am__flow{list-style:none;margin:12px 0 4px;padding:0;display:flex;align-items:flex-start;position:relative}
+.am__flow::before{content:"";position:absolute;left:28px;right:28px;top:28px;border-top:2px dashed var(--stone-300)}
+.am__flow li{position:relative;flex:1;display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;font:500 var(--t-small)/var(--l-small) var(--font-text)}
+.am__fi{width:56px;height:56px;border-radius:50%;background:var(--white);color:var(--graphite);display:grid;place-items:center;box-shadow:0 0 0 6px var(--grey-100)}
+.am__fi .ico{width:24px;height:24px}
+.am__flow li:last-child .am__fi{background:var(--red);color:var(--white)}
+.am__flow li:first-child{align-items:flex-start;text-align:left}.am__flow li:last-child{align-items:flex-end;text-align:right}
+.am__flow::before{left:28px;right:28px}
+.am__side .lp-k{margin-bottom:16px}
+.am__tiles{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.am__tiles li{position:relative;display:flex;flex-direction:column;gap:14px;min-height:150px;padding:20px;border-radius:var(--r-lg);background:var(--white);transition:transform .35s var(--ease),background-color .3s,color .3s}
+.am__tiles li:hover{transform:translateY(-4px);background:var(--graphite);color:var(--white)}
+.am__ti{width:48px;height:48px;border-radius:var(--r-md);background:var(--grey-100);color:var(--red);display:grid;place-items:center;transition:background-color .3s}
+.am__tiles li:hover .am__ti{background:var(--red);color:var(--white)}
+.am__ti .ico{width:26px;height:26px}
+.am__tiles b{margin-top:auto;font:600 var(--t-body)/1.25 var(--font-text)}
+.am__tiles small{position:absolute;top:20px;right:16px;padding:4px 8px;border-radius:var(--pill);background:var(--grey-100);color:var(--grey-600);font:500 var(--t-caption)/1 var(--font-text)}
+@media (max-width:1040px){.am{grid-template-columns:1fr}}
+@media (max-width:767px){.am__tiles{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.am__tiles li{min-height:120px;padding:16px}.am__fi{width:48px;height:48px}.am__flow::before{top:24px;left:24px;right:24px}.am__flow li{font-size:12px}}
+@media (min-width:1041px){.am{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}}
+.am__flow::before{left:12.5%;right:12.5%}
+.am__flow li,.am__flow li:first-child,.am__flow li:last-child{align-items:center;text-align:center}
+@media (max-width:767px){.am__flow::before{left:12.5%;right:12.5%}}
