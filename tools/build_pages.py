@@ -280,7 +280,7 @@ body = '''<main class="lp">
       <div><h2 class="d h2">Уже занимались скалолазанием?</h2><p class="lead">Если вы знакомы с&nbsp;базовой техникой и&nbsp;хотите тренироваться регулярно, посмотрите пакетные предложения К2&nbsp;— от&nbsp;системного освоения базы до&nbsp;работы над техникой, силой и&nbsp;выносливостью.</p></div>
             <!-- фон: бледный знак К2 за краем блока + бегущая надпись по контуру кнопки (js/landing.js) -->
       <svg class="lp-next__mark" viewBox="19 24 698 322" aria-hidden="true"><path d="M716.4,59.9v89l-90,62.4l90-1v133.8h-347V219.8l90-35.4l-90-35.4V24.5h257L716.4,59.9z"/><path d="M167.4,167.2l23.7-143h146.3v4l-24,145h24v171H190.8l-23.3-141v141h-148v-320h148V167.2z"/></svg>
-      <div class="lp-orbit"><svg class="lp-orbit__ring" aria-hidden="true"><path id="orbitP" fill="none"/><text><textPath href="#orbitP" data-t="следующий уровень · пакеты · "></textPath></text></svg><a class="btn btn--light" href="pakety.html">Смотреть пакетные предложения</a></div>
+      <div class="lp-orbit"><svg class="lp-orbit__ring" aria-hidden="true"><path fill="none"/><text><textPath data-t="следующий уровень · пакеты · "></textPath></text></svg><a class="btn btn--light" href="pakety.html">Смотреть пакетные предложения</a></div>
     </div>
   </div>
 </section>
