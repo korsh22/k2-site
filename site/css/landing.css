@@ -805,3 +805,28 @@ a.chip{display:inline-flex;align-items:center;text-decoration:none}
 .lp-orbit:hover .lp-orbit__ring{color:var(--white)}
 @media (max-width:1040px){.lp-next--art{grid-template-columns:1fr}.lp-orbit{justify-self:start;margin-left:-22px}}
 @media (max-width:767px){.lp-orbit{justify-self:stretch;margin:0 -6px;padding:18px}.lp-orbit .btn{width:100%}}
+
+/* Детская секция: абонементы — метка, фото группы, крупный возраст, условия с иконками (по мотивам референсов) */
+.abo__f{gap:0;min-height:100%}
+.abo__top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.abo__tag{display:inline-flex;align-items:center;gap:8px;height:32px;padding:0 14px 0 10px;border-radius:var(--pill);border:1px solid var(--grey-100);font:600 var(--t-caption)/1 var(--font-text);letter-spacing:.06em;text-transform:uppercase}
+.abo__tag i{width:10px;height:10px;border-radius:50%;background:var(--red);box-shadow:0 0 0 4px rgba(224,66,54,.15)}
+.abo__ph{width:88px;height:88px;border-radius:var(--r-md);object-fit:cover;flex:none;transform:rotate(4deg);transition:transform .5s var(--ease)}
+.abo:hover .abo__ph{transform:rotate(0) scale(1.05)}
+.abo__age{display:flex;align-items:baseline;gap:8px;margin-top:-12px;font-size:clamp(56px,6vw,88px);line-height:1;letter-spacing:-.03em}
+.abo__age small{font:700 var(--t-h4)/1 var(--font-display);letter-spacing:0;color:var(--red)}
+.abo__fs{display:flex;flex-direction:column;gap:10px;margin-top:24px}
+.abo__fi{display:flex;align-items:center;gap:12px;font:500 var(--t-body)/var(--l-body) var(--font-text)}
+.abo__fi .ico{flex:none;width:40px;height:40px;padding:9px;border-radius:50%;background:var(--grey-100);color:var(--red)}
+.abo__pr{display:flex;flex-direction:column;gap:6px;margin-top:24px;padding-top:20px;border-top:1px dashed var(--stone-300)}
+.abo__pr .abo__p{margin:0}
+.abo__f .abo__turn{padding-top:20px}
+.abo:nth-child(2) .abo__f{background:var(--red);color:var(--on-red)}
+.abo:nth-child(2) .abo__f .abo__n{color:var(--on-red);opacity:.85}
+.abo:nth-child(2) .abo__tag{border-color:rgba(255,255,255,.4)}
+.abo:nth-child(2) .abo__tag i{background:var(--white);box-shadow:0 0 0 4px rgba(255,255,255,.2)}
+.abo:nth-child(2) .abo__age small,.abo:nth-child(2) .abo__turn .ico{color:var(--white)}
+.abo:nth-child(2) .abo__fi .ico{background:rgba(255,255,255,.18);color:var(--white)}
+.abo:nth-child(2) .abo__pr{border-top-color:rgba(255,255,255,.45)}
+.abo__r .abo__g{color:var(--stone-300);margin-bottom:6px}
+@media (max-width:767px){.abo__ph{width:72px;height:72px}.abo__age{margin-top:-4px}}

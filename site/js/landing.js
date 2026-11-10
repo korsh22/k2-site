@@ -298,7 +298,7 @@
       why.style.setProperty('--p', p.toFixed(4));
       var m = clamp((vh * 0.85 - r.top) / (r.height * 0.8), 0, 1) * 13;
       why.style.setProperty('--m', m.toFixed(2));
-      wVal.textContent = m.toFixed(1);
+      if (wVal) wVal.textContent = m.toFixed(1);  // шкалы может не быть (детская секция)
       wTick = false;
     };
     if (!reduce) {

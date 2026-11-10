@@ -384,12 +384,19 @@ body += sec('<p class="lp-k reveal">Расписание</p>' + sechead('Выб�
 # 5. Абонементы: карточка переворачивается по клику (список абонементов уточняется)
 ABO_BACK = [('Срок действия', '[точные условия]'), ('Порядок записи', '[условия]'), ('Пропуски и переносы', '[правила]'), ('Снаряжение', '[включено или нет]'), ('Дополнительные платежи', '[если есть]')]
 TURN = ico('<path d="M4 12a8 8 0 0 1 14-5.3L20 9"/><path d="M20 4v5h-5"/><path d="M20 12a8 8 0 0 1-14 5.3L4 15"/><path d="M4 20v-5h5"/>')
-def abo(t):
-    return ('<button class="abo reveal" type="button" aria-pressed="false"><span class="abo__in">'
-            '<span class="abo__s abo__f"><span class="abo__t d">[Количество] тренировок в месяц</span><span class="abo__g">Для группы %s</span><span class="abo__p d">[Стоимость] ₽</span>'
-            '<span class="abo__n">В стоимость входит: [утверждённый состав услуги]. Срок действия: [точные условия].</span><span class="abo__turn">Подробнее%s</span></span>'
-            '<span class="abo__s abo__r">%s<span class="abo__turn">Назад%s</span></span></span></button>') % (t, TURN, ''.join('<span class="abo__row"><b>%s</b><span>%s</span></span>' % x for x in ABO_BACK), TURN)
-body += sec(sechead('Абонементы') + '<div class="abos">' + ''.join(abo(t) for _, t, _, _, _ in KGROUPS) + '</div>', 'abonementy', 'dark', 'stack')
+ABO_PH = {'5': 'p-fun.jpg', '8': 'k2-09.jpg', '11': 'k2-11.jpg'}
+def abo(k, t, m):
+    """Карточка абонемента: метка, фото группы, крупный возраст, условия с иконками, цена; по клику переворачивается на условия"""
+    age = t.replace(' лет', '')
+    return ('<button class="abo reveal" type="button" aria-pressed="false" aria-label="Абонемент для группы %s: подробнее об условиях"><span class="abo__in">'
+            '<span class="abo__s abo__f"><span class="abo__top"><span class="abo__tag"><i></i>Абонемент</span><img class="abo__ph" src="assets/img/%s" alt="" loading="lazy"></span>'
+            '<span class="abo__age d">%s<small>лет</small></span>'
+            '<span class="abo__fs"><span class="abo__fi">%s<span>[Количество] тренировок в&nbsp;месяц</span></span><span class="abo__fi">%s<span>Занятие %s</span></span></span>'
+            '<span class="abo__pr"><span class="abo__p d">[Стоимость] ₽</span><span class="abo__n">В стоимость входит: [утверждённый состав услуги]. Срок действия: [точные условия].</span></span>'
+            '<span class="abo__turn">Условия абонемента%s</span></span>'
+            '<span class="abo__s abo__r"><span class="abo__g">Для группы %s</span>%s<span class="abo__turn">Назад%s</span></span></span></button>') % (
+        t, ABO_PH[k], age, I_CAL, I_TIME, m, TURN, t, ''.join('<span class="abo__row"><b>%s</b><span>%s</span></span>' % x for x in ABO_BACK), TURN)
+body += sec(sechead('Абонементы') + '<div class="abos">' + ''.join(abo(k, t, m) for k, t, _, m, _ in KGROUPS) + '</div>', 'abonementy', 'dark', 'stack')
 # 6. Навыки
 KSKILLS = [('Управлять движением', 'Находить опору, переносить вес и выбирать положение тела на стене.', 'Координация, выносливость, сила!'),
            ('Разбираться в задаче', 'Смотреть на трассу, пробовать разные движения и искать подходящий способ прохождения.', 'Логическое мышление, внимательность, пытливость!'),
@@ -444,11 +451,9 @@ _sub = ('<nav class="lp-sub" aria-label="Разделы страницы"><butto
         '<span class="lp-sub__more">Разделы<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></span></button><div class="wrap lp-sub__in">'
         + ''.join('<a href="#%s" style="--i:%d">%s<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6"/></svg></a>' % (h, i, t) for i, (h, t) in enumerate(KSUB))
         + '</div></nav>\n')
-# «Почему К2» — как на «Первом разе»: фото на весь экран, цифры, шкала высоты (логика — js/landing.js)
+# «Почему К2» — как на «Первом разе»: фото на весь экран, цифры (без шкалы высоты; логика — js/landing.js)
 KWHY = ('<section class="lp-why2 dark" id="why">'
-    '<div class="lp-why2__bg" aria-hidden="true"><picture><source media="(max-width: 767px)" srcset="assets/img/p-dyno.jpg"><img src="assets/img/k2-rock.jpg" alt="" loading="lazy"></picture></div>'
-    '<div class="lp-why2__meter" aria-hidden="true"><span class="lp-why2__tick" style="--h:0">0</span><span class="lp-why2__tick" style="--h:5">5</span>'
-    '<span class="lp-why2__tick" style="--h:10">10</span><span class="lp-why2__tick" style="--h:13">13 м</span><i class="lp-why2__fill"></i><span class="lp-why2__dot"><b>0.0</b> м</span></div>'
+    '<div class="lp-why2__bg" aria-hidden="true"><picture><source media="(max-width: 767px)" srcset="assets/img/k2-09.jpg"><img src="assets/img/k2-first-2.jpg" alt="" loading="lazy"></picture></div>'
     '<div class="wrap lp-why2__in"><div class="lp-why2__head"><span class="mark reveal">Почему К2</span>'
     '<h2 class="d lp-why2__t reveal">Почему ребёнку стоит заниматься в&nbsp;К2</h2></div><ul class="lp-why2__stats">'
     '<li class="reveal"><b class="d"><span data-count="13">13</span><small>м</small></b><span><em>высоты</em> Высокие стены&nbsp;— лазаем только со&nbsp;страховкой.</span></li>'
