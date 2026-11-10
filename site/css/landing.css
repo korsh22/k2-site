@@ -1038,3 +1038,14 @@ a.chip{display:inline-flex;align-items:center;text-decoration:none}
 @media (max-width:1040px){.kban{grid-template-columns:1fr}.kban__ph{order:-1;aspect-ratio:auto;height:440px}.kban__in{padding:var(--pad)}}
 @media (max-width:767px){.kban{border-radius:var(--r-lg)}.kban__in{padding:24px;gap:22px}.kban__ph{height:360px}.kban__in .btn{align-self:stretch}}
 @media (prefers-reduced-motion:reduce){.kban__scale::before{transition:none;transform:none}}
+
+/* Школа: «Уровни подготовки» лесенкой — карточки растут к продвинутому уровню, сверху стрелка роста */
+#levels .lp-cards4--3{align-items:end}
+#levels .lp-c:nth-child(1){min-height:240px}
+#levels .lp-c:nth-child(2){min-height:300px}
+#levels .lp-c:nth-child(3){min-height:360px;background:var(--red);color:var(--on-red)}
+#levels .lp-c:nth-child(3) p{color:var(--on-red);opacity:.9}
+#levels .lp-c:nth-child(3) .lp-c__ic{background:var(--white);color:var(--red)}
+#levels .lp-c:nth-child(3) .lp-c__n{-webkit-text-stroke-color:rgba(255,255,255,.5)}
+@media (max-width:1040px){#levels .lp-cards4--3{padding-top:0}#levels .lp-cards4--3::before,#levels .lp-cards4--3::after{display:none}#levels .lp-c:nth-child(n){min-height:0}}
+.lp-formats:not(.lp-formats--3) .lp-f__img{aspect-ratio:2/1}
