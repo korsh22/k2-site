@@ -471,3 +471,30 @@
   if (hdr) new MutationObserver(frame).observe(hdr, { attributes: true, attributeFilter: ['class'] });
   frame();
 })();
+
+/* «Уже занимались»: надпись бежит по контуру кнопки (путь — скруглённый прямоугольник, пройденный дважды, чтобы текст шёл без шва) */
+(function () {
+  'use strict';
+  var box = document.querySelector('.lp-orbit');
+  if (!box) return;
+  var svg = box.querySelector('svg'), path = box.querySelector('path'), tp = box.querySelector('textPath');
+  var unit = tp.getAttribute('data-t'), per = 0, still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function build() {
+    var w = box.offsetWidth, h = box.offsetHeight, d = 9, r = (h - 2 * d) / 2, x0 = d + r, x1 = w - d - r;
+    if (w < 40) return;
+    svg.setAttribute('viewBox', '0 0 ' + w + ' ' + h);
+    var loop = 'H' + x1 + 'A' + r + ' ' + r + ' 0 0 1 ' + x1 + ' ' + (h - d) + 'H' + x0 + 'A' + r + ' ' + r + ' 0 0 1 ' + x0 + ' ' + d;
+    path.setAttribute('d', 'M' + x0 + ' ' + d + loop + loop);
+    per = 2 * (x1 - x0) + 2 * Math.PI * r;
+    tp.textContent = unit;
+    var len = tp.getComputedTextLength() || 1;
+    tp.textContent = new Array(Math.max(1, Math.round(per / len)) + 1).join(unit);
+    tp.setAttribute('textLength', per); tp.setAttribute('lengthAdjust', 'spacing');
+  }
+  build();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(build);
+  window.addEventListener('resize', build);
+  if (still) return;
+  var t0 = performance.now();
+  (function tick(t) { if (per) tp.setAttribute('startOffset', ((t - t0) * 0.03) % per); requestAnimationFrame(tick); })(t0);
+})();
