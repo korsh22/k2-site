@@ -304,9 +304,21 @@ body += sec(sechead('Кто может лазать самостоятельно
         '<li><span class="who__ic">%s</span><div><b>%s</b><p>%s</p></div><span class="who__z">%s</span><span class="who__ok" aria-hidden="true">%s</span></li>' % (ic, t, d, z, CHECK) for ic, t, d, z in WHO) + '</ul></div>'
     '<div class="who__help reveal"><span class="who__q d">?</span><b class="d">Не&nbsp;уверены?</b><p>Начните с&nbsp;базового курса: за&nbsp;3–5 тренировок научим лазать, страховать и&nbsp;всему необходимому.</p>'
     + link_btn('Базовые курсы', 'bazovye-kursy.html', 'btn btn--light') + '</div></div>', 'who')
-body += sec(sechead('Какие зоны доступны') + '\n' + offers([
-    offer('Боулдеринг', ['невысокие трассы', 'без верёвки, над матами', 'можно одному'], 'Короткие невысокие трассы без верёвки — можно прийти одному.', link_btn('О зоне', 'o-skalodrome.html#bouldering', 'btn btn--primary'), 'Без страховки'),
-    offer('Трудность', ['стены 13 метров', 'со страховкой', 'нужен напарник и допуск'], 'Длинные трассы на высокой стене со страховкой — нужен напарник.', link_btn('О зоне', 'o-skalodrome.html#trudnost', 'btn btn--primary'), 'Со страховкой', dark=True)]), 'zones', 'dark', 'stack')
+# Зоны: две карточки с фото, факты с иконками и главное условие
+I_MAT = ico('<rect x="3" y="14" width="18" height="6" rx="2"/><path d="M7 14V9l3-4 3 3 4-2"/>')
+I_HEIGHT = ico('<path d="M12 3v18M8 7l4-4 4 4M8 17l4 4 4-4"/>')
+I_SOLO = ico('<circle cx="12" cy="7" r="3"/><path d="M6 20a6 6 0 0 1 12 0"/>')
+ZONES = [('Боулдеринг', 'Без страховки', 'k2-first-1.jpg', 'o-skalodrome.html#bouldering',
+          [(I_MAT, 'Невысокие трассы над&nbsp;матами'), (I_SPARK, 'Без верёвки и&nbsp;снаряжения для страховки'), (I_SOLO, 'Можно прийти одному')],
+          'Короткие задачи: лазаете, спрыгиваете на&nbsp;мат, пробуете снова.', 'Подойдёт, если вы&nbsp;пришли без&nbsp;напарника'),
+         ('Трудность', 'Со страховкой', 'k2-hall.jpg', 'o-skalodrome.html#trudnost',
+          [(I_HEIGHT, 'Стены 13&nbsp;метров'), (I_ROPE, 'Лазание со&nbsp;страховкой верёвкой'), (I_PEOPLE, 'Вдвоём: один лезет, второй страхует')],
+          'Длинные трассы на&nbsp;высокой стене.', 'Нужен напарник и&nbsp;допуск к&nbsp;страховке')]
+body += sec(sechead('Какие зоны доступны', 'Для самостоятельных посещений открыты обе зоны&nbsp;— условия у&nbsp;них разные.') + '<div class="zn">' + ''.join(
+    '<article class="zn__c reveal"><a class="zn__ph" href="%s"><img src="assets/img/%s" alt="" loading="lazy"><span class="zn__tag">%s</span><b class="zn__t d">%s</b></a>'
+    '<div class="zn__b"><ul class="zn__f">%s</ul><p class="zn__d">%s</p><p class="zn__must">%s<span>%s</span></p>%s</div></article>' % (
+        h, img, tag, t, ''.join('<li><span class="zn__ic">%s</span>%s</li>' % f for f in facts), d, I_SHIELD if k == 1 else CHECK, must, link_btn('О зоне', h, 'btn btn--sec'))
+    for k, (t, tag, img, h, facts, d, must) in enumerate(ZONES)) + '</div>', 'zones', 'dark', 'stack')
 body += sec('<div class="prices__grid"><div class="prices__main">' + sechead('Разовое посещение и абонементы') + plist([
     ('Разовое посещение', 'Самостоятельно, боулдеринг и трудность', '[___] ₽'), ('Абонемент [на месяц]', 'Самостоятельные посещения', '[___] ₽'),
     ('Абонемент [на __ посещений]', 'Самостоятельные посещения', '[___] ₽'), ('Прокат снаряжения', 'Скальники, страховочная система', '[___] ₽')]) +
