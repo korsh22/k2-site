@@ -987,3 +987,19 @@ a.chip{display:inline-flex;align-items:center;text-decoration:none}
 @media (max-width:767px){.zn__f{grid-template-columns:1fr;gap:10px}.zn__f li{flex-direction:row;align-items:center;gap:12px}.zn__ic{width:40px;height:40px;flex:none}.zn__b{padding:var(--pad-s)}.zn__b .btn{align-self:stretch}.zn__tag{left:16px;top:16px}.zn__t{left:16px;bottom:14px}}
 .dark .zn__c .btn--sec{--ink:var(--graphite);--line:var(--graphite);--fill:var(--graphite);--fill-ink:var(--white)}
 .dark .zn__c .btn:focus-visible{outline-color:var(--graphite)}
+
+/* Карточки и шаги по всему сайту: иконка + крупная контурная цифра, подъём при наведении */
+.lp-c{position:relative;overflow:hidden;transition:transform .35s var(--ease),box-shadow .35s}
+.lp-c:hover{transform:translateY(-4px);box-shadow:0 18px 40px rgba(0,0,0,.08)}
+.lp-c__top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:auto;padding-bottom:20px}
+.lp-c__top .lp-c__n{margin:0}
+.lp-c__top:has(.lp-c__ic) .lp-c__n{font:400 56px/1 var(--font-display);letter-spacing:-.04em;color:transparent;-webkit-text-stroke:1.5px var(--stone-300);margin:-6px -4px 0 0}
+.lp-c__ic{width:56px;height:56px;border-radius:var(--r-md);background:rgba(217,73,62,.1);color:var(--red);display:grid;place-items:center;flex:none;transition:background-color .3s,color .3s,transform .4s var(--ease)}
+.lp-c__ic .ico{width:28px;height:28px}
+.lp-c:hover .lp-c__ic{background:var(--red);color:var(--white);transform:rotate(-8deg)}
+.lp-steps__top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.lp-steps__ic{width:48px;height:48px;border-radius:50%;background:var(--red);color:var(--white);display:grid;place-items:center;flex:none}
+.lp-steps__ic .ico{width:24px;height:24px}
+.neutral .lp-steps__ic{box-shadow:0 0 0 6px rgba(217,73,62,.12)}
+@media (max-width:767px){.lp-c__ic{width:48px;height:48px}.lp-c__top:has(.lp-c__ic) .lp-c__n{font-size:44px}}
+.lp-c__top{margin-bottom:0}

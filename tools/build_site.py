@@ -80,9 +80,50 @@ def sechead(h2, lead='', right=''):
     l = '<p class="lead muted reveal">%s</p>' % lead if lead else ''
     return '<div class="sechead"><div><h2 class="d h2 reveal">%s</h2>%s</div>%s</div>' % (h2, l, right)
 
+# Иконки карточек и шагов по заголовку (cards() и steps() подставляют сами)
+_I = {
+    'shield': '<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/>',
+    'shoe': '<path d="M3 17v-4.5c2-.5 3.5-2 4.5-4l1-2 3 2.5c1.5 1.3 3 2 5 2.3 2.4.4 4.5 1.4 4.5 3.7v2z"/><path d="M3 20h18"/>',
+    'key': '<circle cx="8" cy="15" r="4"/><path d="M11 12l8-8M16 7l2 2M14 9l2 2"/>',
+    'smile': '<circle cx="12" cy="12" r="9"/><path d="M8.5 14a4 4 0 0 0 7 0M9 9.5h.01M15 9.5h.01"/>',
+    'people': '<circle cx="9" cy="8" r="3"/><path d="M3 20a6 6 0 0 1 12 0"/><circle cx="17" cy="9" r="2.5"/><path d="M16 14.2A5 5 0 0 1 21 19"/>',
+    'book': '<path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 19V5M9 7h6"/>',
+    'rope': '<path d="M9 3h6l-1 5a2 2 0 0 1-4 0z"/><path d="M12 10v3"/><circle cx="12" cy="17" r="4"/>',
+    'flag': '<path d="M5 21V4M5 4h11l-2 4 2 4H5"/>',
+    'route': '<circle cx="6" cy="18" r="2"/><circle cx="12" cy="11" r="2"/><circle cx="18" cy="5" r="2"/><path d="M7.2 16.3l3.6-3.6M13.3 9.5l3.4-3"/>',
+    'star': '<path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/>',
+    'seed': '<path d="M12 21v-8"/><path d="M12 13c0-4 3-7 8-7 0 5-3 7-8 7zM12 15c0-3-2.5-5-7-5 0 4 2.5 5 7 5z"/>',
+    'repeat': '<path d="M4 12a8 8 0 0 1 14-5.3L20 9"/><path d="M20 4v5h-5"/><path d="M20 12a8 8 0 0 1-14 5.3L4 15"/><path d="M4 20v-5h5"/>',
+    'dumbbell': '<path d="M6 7v10M18 7v10M3 10v4M21 10v4M6 12h12"/>',
+    'up': '<path d="M4 20l6-8 4 4 6-9"/><path d="M15 7h5v5"/>',
+    'target': '<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/><path d="M12 12l7-7M16 5h3v3"/>',
+    'bar1': '<path d="M6 20v-5"/><path d="M12 20V10M18 20V4" opacity=".25"/>',
+    'bar2': '<path d="M6 20v-5M12 20V10"/><path d="M18 20V4" opacity=".25"/>',
+    'bar3': '<path d="M6 20v-5M12 20V10M18 20V4"/>',
+    'bolt': '<path d="M13 2L4 14h7l-1 8 9-12h-7z"/>',
+    'cal': '<rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/>',
+    'clock': '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+    'spark': '<path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5L18 18M6 18l2.5-2.5M15.5 8.5L18 6"/>',
+    'child': '<circle cx="12" cy="6" r="3"/><path d="M12 9v7M8 12h8M9 21l3-5 3 5"/>',
+    'wall': '<path d="M4 21V5l8-2 8 2v16"/><circle cx="9" cy="9" r="1.2"/><circle cx="15" cy="12" r="1.2"/><circle cx="10" cy="16" r="1.2"/>',
+    'pin': '<path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/>',
+    'pen': '<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13 7l4 4"/>',
+    'card': '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18M7 15h4"/>',
+    'hand': '<path d="M7 11V6a1.5 1.5 0 0 1 3 0v4M10 10V4.5a1.5 1.5 0 0 1 3 0V10M13 10V5.5a1.5 1.5 0 0 1 3 0V12M16 9.5a1.5 1.5 0 0 1 3 0V14a7 7 0 0 1-7 7h-1a6 6 0 0 1-5-3l-2.5-4.5a1.5 1.5 0 0 1 2.5-1.6L7 13"/>',
+}
+CARD_ICO = {k: ico(_I[v]) for k, v in {
+    'Безопасность': 'shield', 'Техника': 'shoe', 'Свобода': 'key', 'Уверенность': 'smile',
+    'Знакомство': 'hand', 'Основы': 'book', 'Страховка': 'rope', 'Итог': 'flag', 'Инструктаж и разминка': 'shield', 'Первые трассы': 'route',
+    'После пробной тренировки': 'star', 'Без опыта': 'seed', 'Для пары и друзей': 'people', 'Лазали когда-то давно': 'repeat',
+    'Сила': 'dumbbell', 'Прогресс': 'up', 'Цели': 'target', 'Начальный': 'bar1', 'Средний': 'bar2', 'Продвинутый': 'bar3',
+    'Хочется быстрее': 'bolt', 'Есть конкретная задача': 'target', 'Неудобно расписание групп': 'cal', 'Нужен свой темп': 'clock',
+    'Новый скалодром': 'spark', 'Детские тренеры': 'child', 'Боулдеринг и трудность': 'wall', '7 минут от метро': 'pin',
+    'Оставьте заявку': 'pen', 'Оплатите': 'card', 'Получатель записывается': 'cal'}.items()}
+
 def cards(items, n=4):
     return '<div class="lp-cards4%s">%s</div>' % (' lp-cards4--3' if n == 3 else '', ''.join(
-        '<div class="lp-c reveal"><span class="lp-c__n">%02d</span><b>%s</b><p>%s</p></div>' % (i + 1, t, d) for i, (t, d) in enumerate(items)))
+        '<div class="lp-c reveal"><span class="lp-c__top">%s<span class="lp-c__n" aria-hidden="true">%02d</span></span><b>%s</b><p>%s</p></div>' % (
+            '<span class="lp-c__ic">%s</span>' % CARD_ICO[t] if t in CARD_ICO else '', i + 1, t, d) for i, (t, d) in enumerate(items)))
 
 def li(items, cls='lp-list'):
     return '<ul class="%s">%s</ul>' % (cls, ''.join('<li>%s%s</li>' % (CHECK, x) for x in items))
@@ -102,7 +143,8 @@ def offers(items, n=2):
     return '<div class="lp-formats%s">%s</div>' % (' lp-formats--3' if n == 3 else '', '\n'.join(items))
 
 def steps(items):
-    return '<ol class="lp-steps">%s</ol>' % ''.join('<li class="reveal"><span class="lp-steps__n">%02d</span><b>%s</b><p>%s</p></li>' % (i + 1, t, d) for i, (t, d) in enumerate(items))
+    return '<ol class="lp-steps">%s</ol>' % ''.join('<li class="reveal"><span class="lp-steps__top"><span class="lp-steps__n">%02d</span>%s</span><b>%s</b><p>%s</p></li>' % (
+        i + 1, '<span class="lp-steps__ic">%s</span>' % CARD_ICO[t] if t in CARD_ICO else '', t, d) for i, (t, d) in enumerate(items))
 
 def plist(rows):
     # строка: (название, пояснение, цена[, ссылка на услугу]); нет ссылки — нет и «Подробнее»
