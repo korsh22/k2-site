@@ -16,6 +16,7 @@ UNITS = r'(м²|м|мин|минут|минуты|метров|метра|чел
 NUM_UNIT = re.compile(r'(\d) (?=' + UNITS + r'(?![' + LET + r']))')
 DASH = re.compile(r' (—)')
 NUM_DASH_NUM = re.compile(r'(\d)–(\d)')
+ATTR = re.compile(r'(data-join-title=")([^"]*)"')
 HYPH = re.compile(r'[' + LET + r']+(?:-[' + LET + r']+)+')
 
 def fix_text(t):
@@ -30,6 +31,7 @@ def fix_text(t):
     t = DASH.sub(lambda m: NB + m.group(1), t)
     t = NUM_DASH_NUM.sub(lambda m: m.group(1) + WJ + '–' + WJ + m.group(2), t)
     t = HYPH.sub(lambda m: m.group(0).replace('-', '-' + WJ), t)
+    t = SHORT_RE.sub(lambda m: m.group(1) + NB, t)  # «из-за» после вставки WJ
     return t
 
 def process(html):
@@ -37,7 +39,10 @@ def process(html):
     token = re.compile(r'(<script\b.*?</script>|<style\b.*?</style>|<!--.*?-->|<title>.*?</title>|<[^>]+>)', re.S | re.I)
     for m in token.finditer(html):
         out.append(fix_text(html[i:m.start()]))
-        out.append(m.group(0))
+        tag = m.group(0)
+        if tag.startswith('<') and 'data-join-title="' in tag:  # заголовок окна записи виден на экране
+            tag = ATTR.sub(lambda a: a.group(1) + fix_text(a.group(2)) + '"', tag)
+        out.append(tag)
         i = m.end()
     out.append(fix_text(html[i:]))
     return ''.join(out).replace(NB, '&nbsp;')

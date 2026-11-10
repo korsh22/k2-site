@@ -78,8 +78,8 @@
   else window.addEventListener('load', ready);
   setTimeout(function () { if (document.body.classList.contains('is-loading')) ready(); }, 4000);
 
-  /* ---------- Фоновое видео в hero ---------- */
-  // Грузим после страницы. При «меньше анимации» и экономии трафика остаётся фото.
+  /* ---------- Фоновое видео в\u00a0hero ---------- */
+  // Грузим после страницы. При\u00a0«меньше анимации» и\u00a0экономии трафика остаётся фото.
   var heroVideo = $('.hero__video');
   var saveData = navigator.connection && navigator.connection.saveData;
   function loadHeroVideo() {
@@ -187,11 +187,11 @@
 
   /* ---------- Словарик ---------- */
   var GLOSSARY = {
-    bould: ['Боулдеринг', 'Лазание по невысоким трассам без верёвки — над мягкими матами.'],
-    lead: ['Трудность', 'Лазание по высоким трассам со страховкой верёвкой. У нас стены 13 метров.'],
-    shoes: ['Скальники', 'Специальная обувь для лазания с цепкой резиновой подошвой. Выдаём на месте.'],
-    chalk: ['Магнезия', 'Порошок для рук: сушит ладони, чтобы они не скользили по зацепам.'],
-    belay: ['Нижняя страховка', 'Способ страховки, при котором верёвку по ходу подъёма прощёлкивают в точки на стене.']
+    bould: ['Боулдеринг', 'Лазание по\u00a0невысоким трассам без\u00a0верёвки\u00a0— над\u00a0мягкими матами.'],
+    lead: ['Трудность', 'Лазание по\u00a0высоким трассам со\u00a0страховкой верёвкой. У\u00a0нас стены 13\u00a0метров.'],
+    shoes: ['Скальники', 'Специальная обувь для\u00a0лазания с\u00a0цепкой резиновой подошвой. Выдаём на\u00a0месте.'],
+    chalk: ['Магнезия', 'Порошок для\u00a0рук: сушит ладони, чтобы они не\u00a0скользили по\u00a0зацепам.'],
+    belay: ['Нижняя страховка', 'Способ страховки, при\u00a0котором верёвку по\u00a0ходу подъёма прощёлкивают в\u00a0точки на\u00a0стене.']
   };
   var tip = $('#tip'), tipT = $('.tip__t', tip), tipD = $('.tip__d', tip), tipFor = null;
   function showTip(el) {
@@ -239,7 +239,7 @@
 
   }
 
-  /* ---------- Магнезия: облачко частиц при клике ---------- */
+  /* ---------- Магнезия: облачко частиц при\u00a0клике ---------- */
   var cv = $('.chalk'), ctx = cv.getContext('2d'), parts = [], dpr = Math.min(2, window.devicePixelRatio || 1), chalkRaf = 0;
   function sizeCanvas() { cv.width = innerWidth * dpr; cv.height = innerHeight * dpr; }
   sizeCanvas();
@@ -317,7 +317,7 @@
         chars[i].style.transform = k ? 'translate3d(' + (-dx / d * k * 6).toFixed(1) + 'px,' + (-k * 16).toFixed(1) + 'px,0) rotate(' + (dx / d * k * -8).toFixed(1) + 'deg)' : '';
       }
     };
-    // Первый экран заезжает под прозрачную шапку — свет и буквы реагируют и когда курсор над шапкой
+    // Первый экран заезжает под\u00a0прозрачную шапку\u00a0— свет и\u00a0буквы реагируют и\u00a0когда курсор над\u00a0шапкой
     var lit = false, firstSec = $('#first');
     window.addEventListener('mousemove', function (e) {
       var r = heroSec.getBoundingClientRect(), fr = firstSec ? firstSec.getBoundingClientRect() : r;
@@ -432,7 +432,7 @@
     });
   });
 
-  /* ---------- Связь: статус «открыто/закрыто» по времени Петербурга ---------- */
+  /* ---------- Связь: статус «открыто/закрыто» по\u00a0времени Петербурга ---------- */
   var status = $('.status');
   if (status) {
     var toMin = function (s) { var p = s.split(':'); return +p[0] * 60 + +p[1]; };
@@ -490,9 +490,9 @@
         return;
       }
       var viaEl = $('[name="via"]:checked', form), via = viaEl ? viaEl.value : 'call';
-      var how = { call: 'Перезвоним', tg: 'Напишем в Telegram', max: 'Напишем в Max', wa: 'Напишем в WhatsApp' }[via];
+      var how = { call: 'Перезвоним', tg: 'Напишем в\u00a0Telegram', max: 'Напишем в\u00a0Max', wa: 'Напишем в\u00a0WhatsApp' }[via];
       var showDone = function () {
-        $('.done__msg', form).textContent = name.value.trim() + ', спасибо! ' + how + ' в рабочее время — подберём тренировку.';
+        $('.done__msg', form).textContent = name.value.trim() + ', спасибо! ' + how + ' в\u00a0рабочее время\u00a0— подберём тренировку.';
         form.classList.add('is-sent');
         done.hidden = false;
         var ic = $('.done__ic', done); ic.replaceWith(ic.cloneNode(true)); // перезапуск анимации галочки
@@ -506,7 +506,7 @@
         .catch(function () {
           var err = $('.cform__fail', form);
           if (!err) { err = document.createElement('p'); err.className = 'cform__fail'; err.setAttribute('role', 'alert'); go.parentNode.insertBefore(err, go.nextSibling); }
-          err.textContent = 'Не получилось отправить заявку. Попробуйте ещё раз или позвоните нам.';
+          err.textContent = 'Не\u00a0получилось отправить заявку. Попробуйте ещё раз или\u00a0позвоните нам.';
         })
         .then(function () { go.disabled = false; });
     });
@@ -628,7 +628,7 @@
     });
   }
 
-  /* ---------- Галерея: клик по фото в «Почему К2» ---------- */
+  /* ---------- Галерея: клик по\u00a0фото в\u00a0«Почему К2» ---------- */
   var lb = $('#lb');
   if (lb && lb.showModal) {
     var cells = $$('.why .cell'), items = cells.map(function (c) { var im = $('img', c); return { src: im.getAttribute('src'), alt: im.getAttribute('alt') || '' }; });
@@ -720,7 +720,7 @@
     var spbHour = function () { return +new Date().toLocaleString('ru-RU', { timeZone: 'Europe/Moscow', hour: '2-digit', hour12: false }); };
     var chips = $$('.js-occ'), lines = $$('.js-occ-line');
     var panel = $('.occ__panel', occ);
-    var level = function (k) { return k < 0.35 ? { id: 'low', t: 'Свободно', d: 'Можно спокойно выбирать трассы' } : k < 0.7 ? { id: 'mid', t: 'Средняя загрузка', d: 'Людей немного, но очереди на популярные трассы бывают' } : { id: 'high', t: 'Много людей', d: 'Сейчас пик — если хотите свободнее, загляните позже' }; };
+    var level = function (k) { return k < 0.35 ? { id: 'low', t: 'Свободно', d: 'Можно спокойно выбирать трассы' } : k < 0.7 ? { id: 'mid', t: 'Средняя загрузка', d: 'Людей немного, но\u00a0очереди на\u00a0популярные трассы бывают' } : { id: 'high', t: 'Много людей', d: 'Сейчас пик\u00a0— если хотите свободнее, загляните позже' }; };
     var plural = function (n) { var a = n % 10, b = n % 100; return a === 1 && b !== 11 ? 'человек' : a >= 2 && a <= 4 && (b < 12 || b > 14) ? 'человека' : 'человек'; };
     var render = function (d) {
       var h = spbHour(), open = h >= openH && h < closeH;
@@ -729,11 +729,11 @@
       chips.forEach(function (c) {
         c.dataset.level = open ? L.id : 'closed';
         $('.occ-chip__n', c).textContent = open ? n : '—';
-        c.setAttribute('aria-label', open ? 'Сейчас в зале ' + n + ' ' + plural(n) + ', ' + L.t.toLowerCase() + '. Подробнее о загруженности' : 'Зал закрыт. Загруженность по часам');
+        c.setAttribute('aria-label', open ? 'Сейчас в\u00a0зале ' + n + ' ' + plural(n) + ', ' + L.t.toLowerCase() + '. Подробнее о\u00a0загруженности' : 'Зал закрыт. Загруженность по\u00a0часам');
       });
-      lines.forEach(function (l) { l.dataset.level = open ? L.id : 'closed'; $('span', l).textContent = open ? 'Сейчас в зале ' + n + ' ' + plural(n) + ' · ' + L.t.toLowerCase() : 'Сейчас закрыто · загруженность по часам'; });
+      lines.forEach(function (l) { l.dataset.level = open ? L.id : 'closed'; $('span', l).textContent = open ? 'Сейчас в\u00a0зале ' + n + ' ' + plural(n) + ' · ' + L.t.toLowerCase() : 'Сейчас закрыто · загруженность по\u00a0часам'; });
       $('.occ__n', occ).textContent = open ? n : '—';
-      $('.occ__unit', occ).textContent = open ? plural(n) + ' в зале' : 'зал закрыт';
+      $('.occ__unit', occ).textContent = open ? plural(n) + ' в\u00a0зале' : 'зал закрыт';
       $('.occ__lvl', occ).textContent = open ? L.t : 'Сейчас закрыто';
       $('.occ__desc', occ).textContent = open ? L.d : 'Откроемся в ' + openH + ':00';
       occ.dataset.level = open ? L.id : 'closed';
@@ -748,9 +748,9 @@
         if (i > h && (best === null || v < hourly[best])) best = i;
       }
       $('.occ__chart', occ).innerHTML = html;
-      $('.occ__tip', occ).textContent = best !== null && open ? 'Свободнее всего сегодня — около ' + best + ':00' : 'Утром обычно свободнее всего';
+      $('.occ__tip', occ).textContent = best !== null && open ? 'Свободнее всего сегодня\u00a0— около ' + best + ':00' : 'Утром обычно свободнее всего';
       var upd = d.updated ? new Date(d.updated) : new Date();
-      $('.occ__upd span:last-child', occ).textContent = (d.demo ? 'Демо-данные · ' : 'Обновлено ') + upd.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Moscow' });
+      $('.occ__upd span:last-child', occ).textContent = (d.demo ? 'Демо-\u2060данные · ' : 'Обновлено ') + upd.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Moscow' });
       occ.classList.toggle('is-demo', !!d.demo);
     };
     var demo = function () {
@@ -801,7 +801,7 @@
     });
   });
 
-  /* ---------- Лента видео: тянуть мышью и стрелки ---------- */
+  /* ---------- Лента видео: тянуть мышью и\u00a0стрелки ---------- */
   var shorts = $('.shorts');
   (function () {
     var down = false, sx = 0, sl = 0, moved = false;
@@ -826,7 +826,7 @@
     $('.js-prev').addEventListener('click', function () { shorts.scrollBy({ left: -step(), behavior: 'smooth' }); });
   })();
 
-  /* ---------- Шкала 0 → 13 м ---------- */
+  /* ---------- Шкала 0 → 13\u00a0м ---------- */
   var gauge = $('.gauge'), gVal = $('.gauge__val'), marks = $('.gauge__marks');
   for (var m = 0; m <= 13; m++) {
     var li = document.createElement('li');
@@ -838,8 +838,8 @@
   // Навигация по шкале: клик — плавно туда, перетаскивание — страница едет следом, стрелки — на метр
   (function () {
     var tip = $('.gauge__tip', gauge), dragging = false, moved = false;
-    var NAMES = [['#top', 'Главная'], ['#first', 'Первый раз'], ['#about', 'Почему К2'], ['#goals', 'Для любых целей'],
-                 ['#prices', 'Цены и пакеты'], ['.videos', 'Видео'], ['#blog', 'Блог и отзывы'], ['#contacts', 'Связь и вопросы'], ['.foot', 'Контакты']];
+    var NAMES = [['#top', 'Главная'], ['#first', 'Первый раз'], ['#about', 'Почему К2'], ['#goals', 'Для\u00a0любых целей'],
+                 ['#prices', 'Цены и\u00a0пакеты'], ['.videos', 'Видео'], ['#blog', 'Блог и\u00a0отзывы'], ['#contacts', 'Связь и\u00a0вопросы'], ['.foot', 'Контакты']];
     var maxScroll = function () { return document.documentElement.scrollHeight - innerHeight; };
     var gFromY = function (y) { var r = gauge.getBoundingClientRect(); return clamp(1 - (y - r.top) / r.height, 0, 1); };
     var sectionAt = function (g) {
@@ -912,7 +912,7 @@
   var wallCols = $$('.wall__col');
   var stairWords = $$('.stair__w');
   var mobile = window.matchMedia('(max-width: 767px)');
-  // Блоки, которые наезжают на предыдущий
+  // Блоки, которые наезжают на\u00a0предыдущий
   var flow = $$('main > section, main > .xband, body > footer');
   var stacks = flow.map(function (el, i) {
     if (!el.classList.contains('stack')) return null;
@@ -941,7 +941,7 @@
     }
 
     if (!reduce) {
-      // Hero: карточка с фото раскрывается на всю ширину
+      // Hero: карточка с\u00a0фото раскрывается на\u00a0всю ширину
       var hdrH = hdr.offsetHeight;
       var p = clamp(y / Math.max(1, stageTop - hdrH - 40), 0, 1);
       heroMedia.style.setProperty('--p', p.toFixed(4));

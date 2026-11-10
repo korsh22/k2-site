@@ -52,7 +52,7 @@
       .then(function (r) { if (!r.ok) throw r; ok(); })
       .catch(function () {
         var p = document.createElement('p'); p.className = 'cform__fail'; p.setAttribute('role', 'alert');
-        p.textContent = 'Не получилось отправить заявку. Позвоните нам или попробуйте ещё раз.';
+        p.textContent = 'Не\u00a0получилось отправить заявку. Позвоните нам или\u00a0попробуйте ещё раз.';
         go.insertAdjacentElement('afterend', p);
       })
       .then(function () { go.disabled = false; });
@@ -94,7 +94,7 @@
     jForm.addEventListener('submit', function (e) {
       e.preventDefault();
       if (!validate(jForm)) return;
-      send(jForm, function () { showDone(jForm, $('[name="name"]', jForm).value.trim() + ', спасибо! Перезвоним в рабочее время и поможем выбрать формат.'); });
+      send(jForm, function () { showDone(jForm, $('[name="name"]', jForm).value.trim() + ', спасибо! Перезвоним в\u00a0рабочее время и\u00a0поможем выбрать формат.'); });
     });
   }
 
@@ -107,8 +107,8 @@
       e.preventDefault();
       if (!validate(form)) return;
       var via = $('[name="via"]:checked', form);
-      var how = { call: 'Перезвоним', tg: 'Напишем в Telegram', max: 'Напишем в Max', wa: 'Напишем в WhatsApp' }[via ? via.value : 'call'];
-      send(form, function () { showDone(form, $('[name="name"]', form).value.trim() + ', спасибо! ' + how + ' в рабочее время — подберём тренировку.'); });
+      var how = { call: 'Перезвоним', tg: 'Напишем в\u00a0Telegram', max: 'Напишем в\u00a0Max', wa: 'Напишем в\u00a0WhatsApp' }[via ? via.value : 'call'];
+      send(form, function () { showDone(form, $('[name="name"]', form).value.trim() + ', спасибо! ' + how + ' в\u00a0рабочее время\u00a0— подберём тренировку.'); });
     });
     var again = $('.js-again', form);
     if (again) again.addEventListener('click', function () { resetForm(form); $('[name="name"]', form).focus(); });
@@ -120,7 +120,7 @@
   var book = $('#book');
   if (book && book.showModal) {
     var bForm = $('form', book);
-    var LIMIT = { group: { min: 1, max: 8, t: 'В группе — до 8 человек' }, personal: { min: 1, max: 3, t: 'Персонально — от 1 до 3 участников' } };
+    var LIMIT = { group: { min: 1, max: 8, t: 'В\u00a0группе\u00a0— до\u00a08\u00a0человек' }, personal: { min: 1, max: 3, t: 'Персонально\u00a0— от\u00a01 до\u00a03\u00a0участников' } };
     var cnt = { adults: 1, kids: 0 };
     var price = function (k) { var v = book.dataset[k]; return v ? +v : null; };
     var rub = function (n) { return n === null ? '[____]&nbsp;₽' : n.toLocaleString('ru-RU') + '&nbsp;₽'; };
@@ -136,10 +136,10 @@
         $('[data-d="-1"]', row).disabled = k === 'adults' ? (v <= 0 || total <= L.min) : v <= 0;
         $('[data-d="1"]', row).disabled = total >= L.max;
       });
-      $('.book__limit', bForm).textContent = L.t + (cnt.kids ? ' · для детей — детская пробная тренировка с тренером' : '');
+      $('.book__limit', bForm).textContent = L.t + (cnt.kids ? ' · для\u00a0детей\u00a0— детская пробная тренировка с\u00a0тренером' : '');
       var pA = price(t === 'group' ? 'priceGroup' : 'pricePersonal'), pK = price(t === 'group' ? 'priceGroupKid' : 'pricePersonalKid');
       var rows = '', sum = 0, known = true;
-      var label = t === 'group' ? 'Пробная в группе' : 'Персональная пробная';
+      var label = t === 'group' ? 'Пробная в\u00a0группе' : 'Персональная пробная';
       if (cnt.adults) { rows += '<div><span>' + label + ' · взрослые × ' + cnt.adults + '</span><span>' + (pA === null ? '[____]&nbsp;₽' : rub(pA * cnt.adults)) + '</span></div>'; if (pA === null) known = false; else sum += pA * cnt.adults; }
       if (cnt.kids) { rows += '<div><span>' + label + ' · дети × ' + cnt.kids + '</span><span>' + (pK === null ? '[____]&nbsp;₽' : rub(pK * cnt.kids)) + '</span></div>'; if (pK === null) known = false; else sum += pK * cnt.kids; }
       $('.book__rows', bForm).innerHTML = rows;
@@ -166,7 +166,7 @@
       if (!validate(bForm)) return;
       // Здесь разработчик: отправить заявку в CRM и перейти на страницу оплаты банка (new FormData(bForm) + сумма)
       var who = cnt.adults + cnt.kids;
-      showDone(bForm, $('[name="name"]', bForm).value.trim() + ', записываем вас: ' + (type() === 'group' ? 'пробная в группе' : 'персональная пробная') + ', участников — ' + who + '. Сейчас откроется оплата.');
+      showDone(bForm, $('[name="name"]', bForm).value.trim() + ', записываем вас: ' + (type() === 'group' ? 'пробная в\u00a0группе' : 'персональная пробная') + ', участников\u00a0— ' + who + '. Сейчас откроется оплата.');
     });
     recalc();
   }
@@ -211,8 +211,8 @@
     route.addEventListener('click', startWalk);
   }
 
-  /* ---------- Сцена «60 минут»: таймер, полоса времени, фото и шаги ----------
-     Компьютер: блок закреплён, прокрутка ведёт минуты 0 → 60. Телефон и «уменьшить движение»: шаги листаются сами, пока блок на экране, и по нажатию */
+  /* ---------- Сцена «60\u00a0минут»: таймер, полоса времени, фото и\u00a0шаги ----------
+     Компьютер: блок закреплён, прокрутка ведёт минуты 0 → 60. Телефон и\u00a0«уменьшить движение»: шаги листаются сами, пока блок на\u00a0экране, и\u00a0по\u00a0нажатию */
   var hour = $('.lp-hour');
   if (hour) {
     var hSteps = $$('.lp-hour__steps li', hour), hPics = $$('.lp-hour__pics img', hour), hSegs = $$('.lp-hour__bar > span', hour);
@@ -245,7 +245,7 @@
     var hList = $('.lp-hour__steps', hour), hSwipe = false;
     var hMode = function () {
       hScroll = !reduce && matchMedia('(min-width: 1041px) and (min-height: 640px)').matches;
-      // телефон: шаги — карточки, которые листаются пальцем; таймер и полоса показывают текущую
+      // телефон: шаги\u00a0— карточки, которые листаются пальцем; таймер и\u00a0полоса показывают текущую
       hSwipe = !hScroll && matchMedia('(max-width: 767px)').matches;
       hour.classList.toggle('is-scroll', hScroll);
       hour.classList.toggle('is-swipe', hSwipe);
@@ -322,10 +322,10 @@
 
   /* ---------- Словарик (подсказки к терминам) ---------- */
   var GLOSSARY = {
-    bould: ['Боулдеринг', 'Лазание по невысоким трассам без верёвки — над мягкими матами.'],
-    lead: ['Трудность', 'Лазание по высоким трассам со страховкой верёвкой. У нас стены 13 метров.'],
-    shoes: ['Скальники', 'Специальная обувь для лазания с цепкой резиновой подошвой. Выдаём на месте.'],
-    chalk: ['Магнезия', 'Порошок для рук: сушит ладони, чтобы они не скользили по зацепам.']
+    bould: ['Боулдеринг', 'Лазание по\u00a0невысоким трассам без\u00a0верёвки\u00a0— над\u00a0мягкими матами.'],
+    lead: ['Трудность', 'Лазание по\u00a0высоким трассам со\u00a0страховкой верёвкой. У\u00a0нас стены 13\u00a0метров.'],
+    shoes: ['Скальники', 'Специальная обувь для\u00a0лазания с\u00a0цепкой резиновой подошвой. Выдаём на\u00a0месте.'],
+    chalk: ['Магнезия', 'Порошок для\u00a0рук: сушит ладони, чтобы они не\u00a0скользили по\u00a0зацепам.']
   };
   var tip = $('#tip');
   if (tip) {
@@ -362,7 +362,7 @@
     a.addEventListener('click', function () { var p = a.dataset.tabGo.split(':'); tabSelect(p[0], p[1]); });
   });
 
-  /* ---------- Абонементы: карточка переворачивается по клику ---------- */
+  /* ---------- Абонементы: карточка переворачивается по\u00a0клику ---------- */
   $$('.abo').forEach(function (c) {
     c.addEventListener('click', function () { c.setAttribute('aria-pressed', String(c.getAttribute('aria-pressed') !== 'true')); });
   });
@@ -438,7 +438,7 @@
     pFrame();
   }
 
-  /* ---------- Липкое меню разделов и плавающая кнопка ---------- */
+  /* ---------- Липкое меню разделов и\u00a0плавающая кнопка ---------- */
   var sub = $('.lp-sub'), hdr = $('#hdr'), fab = $('.lp-fab'), hero = $('.lp-hero');
   var links = sub ? $$('a', sub) : [];
   var subBtn = sub && $('.lp-sub__toggle', sub), subCur = sub && $('.lp-sub__cur', sub);

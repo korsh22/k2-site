@@ -1106,3 +1106,17 @@ html.has-cur.lb-open button{cursor:pointer!important}
 
 /* Блок заявки сразу после тёмной секции: серая подложка наезжает скруглённым краем, карточка не прилипает к тёмному */
 .dark + #contacts.sec--flush{border-radius:var(--overlap) var(--overlap) 0 0;margin-top:calc(var(--overlap) * -1);z-index:2;padding-top:calc(var(--g) * 2)}
+
+/* Детская секция: описание групп — в две строки */
+#groups .sechead .lead{max-width:780px}
+
+/* Планшет (768–1040): карточки «для любых целей» — без дыр и обрезанных ссылок */
+@media (min-width:768px) and (max-width:1040px){
+  .goals{grid-auto-rows:minmax(280px,auto)}
+  .goals .g3{grid-column:span 6}
+  .goals .r2{grid-row:auto}
+  .links--row{flex-direction:column}
+  .cert{flex-wrap:wrap}
+  .cert .card__s{flex:1 1 280px}
+  .cert .btn{margin-left:0}
+}

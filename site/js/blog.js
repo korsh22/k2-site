@@ -171,7 +171,7 @@
     var spbHour = function () { return +new Date().toLocaleString('ru-RU', { timeZone: 'Europe/Moscow', hour: '2-digit', hour12: false }); };
     var chips = $$('.js-occ'), lines = $$('.js-occ-line');
     var panel = $('.occ__panel', occ);
-    var level = function (k) { return k < 0.35 ? { id: 'low', t: 'Свободно', d: 'Можно спокойно выбирать трассы' } : k < 0.7 ? { id: 'mid', t: 'Средняя загрузка', d: 'Людей немного, но очереди на популярные трассы бывают' } : { id: 'high', t: 'Много людей', d: 'Сейчас пик — если хотите свободнее, загляните позже' }; };
+    var level = function (k) { return k < 0.35 ? { id: 'low', t: 'Свободно', d: 'Можно спокойно выбирать трассы' } : k < 0.7 ? { id: 'mid', t: 'Средняя загрузка', d: 'Людей немного, но\u00a0очереди на\u00a0популярные трассы бывают' } : { id: 'high', t: 'Много людей', d: 'Сейчас пик\u00a0— если хотите свободнее, загляните позже' }; };
     var plural = function (n) { var a = n % 10, b = n % 100; return a === 1 && b !== 11 ? 'человек' : a >= 2 && a <= 4 && (b < 12 || b > 14) ? 'человека' : 'человек'; };
     var render = function (d) {
       var h = spbHour(), open = h >= openH && h < closeH;
@@ -180,11 +180,11 @@
       chips.forEach(function (c) {
         c.dataset.level = open ? L.id : 'closed';
         $('.occ-chip__n', c).textContent = open ? n : '—';
-        c.setAttribute('aria-label', open ? 'Сейчас в зале ' + n + ' ' + plural(n) + ', ' + L.t.toLowerCase() + '. Подробнее о загруженности' : 'Зал закрыт. Загруженность по часам');
+        c.setAttribute('aria-label', open ? 'Сейчас в\u00a0зале ' + n + ' ' + plural(n) + ', ' + L.t.toLowerCase() + '. Подробнее о\u00a0загруженности' : 'Зал закрыт. Загруженность по\u00a0часам');
       });
-      lines.forEach(function (l) { l.dataset.level = open ? L.id : 'closed'; $('span', l).textContent = open ? 'Сейчас в зале ' + n + ' ' + plural(n) + ' · ' + L.t.toLowerCase() : 'Сейчас закрыто · загруженность по часам'; });
+      lines.forEach(function (l) { l.dataset.level = open ? L.id : 'closed'; $('span', l).textContent = open ? 'Сейчас в\u00a0зале ' + n + ' ' + plural(n) + ' · ' + L.t.toLowerCase() : 'Сейчас закрыто · загруженность по\u00a0часам'; });
       $('.occ__n', occ).textContent = open ? n : '—';
-      $('.occ__unit', occ).textContent = open ? plural(n) + ' в зале' : 'зал закрыт';
+      $('.occ__unit', occ).textContent = open ? plural(n) + ' в\u00a0зале' : 'зал закрыт';
       $('.occ__lvl', occ).textContent = open ? L.t : 'Сейчас закрыто';
       $('.occ__desc', occ).textContent = open ? L.d : 'Откроемся в ' + openH + ':00';
       occ.dataset.level = open ? L.id : 'closed';
@@ -199,9 +199,9 @@
         if (i > h && (best === null || v < hourly[best])) best = i;
       }
       $('.occ__chart', occ).innerHTML = html;
-      $('.occ__tip', occ).textContent = best !== null && open ? 'Свободнее всего сегодня — около ' + best + ':00' : 'Утром обычно свободнее всего';
+      $('.occ__tip', occ).textContent = best !== null && open ? 'Свободнее всего сегодня\u00a0— около ' + best + ':00' : 'Утром обычно свободнее всего';
       var upd = d.updated ? new Date(d.updated) : new Date();
-      $('.occ__upd span:last-child', occ).textContent = (d.demo ? 'Демо-данные · ' : 'Обновлено ') + upd.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Moscow' });
+      $('.occ__upd span:last-child', occ).textContent = (d.demo ? 'Демо-\u2060данные · ' : 'Обновлено ') + upd.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Moscow' });
       occ.classList.toggle('is-demo', !!d.demo);
     };
     var demo = function () {
