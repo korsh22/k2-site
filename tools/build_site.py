@@ -456,7 +456,7 @@ _sub = ('<nav class="lp-sub" aria-label="Разделы страницы"><butto
         + ''.join('<a href="#%s" style="--i:%d">%s<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6"/></svg></a>' % (h, i, t) for i, (h, t) in enumerate(KSUB))
         + '</div></nav>\n')
 # «Почему К2» — как на «Первом разе»: фото на весь экран, цифры (без шкалы высоты; логика — js/landing.js)
-KWHY = ('<section class="lp-why2 dark" id="why">'
+KWHY = ('<section class="sec neutral sec--flush" id="why"><div class="wrap"><div class="lp-why2 lp-why2--inset dark">'
     '<div class="lp-why2__bg" aria-hidden="true"><picture><source media="(max-width: 767px)" srcset="assets/img/k2-09.jpg"><img src="assets/img/k2-first-2.jpg" alt="" loading="lazy"></picture></div>'
     '<div class="wrap lp-why2__in"><div class="lp-why2__head"><span class="mark reveal">Почему К2</span>'
     '<h2 class="d lp-why2__t reveal">Почему ребёнку стоит заниматься в&nbsp;К2</h2></div><ul class="lp-why2__stats">'
@@ -465,7 +465,7 @@ KWHY = ('<section class="lp-why2 dark" id="why">'
     '<li class="reveal"><b class="d"><span data-count="7">7</span><small>мин</small></b><span><em>от метро</em> Удобно привозить ребёнка после школы.</span></li></ul>'
     '<div class="lp-why2__cards"><div class="lp-why2__c lp-why2__c--red reveal"><b class="d">Детские тренеры</b><p>Объясняют просто, следят за&nbsp;безопасностью и&nbsp;не&nbsp;дают заскучать.</p></div>'
     '<div class="lp-why2__c reveal"><b class="d">Новый скалодром</b><p>Новые стены, зацепы и&nbsp;снаряжение.</p></div>'
-    '<div class="lp-why2__go reveal">' + trial_btn(cls='btn btn--light') + '</div></div></div></section>\n')
+    '<div class="lp-why2__go reveal">' + trial_btn(cls='btn btn--light') + '</div></div></div></div></div></section>\n')
 body = body.replace('<section class="sec neutral lp-alt" id="trial">', KWHY + '<section class="sec neutral lp-alt" id="trial">', 1)
 _i = body.index('</section>') + len('</section>')
 body = body[:_i] + '\n' + _sub + body[_i:]

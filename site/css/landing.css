@@ -852,3 +852,10 @@ a.chip{display:inline-flex;align-items:center;text-decoration:none}
 .ksk__c:nth-child(2) .ksk__ic{background:var(--white);color:var(--red)}
 @media (max-width:1040px){.ksk{grid-template-columns:1fr}.ksk__c{min-height:0}}
 @media (max-width:767px){.ksk__n{font-size:110px}.ksk__ic{width:56px;height:56px}}
+
+/* Детская секция: «Почему К2» — карточкой внутри страницы, а не на всю ширину */
+.lp-why2--inset{min-height:0;height:auto;max-height:none;border-radius:var(--r-xl);padding:56px 0}
+.lp-why2--inset .lp-why2__in{padding:0 56px;max-width:none;gap:48px}
+.lp-why2--inset .lp-why2__stats b{font-size:clamp(64px,8vw,132px)}
+.lp-why2--inset .lp-why2__t{font-size:clamp(30px,3.8vw,56px)}
+@media (max-width:767px){.lp-why2--inset{border-radius:var(--r-lg);padding:32px 0}.lp-why2--inset .lp-why2__in{padding:0 20px}}
