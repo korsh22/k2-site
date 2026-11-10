@@ -87,14 +87,14 @@ def cards(items, n=4):
 def li(items, cls='lp-list'):
     return '<ul class="%s">%s</ul>' % (cls, ''.join('<li>%s%s</li>' % (CHECK, x) for x in items))
 
-def offer(title, items, desc, foot, badge='', dark=False, id='', img=''):
+def offer(title, items, desc, foot, badge='', dark=False, id='', img='', play=''):
     return '''<article class="lp-f%s reveal"%s>%s%s
   <h3 class="d lp-f__t">%s</h3>
   %s
   %s
   <div class="lp-f__foot">%s</div>
 </article>''' % ((' lp-f--dark' if dark else '') + (' lp-f--img' if img else ''),' id="%s"' % id if id else '',
-                 '<div class="lp-f__img"><img src="assets/img/%s" alt="" loading="lazy"></div>' % img if img else '',
+                 '<div class="lp-f__img"><img src="assets/img/%s" alt="" loading="lazy">%s</div>' % (img, play) if img else '',
                  '<span class="badge%s">%s</span>' % (' badge--dark' if dark else '', badge) if badge else '', title,
                  li(items, 'lp-list' + ('' if dark else ' lp-list--dark')) if items else '', '<p class="lp-f__d">%s</p>' % desc if desc else '', foot)
 
@@ -203,18 +203,20 @@ body = hero([('Для взрослых', '')], 'Скалолазание для 
             'Впервые? Начните с пробной тренировки или базового курса. Уже лазаете — выбирайте школу, персональные тренировки с тренером или приходите сами.',
             'k2-05.jpg', [(I_SPARK, 'Любой уровень'), (I_GEAR, 'Снаряжение выдаём'), (I_PEOPLE, 'В группе или персонально'), (I_TIME, '7 дней в неделю')],
             join_btn('Подобрать тренировку', 'Подберём тренировку', 'trial') + link_btn('Цены', 'ceny.html', 'btn btn--sec'), 'Скалолаз на стене К2')
+# Кнопка видео на фото «Первого раза» — ведёт к ролику на странице пробной тренировки
+PLAY_FIRST = '<a class="lp-f__play" href="pervyj-raz.html#video"><i>' + ico('<path d="M8 5v14l11-7z"/>') + '</i><span class="lp-f__pl">Видео: как проходит первая тренировка</span><span class="lp-f__ps">Смотреть видео</span></a>'
 body += sec('<p class="lp-k reveal">Новичкам</p>\n' + offers([
     offer('Первый раз', ['для любого возраста от 16 лет', 'для любого уровня подготовки', 'всё снаряжение выдаём', '60 минут', 'персонально или в группе'],
-          'Час с тренером: разберём основы и пройдём первые трассы.', PRICE + link_btn('Подробнее', 'pervyj-raz.html', 'btn btn--primary'), 'Пробная тренировка'),
+          'Час с тренером: разберём основы и пройдём первые трассы.', PRICE + link_btn('Подробнее', 'pervyj-raz.html', 'btn btn--primary'), 'Пробная тренировка', img='k2-first-3.jpg', play=PLAY_FIRST),
     offer('Базовые курсы', ['программа из 3–5 тренировок', 'всё снаряжение выдаём', 'персонально или в группе'],
-          'Освоите боулдеринг, трудность и страховку — и сможете лазать без тренера.', PRICE + link_btn('Подробнее', 'bazovye-kursy.html', 'btn btn--primary'), 'Курс')]) +
+          'Освоите боулдеринг, трудность и страховку — и сможете лазать без тренера.', PRICE + link_btn('Подробнее', 'bazovye-kursy.html', 'btn btn--primary'), 'Курс', img='p-chalk.jpg')]) +
     '\n<p class="lp-k lp-k--gap reveal">Уже занимаюсь</p>\n' + offers([
     offer('Тренировки в группе', ['регулярно, по расписанию', 'с тренером', 'техника, сила, прогресс'], 'Школа скалолазания: программа, группа своего уровня и заметный прогресс.',
-          PRICE + link_btn('Подробнее', 'shkola.html', 'btn btn--primary')),
+          PRICE + link_btn('Подробнее', 'shkola.html', 'btn btn--primary'), img='k2-first-1.jpg'),
     offer('Индивидуальные тренировки', ['персонально с тренером', 'под вашу задачу', 'удобное время'], 'Самый быстрый путь к цели — один на один с тренером.',
-          PRICE + link_btn('Подробнее', 'individualnye.html', 'btn btn--primary'), dark=True),
+          PRICE + link_btn('Подробнее', 'individualnye.html', 'btn btn--primary'), dark=True, img='p-cave.jpg'),
     offer('Самостоятельные посещения', ['разовые и абонементы', 'боулдеринг и трудность', 'прокат снаряжения'], 'Приходите, когда удобно, и лазайте в своём ритме.',
-          PRICE + link_btn('Подробнее', 'samostoyatelno.html', 'btn btn--primary'))], 3), 'formats')
+          PRICE + link_btn('Подробнее', 'samostoyatelno.html', 'btn btn--primary'), img='k2-hall.jpg')], 3), 'formats')
 body += sec(sechead('Наш скалодром: боулдеринг и трудность', 'Нажмите на фото — откроется галерея', link_btn('О скалодроме', 'o-skalodrome.html', 'btn btn--sec reveal')) + '\n' + gal(GAL_HALL), 'photos', cls='lp-alt')
 body += CONTACT + faq_sec(FAQ_ADULT)
 page('dlya-vzroslyh.html', 'Скалолазание для взрослых — скалодром К2', 'Пробные тренировки, базовые курсы, школа скалолазания, индивидуальные тренировки и самостоятельные посещения для взрослых. Скалодром К2, м. Площадь Ленина.', body, gallery=True)
