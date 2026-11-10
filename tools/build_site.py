@@ -437,6 +437,15 @@ body += faq_sec([('С какого возраста можно?', 'С 5 лет. 
                  ('Что, если ребёнок пропустит занятие?', '[Правила пропусков и переносов уточняются.]'),
                  ('Есть ли выезды на скалы?', 'Да, в школьные каникулы: в Ленинградскую область и Карелию.'),
                  ('Участвуют ли дети в соревнованиях?', 'Да, дети секции выступают на городских соревнованиях в составе команды скалодрома.')])
+# Липкое меню по разделам — как на «Первом разе»
+KSUB = [('groups', 'Группы'), ('schedule', 'Расписание'), ('abonementy', 'Абонементы'), ('trial', 'Пробное'),
+        ('docs', 'Документы'), ('coaches', 'Тренеры'), ('reviews', 'Отзывы'), ('faq', 'Вопросы')]
+_sub = ('<nav class="lp-sub" aria-label="Разделы страницы"><button class="lp-sub__toggle" type="button" aria-expanded="false"><span class="lp-sub__cur">Разделы страницы</span>'
+        '<span class="lp-sub__more">Разделы<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></span></button><div class="wrap lp-sub__in">'
+        + ''.join('<a href="#%s" style="--i:%d">%s<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6"/></svg></a>' % (h, i, t) for i, (h, t) in enumerate(KSUB))
+        + '</div></nav>\n')
+_i = body.index('</section>') + len('</section>')
+body = body[:_i] + '\n' + _sub + body[_i:]
 page('detskaya-sekciya.html', 'Детская секция скалолазания от 5 до 16 лет — скалодром К2', 'Регулярные тренировки в трёх возрастных группах: 5–7, 8–10 и 11–16 лет. Занятия 60 или 90 минут, абонементы на месяц. Начните с пробного занятия в секции.', body, gallery=True)
 
 
