@@ -157,8 +157,10 @@ def tag_count(k): return sum(1 for x in ARTICLES if k == x['cat'] or k in x['tag
 CHEVRON = '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>'
 def filter_group(cat, name):
     items = ''.join('<label class="bf__i"><input type="checkbox" value="%s"><span class="bf__box"></span><span>%s <small>(%d)</small></span></label>' % (t, esc(TAGS[t]), tag_count(t)) for t in TOPICS[cat])
-    return ('<div class="bf__g"><div class="bf__h"><button class="bf__name" type="button" data-f="%s" aria-pressed="false">%s <small>(%d)</small></button>'
-            '<button class="bf__x" type="button" aria-expanded="true" aria-label="Темы раздела «%s»">%s</button></div><div class="bf__list">%s</div></div>') % (cat, esc(name), tag_count(cat), esc(name), CHEVRON, items)
+    # карточка раздела: фото обложки статьи раздела + название (фильтр по разделу) + «Темы» аккордеоном
+    img = next(x['cover'] for x in ARTICLES if x['cat'] == cat)
+    return ('<div class="bf__g"><div class="bf__ph"><img src="../assets/img/%s" alt="" loading="lazy"></div><div class="bf__h"><button class="bf__name" type="button" data-f="%s" aria-pressed="false">%s <small>(%d)</small></button>'
+            '<button class="bf__x" type="button" aria-expanded="true" aria-label="Темы раздела «%s»"><span>Темы</span>%s</button></div><div class="bf__list">%s</div></div>') % (img, cat, esc(name), tag_count(cat), esc(name), CHEVRON, items)
 bfilter = '<div class="bf" role="group" aria-label="Темы блога">%s</div>' % ''.join(filter_group(k, v) for k, v in CATEGORIES)
 body = '''<main>
 <section class="blog-head dark">
