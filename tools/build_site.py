@@ -398,11 +398,15 @@ def abo(k, t, m):
         t, ABO_PH[k], age, I_CAL, I_TIME, m, TURN, t, ''.join('<span class="abo__row"><b>%s</b><span>%s</span></span>' % x for x in ABO_BACK), TURN)
 body += sec(sechead('Абонементы') + '<div class="abos">' + ''.join(abo(k, t, m) for k, t, _, m, _ in KGROUPS) + '</div>', 'abonementy', 'dark', 'stack')
 # 6. Навыки
+# Иконки навыков: фигура на стене, маршрут по точкам, мишень
+KSK_ICO = [I_CHILD, ico('<circle cx="6" cy="18" r="2"/><circle cx="12" cy="11" r="2"/><circle cx="18" cy="5" r="2"/><path d="M7.2 16.3l3.6-3.6M13.3 9.5l3.4-3"/>'),
+           ico('<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/><path d="M12 12l7-7M16 5h3v3"/>')]
 KSKILLS = [('Управлять движением', 'Находить опору, переносить вес и выбирать положение тела на стене.', 'Координация, выносливость, сила!'),
            ('Разбираться в задаче', 'Смотреть на трассу, пробовать разные движения и искать подходящий способ прохождения.', 'Логическое мышление, внимательность, пытливость!'),
            ('Работать над своей попыткой', 'Замечать, что получилось, разбирать сложности и пробовать снова с учётом подсказок тренера.', 'Дисциплина, усидчивость, целеустремлённость!')]
 body += sec(sechead('Ключевые навыки, которые развиваем у детей', 'В секции занятия продолжают друг друга: дети знакомятся с движениями, пробуют разные способы прохождения трасс и возвращаются к задачам, которые пока не получились.') +
-            '<div class="lp-cards4 lp-cards4--3">' + ''.join('<div class="lp-c kskill reveal"><span class="lp-c__n">%02d</span><b>%s</b><p>%s</p><p class="kskill__q">%s</p></div>' % (i + 1, t, d, q) for i, (t, d, q) in enumerate(KSKILLS)) + '</div>', 'skills', cls='stack')
+            '<div class="ksk">' + ''.join('<article class="ksk__c reveal"><span class="ksk__n d" aria-hidden="true">%02d</span><span class="ksk__ic">%s</span><b class="ksk__t d">%s</b><p class="ksk__d">%s</p><ul class="ksk__q">%s</ul></article>' % (
+                i + 1, KSK_ICO[i], t, d, ''.join('<li>%s</li>' % w.strip(' !').capitalize() for w in q.split(','))) for i, (t, d, q) in enumerate(KSKILLS)) + '</div>', 'skills', cls='stack')
 # 7. Пробная
 body += sec('<div class="ktrial"><figure class="ktrial__img reveal"><img src="assets/img/k2-02.jpg" alt="Занятие в детской секции" loading="lazy"></figure><div class="ktrial__b">'
             '<p class="lp-k reveal">Пробная тренировка в секции</p><h2 class="d h2 reveal">Сначала попробуйте занятие в секции</h2>'

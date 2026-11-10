@@ -830,3 +830,25 @@ a.chip{display:inline-flex;align-items:center;text-decoration:none}
 .abo:nth-child(2) .abo__pr{border-top-color:rgba(255,255,255,.45)}
 .abo__r .abo__g{color:var(--stone-300);margin-bottom:6px}
 @media (max-width:767px){.abo__ph{width:72px;height:72px}.abo__age{margin-top:-4px}}
+
+/* Детская секция: навыки — иконка, контурная цифра на фоне, качества плашками */
+#skills .sechead .lead{max-width:780px}
+.ksk{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--g)}
+.ksk__c{position:relative;overflow:hidden;display:flex;flex-direction:column;gap:12px;padding:var(--pad);border-radius:var(--r-xl);background:var(--white);color:var(--graphite);transition:transform .4s var(--ease),box-shadow .4s}
+.ksk__c:hover{transform:translateY(-6px);box-shadow:0 24px 48px rgba(0,0,0,.08)}
+.ksk__n{position:absolute;right:-6px;top:-18px;font-size:150px;line-height:1;letter-spacing:-.04em;color:transparent;-webkit-text-stroke:1.5px var(--grey-100);pointer-events:none;transition:transform .6s var(--ease)}
+.ksk__c:hover .ksk__n{transform:translate(-6px,6px)}
+.ksk__ic{position:relative;width:64px;height:64px;border-radius:50%;background:var(--red);color:var(--white);display:grid;place-items:center;margin-bottom:12px;transition:transform .5s var(--ease)}
+.ksk__ic .ico{width:30px;height:30px}
+.ksk__c:hover .ksk__ic{transform:rotate(-12deg) scale(1.06)}
+.ksk__t{position:relative;font-size:var(--t-h4);line-height:var(--l-h4)}
+.ksk__d{position:relative;margin:0;color:var(--grey-600);font-size:var(--t-body);line-height:var(--l-body)}
+.ksk__q{position:relative;list-style:none;margin:auto 0 0;padding:20px 0 0;display:flex;flex-wrap:wrap;gap:6px}
+.ksk__q li{padding:7px 12px;border-radius:var(--pill);background:var(--grey-100);font:600 var(--t-small)/1 var(--font-text)}
+.ksk__c:nth-child(2){background:var(--graphite);color:var(--white)}
+.ksk__c:nth-child(2) .ksk__d{color:var(--stone-300)}
+.ksk__c:nth-child(2) .ksk__n{-webkit-text-stroke-color:rgba(255,255,255,.12)}
+.ksk__c:nth-child(2) .ksk__q li{background:rgba(255,255,255,.1)}
+.ksk__c:nth-child(2) .ksk__ic{background:var(--white);color:var(--red)}
+@media (max-width:1040px){.ksk{grid-template-columns:1fr}.ksk__c{min-height:0}}
+@media (max-width:767px){.ksk__n{font-size:110px}.ksk__ic{width:56px;height:56px}}
