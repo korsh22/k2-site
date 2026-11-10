@@ -417,7 +417,21 @@ body += sec('<div class="ktrial"><figure class="ktrial__img reveal"><img src="as
             '<div class="reveal">' + trial_btn() + '</div></div></div>' +
             helpbox('Остались вопросы?', 'Свяжитесь с нами — ответим и поможем определиться.', link_btn('Связаться с нами', '#contacts')), 'trial', cls='lp-alt')
 # 8. Документы
-body += sec(sechead('Документы и материалы для родителей') + '<div class="kdocs reveal"><a href="dokumenty.html#zayavlenie">Заявление от родителей' + ARROW + '</a><a href="dokumenty.html#tb">Техника безопасности' + ARROW + '</a></div>', 'docs')
+I_DOC = ico('<path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5M10 13h6M10 17h6"/>')
+KDOCS = [('zayavlenie', I_DOC, 'Заявление от&nbsp;родителей', 'Согласие родителя или законного представителя на&nbsp;занятия ребёнка в&nbsp;секции.', 'Заполняет родитель'),
+         ('tb', I_SHIELD, 'Техника безопасности', 'Как вести себя на&nbsp;скалодроме: страховка, маты, зоны лазания. Лучше прочитать вместе с&nbsp;ребёнком.', 'Читаем вместе с&nbsp;ребёнком')]
+KSTEPS = [('Прочитайте документы', 'Заявление и&nbsp;технику безопасности&nbsp;— кнопкой «Открыть» у&nbsp;каждого документа.'),
+          ('Подпишите заявление', 'Его заполняет родитель или законный представитель ребёнка.'),
+          ('Возьмите спортивную форму', 'Удобную одежду для движения. Снаряжение выдадим на&nbsp;месте.')]
+body += sec(sechead('Документы и материалы для родителей', 'Всё, что понадобится до&nbsp;первого занятия: документы можно открыть и&nbsp;распечатать заранее.') + '<div class="kdoc">'
+    '<div class="kdoc__list">' + ''.join(
+        '<article class="kdoc__c reveal"><span class="kdoc__ic">%s</span><div class="kdoc__b"><b class="kdoc__t d">%s</b><p>%s</p>'
+        '<p class="kdoc__meta"><span>%s</span><span>Редакция от&nbsp;[дата]</span></p></div>'
+        '<a class="btn btn--sec kdoc__go" href="dokumenty.html#%s">Открыть%s</a></article>' % (ic, t, d, who, k, ARROW) for k, ic, t, d, who in KDOCS) + '</div>'
+    '<aside class="kdoc__side reveal"><p class="kdoc__st d">Перед первым занятием</p><ol class="kdoc__steps">' + ''.join(
+        '<li><b>%s</b><span>%s</span></li>' % x for x in KSTEPS) + '</ol>'
+    '<p class="kdoc__more">Другие документы: <a href="dokumenty.html#pravila">Правила посещения</a>, <a href="dokumenty.html#oferta">Договор оферты</a></p>'
+    + join_btn('Задать вопрос по&nbsp;документам', 'Вопрос по документам', 'kids', 'btn btn--light') + '</aside></div>', 'docs')
 # 9. Тренеры
 body += sec(sechead('Тренеры детской секции', '', link_btn('Все тренеры', 'trenery.html', 'btn btn--sec reveal')) + '\n' + coaches([('[Имя Фамилия]', 'Детский тренер', '[Квалификация · стаж]')] * 4), 'coaches', cls='lp-alt')
 # 10. Выезды и соревнования

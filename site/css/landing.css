@@ -859,3 +859,30 @@ a.chip{display:inline-flex;align-items:center;text-decoration:none}
 .lp-why2--inset .lp-why2__stats b{font-size:clamp(64px,8vw,132px)}
 .lp-why2--inset .lp-why2__t{font-size:clamp(30px,3.8vw,56px)}
 @media (max-width:767px){.lp-why2--inset{border-radius:var(--r-lg);padding:32px 0}.lp-why2--inset .lp-why2__in{padding:0 20px}}
+
+/* Детская секция: документы — карточки документов + памятка «Перед первым занятием» */
+.kdoc{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:var(--g);align-items:start}
+.kdoc__list{display:flex;flex-direction:column;gap:var(--g)}
+.kdoc__c{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:20px;align-items:center;padding:var(--pad);border-radius:var(--r-xl);background:var(--white);transition:box-shadow .3s}
+.kdoc__c:hover{box-shadow:0 18px 40px rgba(0,0,0,.08)}
+.kdoc__ic{width:64px;height:64px;border-radius:var(--r-md);background:var(--grey-100);color:var(--red);display:grid;place-items:center;align-self:start}
+.kdoc__ic .ico{width:30px;height:30px}
+.kdoc__t{display:block;font-size:var(--t-h4);line-height:var(--l-h4)}
+.kdoc__b p{margin:6px 0 0;color:var(--grey-600);font-size:var(--t-body);line-height:var(--l-body)}
+.kdoc__b .kdoc__meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px}
+.kdoc__meta span{padding:5px 10px;border-radius:var(--pill);background:var(--grey-100);color:var(--graphite);font:500 var(--t-caption)/1.2 var(--font-text)}
+.kdoc__meta span:first-child{background:rgba(217,73,62,.1);color:var(--red)}
+.kdoc__go{white-space:nowrap}
+.kdoc__go .ico{width:16px;height:16px;margin-left:8px}
+.kdoc__side{position:sticky;top:96px;display:flex;flex-direction:column;gap:20px;padding:var(--pad);border-radius:var(--r-xl);background:var(--graphite);color:var(--white)}
+.kdoc__st{font-size:var(--t-h4);line-height:var(--l-h4)}
+.kdoc__steps{list-style:none;margin:0;padding:0;counter-reset:ks;display:flex;flex-direction:column;gap:16px}
+.kdoc__steps li{counter-increment:ks;display:grid;grid-template-columns:36px 1fr;column-gap:14px;row-gap:2px}
+.kdoc__steps li::before{content:counter(ks);grid-row:span 2;width:36px;height:36px;border-radius:50%;background:var(--red);display:grid;place-items:center;font:700 var(--t-small)/1 var(--font-display)}
+.kdoc__steps b{font-weight:600}
+.kdoc__steps span{color:var(--stone-300);font-size:var(--t-small);line-height:var(--l-small)}
+.kdoc__more{margin:0;padding-top:16px;border-top:1px solid var(--graphite-raised);color:var(--stone-300);font-size:var(--t-small);line-height:var(--l-small)}
+.kdoc__more a{color:var(--white)}
+.kdoc__side .btn{align-self:flex-start}
+@media (max-width:1040px){.kdoc{grid-template-columns:1fr}.kdoc__side{position:static}}
+@media (max-width:767px){.kdoc__c{grid-template-columns:auto minmax(0,1fr);padding:var(--pad-s)}.kdoc__ic{width:52px;height:52px}.kdoc__go{grid-column:1/-1;justify-content:center}.kdoc__side{padding:var(--pad-s)}.kdoc__side .btn{align-self:stretch}}
