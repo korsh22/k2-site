@@ -157,10 +157,14 @@ def tag_count(k): return sum(1 for x in ARTICLES if k == x['cat'] or k in x['tag
 CHEVRON = '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>'
 def filter_group(cat, name):
     items = ''.join('<label class="bf__i"><input type="checkbox" value="%s"><span class="bf__box"></span><span>%s <small>(%d)</small></span></label>' % (t, esc(TAGS[t]), tag_count(t)) for t in TOPICS[cat])
-    # карточка раздела: фото обложки статьи раздела + название (фильтр по разделу) + «Темы» аккордеоном
-    img = next(x['cover'] for x in ARTICLES if x['cat'] == cat)
-    return ('<div class="bf__g"><div class="bf__ph"><img src="../assets/img/%s" alt="" loading="lazy"></div><div class="bf__h"><button class="bf__name" type="button" data-f="%s" aria-pressed="false">%s <small>(%d)</small></button>'
-            '<button class="bf__x" type="button" aria-expanded="true" aria-label="Темы раздела «%s»"><span>Темы</span>%s</button></div><div class="bf__list">%s</div></div>') % (img, cat, esc(name), tag_count(cat), esc(name), CHEVRON, items)
+    # раздел: иконка + название (фильтр по разделу) + стрелка; темы — выпадающим списком поверх статей
+    return ('<div class="bf__g is-closed"><div class="bf__h"><span class="bf__ic">%s</span><button class="bf__name" type="button" data-f="%s" aria-pressed="false">%s <small>(%d)</small></button>'
+            '<button class="bf__x" type="button" aria-expanded="false" aria-label="Темы раздела «%s»">%s</button></div><div class="bf__list">%s</div></div>') % (CAT_ICO[cat], cat, esc(name), tag_count(cat), esc(name), CHEVRON, items)
+CAT_ICO = {k: '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true">%s</svg>' % v for k, v in {
+    'travel': '<path d="M3 20l6-11 4 7 2-3 6 7z"/><circle cx="17" cy="6" r="2"/>',
+    'train': '<path d="M6 7v10M18 7v10M3 10v4M21 10v4M6 12h12"/>',
+    'gear': '<path d="M3 17v-4.5c2-.5 3.5-2 4.5-4l1-2 3 2.5c1.5 1.3 3 2 5 2.3 2.4.4 4.5 1.4 4.5 3.7v2z"/><path d="M3 20h18"/>',
+    'club': '<path d="M4 21V5l8-2 8 2v16"/><circle cx="9" cy="9" r="1.2"/><circle cx="15" cy="12" r="1.2"/><circle cx="10" cy="16" r="1.2"/>'}.items()}
 bfilter = '<div class="bf" role="group" aria-label="Темы блога">%s</div>' % ''.join(filter_group(k, v) for k, v in CATEGORIES)
 body = '''<main>
 <section class="blog-head dark">
@@ -168,11 +172,11 @@ body = '''<main>
     <nav class="crumbs" aria-label="Хлебные крошки"><a href="../index.html">Главная</a><span>/</span><span>Блог</span></nav>
     <h1 class="d h1 blog-head__t">Блог о&nbsp;скалолазании</h1>
     <p class="lead blog-head__l">Тренировки, снаряжение, путешествия и&nbsp;жизнь клуба</p>
-    %s
   </div>
 </section>
 <section class="sec neutral blog-list">
   <div class="wrap">
+    %s
     <div class="bpick" hidden data-names='%s'><span>Подборка: <b></b></span><button class="bpick__x" type="button">Все статьи</button></div>
     <div class="bgrid">%s</div>
     <p class="bempty" hidden>В этой рубрике пока нет статей</p>

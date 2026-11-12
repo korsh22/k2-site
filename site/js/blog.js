@@ -135,14 +135,24 @@
     boxes.forEach(function (b) { b.addEventListener('change', function () { show(current()); }); });
     heads.forEach(function (h) { h.addEventListener('click', function () { h.setAttribute('aria-pressed', String(h.getAttribute('aria-pressed') !== 'true')); show(current()); }); });
     if (pick) $('.bpick__x', pick).addEventListener('click', function () { show([]); });
-    // телефон: разделы свёрнуты, темы раскрываются по стрелке; раздел с выбранной темой открыт
-    var groups = $$('.bf__g');
+    // темы раздела — по стрелке. Компьютер: выпадающий список поверх статей, открыт один, закрывается кликом мимо и Esc.
+    // Телефон: список раскрывается под разделом; раздел с выбранной темой открыт
+    var groups = $$('.bf__g'), mob = window.matchMedia('(max-width: 767px)');
     var setOpen = function (g, open) { g.classList.toggle('is-closed', !open); $('.bf__x', g).setAttribute('aria-expanded', String(open)); };
-    groups.forEach(function (g) { $('.bf__x', g).addEventListener('click', function () { setOpen(g, g.classList.contains('is-closed')); }); });
+    groups.forEach(function (g) { $('.bf__x', g).addEventListener('click', function () {
+      var open = g.classList.contains('is-closed');
+      if (open && !mob.matches) groups.forEach(function (o) { if (o !== g) setOpen(o, false); });
+      setOpen(g, open);
+    }); });
+    document.addEventListener('click', function (e) { if (!mob.matches && !e.target.closest('.bf__g')) groups.forEach(function (g) { setOpen(g, false); }); });
+    document.addEventListener('keydown', function (e) {
+      if (e.key !== 'Escape' || mob.matches) return;
+      groups.forEach(function (g) { if (!g.classList.contains('is-closed')) { setOpen(g, false); $('.bf__x', g).focus(); } });
+    });
     var fromHash = function () {
       var sel = location.hash.slice(1).split(',').map(decodeURIComponent).filter(known);
       show(sel, true);
-      groups.forEach(function (g) { setOpen(g, $$('input', g).some(function (b) { return b.checked; })); });
+      groups.forEach(function (g) { setOpen(g, mob.matches && $$('input', g).some(function (b) { return b.checked; })); });
     };
     window.addEventListener('hashchange', fromHash);
     fromHash();

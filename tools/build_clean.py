@@ -20,6 +20,10 @@ COMMENTS = [
     ('(через свой сервер / сниппет MODX — ', '(через свой сервер — '),
     (' В MODX его заменит SimpleSearch / mSearch2 (или JSON из pdoResources).', ' При подключении к серверу заменить настоящим поиском.'),
     ('/* В MODX: data-price / data-price-old из MIGX; если', '/* data-price / data-price-old — цены; если'),
+    ('В MODX: ссылка на ролик (TV). ', 'Ссылка на ролик — атрибут data-video. '),
+    ('В MODX: тренеры — ресурсы/MIGX (фото, имя, должность, квалификация)', 'Тренеры: фото, имя, должность, квалификация'),
+    ('(в MODX из прайса)', '(из прайса)'),
+    ('(в MODX — из прайса)', '(из прайса)'),
 ]
 CMS = re.compile(r'modx|formit|ajaxform|migx|pdoresources|msearch|simplesearch|сниппет', re.I)
 
