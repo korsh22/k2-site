@@ -144,6 +144,8 @@
       if (open && !mob.matches) groups.forEach(function (o) { if (o !== g) setOpen(o, false); });
       setOpen(g, open);
     }); });
+    // клик в любом месте строки раздела — как по стрелке
+    groups.forEach(function (g) { $('.bf__h', g).addEventListener('click', function (e) { if (!e.target.closest('.bf__x')) $('.bf__x', g).click(); }); });
     document.addEventListener('click', function (e) { if (!mob.matches && !e.target.closest('.bf__g')) groups.forEach(function (g) { setOpen(g, false); }); });
     document.addEventListener('keydown', function (e) {
       if (e.key !== 'Escape' || mob.matches) return;

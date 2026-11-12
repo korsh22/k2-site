@@ -286,3 +286,16 @@ a.art__main-tag:hover{background:var(--white);color:var(--graphite)}
   .blog-list .bf__g:not(.is-closed){box-shadow:none}
 }
 @media (max-width:767px){.blog-list .bf__g{overflow:hidden}}
+/* Вся строка раздела кликабельна; «Все статьи раздела» — как пункт с галочкой */
+.blog-list .bf__h{cursor:pointer}
+.bf__t{flex:1;font:700 var(--t-h5)/var(--l-h5) var(--font-display);color:var(--graphite);transition:color .2s}
+.bf__t small{font:500 var(--t-small)/1 var(--font-text);color:var(--grey-600)}
+.blog-list .bf__h:hover .bf__t{color:var(--red)}
+.blog-list .bf__h:hover .bf__x{background:var(--stone-200,#e4e1dc)}
+.blog-list button.bf__name.bf__i{all:unset;box-sizing:border-box;display:flex;align-items:center;gap:10px;min-height:32px;width:100%;cursor:pointer;color:var(--graphite);font:600 var(--t-small)/var(--l-small) var(--font-text);padding-bottom:6px;margin-bottom:4px;border-bottom:1px solid var(--grey-100)}
+.blog-list button.bf__name.bf__i:hover{color:var(--red)}
+.blog-list button.bf__name[aria-pressed="true"] .bf__box{background:var(--red);border-color:var(--red)}
+.blog-list button.bf__name[aria-pressed="true"] .bf__box::after{opacity:1}
+.blog-list button.bf__name:focus-visible{outline:2px solid var(--graphite);outline-offset:2px}
+.blog-list .bf__g:has(.bf__name[aria-pressed="true"]){box-shadow:inset 0 0 0 2px var(--red)}
+@media (max-width:767px){.blog-list button.bf__name.bf__i{min-height:40px;font-size:var(--t-body)}}

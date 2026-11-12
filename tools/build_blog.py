@@ -158,8 +158,11 @@ CHEVRON = '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9
 def filter_group(cat, name):
     items = ''.join('<label class="bf__i"><input type="checkbox" value="%s"><span class="bf__box"></span><span>%s <small>(%d)</small></span></label>' % (t, esc(TAGS[t]), tag_count(t)) for t in TOPICS[cat])
     # раздел: иконка + название (фильтр по разделу) + стрелка; темы — выпадающим списком поверх статей
-    return ('<div class="bf__g is-closed"><div class="bf__h"><span class="bf__ic">%s</span><button class="bf__name" type="button" data-f="%s" aria-pressed="false">%s <small>(%d)</small></button>'
-            '<button class="bf__x" type="button" aria-expanded="false" aria-label="Темы раздела «%s»">%s</button></div><div class="bf__list">%s</div></div>') % (CAT_ICO[cat], cat, esc(name), tag_count(cat), esc(name), CHEVRON, items)
+    # вся строка раздела раскрывает список тем; «Все статьи раздела» — первым пунктом списка
+    return ('<div class="bf__g is-closed"><div class="bf__h"><span class="bf__ic">%s</span><span class="bf__t">%s <small>(%d)</small></span>'
+            '<button class="bf__x" type="button" aria-expanded="false" aria-label="Темы раздела «%s»">%s</button></div>'
+            '<div class="bf__list"><button class="bf__name bf__i" type="button" data-f="%s" aria-pressed="false"><span class="bf__box"></span><span>Все статьи раздела</span></button>%s</div></div>') % (
+        CAT_ICO[cat], esc(name), tag_count(cat), esc(name), CHEVRON, cat, items)
 CAT_ICO = {k: '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true">%s</svg>' % v for k, v in {
     'travel': '<path d="M3 20l6-11 4 7 2-3 6 7z"/><circle cx="17" cy="6" r="2"/>',
     'train': '<path d="M6 7v10M18 7v10M3 10v4M21 10v4M6 12h12"/>',
