@@ -80,12 +80,18 @@
   var join = $('#join');
   if (join && join.showModal) {
     var jForm = $('form', join), jT = $('#join-t'), jTitle = jT.innerHTML;
+    var jS = $('.cform__s', join), jSub = jS ? jS.innerHTML : '';
     var J = setupDialog(join, function () { if (jForm.classList.contains('is-sent')) resetForm(jForm); });
     $$('.js-join').forEach(function (b) {
       b.addEventListener('click', function () {
+        // Отклик на вакансию (data-join-job="Название"): без выбора тренировки, в окне и в заявке — название вакансии
+        var job = b.dataset.joinJob || '';
+        join.classList.toggle('is-job', !!job);
         jT.innerHTML = b.dataset.joinTitle || jTitle;
-        var what = $('[name="what"]', join); if (what) what.value = jT.textContent; // в заявке видно, откуда её отправили
-        var t = b.dataset.joinTopic && $('[name="topic"][value="' + b.dataset.joinTopic + '"]', join);
+        if (jS) jS.innerHTML = job ? 'Вакансия: <b class="cform__job"></b><br>Оставьте телефон — перезвоним и расскажем подробнее' : jSub;
+        if (job) $('.cform__job', join).textContent = job;
+        var what = $('[name="what"]', join); if (what) what.value = job ? 'Отклик на вакансию: ' + job : jT.textContent; // в заявке видно, откуда её отправили
+        var t = !job && b.dataset.joinTopic && $('[name="topic"][value="' + b.dataset.joinTopic + '"]', join);
         if (t) t.checked = true;
         J.open();
       });
@@ -94,7 +100,44 @@
     jForm.addEventListener('submit', function (e) {
       e.preventDefault();
       if (!validate(jForm)) return;
-      send(jForm, function () { showDone(jForm, $('[name="name"]', jForm).value.trim() + ', спасибо! Перезвоним в\u00a0рабочее время и\u00a0поможем выбрать формат.'); });
+      var who = $('[name="name"]', jForm).value.trim();
+      send(jForm, function () { showDone(jForm, who + (join.classList.contains('is-job') ? ', спасибо за отклик! Перезвоним и расскажем о вакансии.' : ', спасибо! Перезвоним в рабочее время и поможем выбрать формат.')); });
+    });
+  }
+
+  /* ---------- Тренер: клик по карточке (или Enter / пробел) — окно с описанием ----------
+     Описание — скрытый блок .lp-coach__bio внутри карточки; на время показа его содержимое переезжает в окно (кнопки сохраняют обработчики) */
+  var coachCards = $$('.js-coach');
+  if (coachCards.length && window.HTMLDialogElement) {
+    var cm = document.createElement('dialog');
+    cm.className = 'modal cm'; cm.id = 'coach'; cm.setAttribute('aria-labelledby', 'cm-n');
+    cm.innerHTML = '<div class="modal__card"><div class="modal__img cm__img"><img alt=""></div><div class="cm__body">' +
+      '<button class="modal__x cm__x" type="button" aria-label="Закрыть"><svg class="ico" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>' +
+      '<span class="cm__r"></span><h3 class="d cm__n" id="cm-n"></h3><p class="cm__q"></p><div class="cm__slot"></div></div></div>';
+    document.body.appendChild(cm);
+    var cmSlot = $('.cm__slot', cm), cmFrom = null;
+    var cmBack = function () { if (!cmFrom) return; while (cmSlot.firstChild) cmFrom.appendChild(cmSlot.firstChild); cmFrom = null; };
+    var CM = setupDialog(cm, cmBack);
+    cm.addEventListener('close', cmBack);
+    $('.cm__x', cm).addEventListener('click', CM.close);
+    // «Записаться к тренеру»: окно тренера закрываем сразу, дальше открывается обычная заявка
+    cmSlot.addEventListener('click', function (e) { if (e.target.closest('.js-join')) cm.close(); }, true);
+    var cmOpen = function (card) {
+      cmBack();
+      var im = $('.lp-coach__img img', card), name = $('.lp-coach__n', card).textContent;
+      $('.cm__img img', cm).src = im ? im.getAttribute('src') : '';
+      $('.cm__n', cm).textContent = name;
+      $('.cm__r', cm).textContent = $('.lp-coach__r', card).textContent;
+      $('.cm__q', cm).textContent = $('.lp-coach__q', card).textContent;
+      cmFrom = $('.lp-coach__bio', card);
+      if (cmFrom) while (cmFrom.firstChild) cmSlot.appendChild(cmFrom.firstChild);
+      var go = $('.js-join', cmSlot); if (go) go.dataset.joinTitle = 'Запись к тренеру: ' + name;
+      CM.open();
+      $('.cm__body', cm).scrollTop = 0;
+    };
+    coachCards.forEach(function (c) {
+      c.addEventListener('click', function () { cmOpen(c); });
+      c.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); cmOpen(c); } });
     });
   }
 
@@ -367,20 +410,75 @@
     c.addEventListener('click', function () { c.setAttribute('aria-pressed', String(c.getAttribute('aria-pressed') !== 'true')); });
   });
 
-  /* ---------- Галерея ---------- */
-  var lb = $('#lb'), gal = $('.lp-gal');
-  if (lb && lb.showModal && gal) {
-    var gItems = $$('.lp-gal__i', gal).map(function (b) { var im = $('img', b); return { src: im.getAttribute('src'), alt: im.getAttribute('alt') || '' }; });
-    var gImg = $('.lb__img', lb), gCap = $('.lb__cap', lb), gCount = $('.lb__count', lb), gThumbs = $('.lb__thumbs', lb), gCur = 0;
-    gItems.forEach(function (it, i) {
-      var t = document.createElement('button'); t.type = 'button'; t.className = 'lb__th'; t.setAttribute('aria-label', 'Фото ' + (i + 1));
-      t.innerHTML = '<img src="' + it.src + '" alt="" loading="lazy">'; t.addEventListener('click', function () { gShow(i); }); gThumbs.appendChild(t);
+  /* ---------- Лента видео (.shorts): стрелки в заголовке секции и перетаскивание мышью ---------- */
+  $$('.videos').forEach(function (sec) {
+    var sh = $('.shorts', sec); if (!sh) return;
+    var step = function () { var s = $('.short', sh); return s ? s.offsetWidth + 16 : 300; };
+    var prev = $('.js-prev', sec), next = $('.js-next', sec);
+    if (prev) prev.addEventListener('click', function () { sh.scrollBy({ left: -step(), behavior: 'smooth' }); });
+    if (next) next.addEventListener('click', function () { sh.scrollBy({ left: step(), behavior: 'smooth' }); });
+    var down = false, moved = false, sx = 0, sl = 0;
+    sh.addEventListener('pointerdown', function (e) { if (e.pointerType !== 'mouse') return; down = true; moved = false; sx = e.clientX; sl = sh.scrollLeft; });
+    window.addEventListener('pointermove', function (e) {
+      if (!down) return; var dx = e.clientX - sx;
+      if (Math.abs(dx) > 5) { moved = true; sh.classList.add('is-drag'); }
+      sh.scrollLeft = sl - dx;
     });
-    var gTh = $$('.lb__th', gThumbs);
+    window.addEventListener('pointerup', function () { if (!down) return; down = false; setTimeout(function () { sh.classList.remove('is-drag'); }, 0); });
+    sh.addEventListener('click', function (e) { if (moved) { e.preventDefault(); moved = false; } }, true);
+  });
+
+  /* ---------- Вакансии: ссылка vakansii.html#slug сразу открывает подробное описание ---------- */
+  var jobHash = location.hash && document.getElementById(decodeURIComponent(location.hash.slice(1)));
+  if (jobHash && jobHash.classList.contains('job')) { var jm = $('.job__more', jobHash); if (jm) jm.open = true; }
+
+  /* ---------- Архив мероприятий: на странице один ряд сетки, ниже — переключатели страниц ---------- */
+  $$('.arc-grid').forEach(function (grid) {
+    var items = $$('.arc', grid), pager = grid.nextElementSibling;
+    if (!pager || !pager.classList.contains('arc-pager')) return;
+    var pagesBox = $('.arc-pager__pages', pager), prev = $('.arc-pager__prev', pager), next = $('.arc-pager__next', pager);
+    var per = 4, page = 0;
+    var cols = function () { return getComputedStyle(grid).gridTemplateColumns.split(' ').filter(Boolean).length || 1; };
+    var total = function () { return Math.max(1, Math.ceil(items.length / per)); };
+    function render(anim) {
+      items.forEach(function (it, i) {
+        var on = i >= page * per && i < (page + 1) * per;
+        it.hidden = !on;
+        it.classList.toggle('is-on', on && anim);
+      });
+      var n = total();
+      pager.hidden = n < 2;
+      pagesBox.innerHTML = '';
+      for (var p = 0; p < n; p++) {
+        var b = document.createElement('button'); b.type = 'button'; b.textContent = p + 1;
+        b.setAttribute('aria-label', 'Страница ' + (p + 1));
+        if (p === page) b.setAttribute('aria-current', 'page');
+        b.addEventListener('click', (function (q) { return function () { go(q); }; })(p));
+        pagesBox.appendChild(b);
+      }
+      prev.disabled = page === 0; next.disabled = page >= n - 1;
+    }
+    function go(p) { page = Math.max(0, Math.min(total() - 1, p)); render(true); }
+    function fit() { var first = page * per; per = cols(); page = Math.floor(first / per); render(false); }
+    prev.addEventListener('click', function () { go(page - 1); });
+    next.addEventListener('click', function () { go(page + 1); });
+    var t; window.addEventListener('resize', function () { clearTimeout(t); t = setTimeout(function () { if (cols() !== per) fit(); }, 150); });
+    fit();
+  });
+
+  /* ---------- Галерея: одно окно #lb на странице, галерей может быть несколько.
+     Группа — .lp-gal (сетка фото) или любой контейнер с data-lb (например, плитки «Удобства»).
+     Пункт — .lp-gal__i или [data-lb-i]; большое фото — data-full (если нет — src превью), подпись — data-cap или alt ---------- */
+  var lb = $('#lb'), groups = $$('.lp-gal, [data-lb]');
+  if (lb && lb.showModal && groups.length) {
+    var gImg = $('.lb__img', lb), gCap = $('.lb__cap', lb), gCount = $('.lb__count', lb), gThumbs = $('.lb__thumbs', lb);
+    var gBtns = [], gItems = [], gTh = [], gCur = 0;
+    var itemOf = function (b) {
+      var im = $('img', b);
+      return { src: b.dataset.full || (im && im.getAttribute('src')) || '', alt: b.dataset.cap || (im && im.getAttribute('alt')) || '' };
+    };
     // в галерее с переключателями листаем только фото выбранной вкладки
-    var gBtns = $$('.lp-gal__i', gal);
     var gVis = function () { return gItems.map(function (_, i) { return i; }).filter(function (i) { return !gBtns[i].hidden; }); };
-    var gStep = function (d) { var a = gVis(); gShow(a[(a.indexOf(gCur) + d + a.length) % a.length]); };
     var gShow = function (i) {
       gCur = (i + gItems.length) % gItems.length;
       gImg.classList.remove('is-in'); void gImg.offsetWidth; gImg.src = gItems[gCur].src; gImg.alt = gItems[gCur].alt; gImg.classList.add('is-in');
@@ -388,8 +486,21 @@
       gCap.textContent = gItems[gCur].alt; gCount.textContent = (act.indexOf(gCur) + 1) + ' / ' + act.length;
       gTh.forEach(function (t, n) { t.setAttribute('aria-current', String(n === gCur)); t.hidden = act.indexOf(n) < 0; });
     };
+    var gStep = function (d) { var a = gVis(); gShow(a[(a.indexOf(gCur) + d + a.length) % a.length]); };
+    var gOpen = function (btns, i) {
+      gBtns = btns; gItems = btns.map(itemOf); gThumbs.innerHTML = '';
+      gItems.forEach(function (it, n) {
+        var t = document.createElement('button'); t.type = 'button'; t.className = 'lb__th'; t.setAttribute('aria-label', 'Фото ' + (n + 1));
+        t.innerHTML = '<img src="' + it.src + '" alt="" loading="lazy">'; t.addEventListener('click', function () { gShow(n); }); gThumbs.appendChild(t);
+      });
+      gTh = $$('.lb__th', gThumbs);
+      document.documentElement.classList.add('lb-open'); lb.showModal(); gShow(i);
+    };
+    groups.forEach(function (g) {
+      var btns = $$('.lp-gal__i, [data-lb-i]', g);
+      btns.forEach(function (b, i) { b.addEventListener('click', function () { gOpen(btns, i); }); });
+    });
     var gClose = function () { if (lb.open) lb.close(); document.documentElement.classList.remove('lb-open'); };
-    $$('.lp-gal__i', gal).forEach(function (b, i) { b.addEventListener('click', function () { document.documentElement.classList.add('lb-open'); lb.showModal(); gShow(i); }); });
     $('.lb__x', lb).addEventListener('click', gClose);
     $('.lb__nav--prev', lb).addEventListener('click', function () { gStep(-1); });
     $('.lb__nav--next', lb).addEventListener('click', function () { gStep(1); });
@@ -399,11 +510,14 @@
     var sx = null;
     lb.addEventListener('touchstart', function (e) { sx = e.touches[0].clientX; }, { passive: true });
     lb.addEventListener('touchend', function (e) { if (sx === null) return; var dx = e.changedTouches[0].clientX - sx; sx = null; if (Math.abs(dx) > 50) gStep(dx < 0 ? 1 : -1); });
-    var more = $('.js-gal-more');
-    if (more) more.addEventListener('click', function () {
-      var all = gal.classList.toggle('is-all');
-      more.textContent = all ? 'Свернуть' : 'Показать ещё';
-      more.setAttribute('aria-expanded', String(all));
+    $$('.js-gal-more').forEach(function (more) {
+      var gal = more.closest('.lp-center') ? more.closest('.lp-center').previousElementSibling : $('.lp-gal');
+      if (!gal) return;
+      more.addEventListener('click', function () {
+        var all = gal.classList.toggle('is-all');
+        more.textContent = all ? 'Свернуть' : 'Показать ещё';
+        more.setAttribute('aria-expanded', String(all));
+      });
     });
   }
 

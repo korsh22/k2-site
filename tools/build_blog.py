@@ -180,12 +180,24 @@ body = '''<main>
 <section class="sec neutral blog-list">
   <div class="wrap">
     %s
-    <div class="bpick" hidden data-names='%s'><span>Подборка: <b></b></span><button class="bpick__x" type="button">Все статьи</button></div>
+    <div class="bpick" hidden data-names='%s'><span>Подборка: <b></b></span><button class="bpick__x btn btn--sec btn--sm" type="button"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>Сбросить фильтр</button></div>
     <div class="bgrid">%s</div>
     <p class="bempty" hidden>В этой рубрике пока нет статей</p>
   </div>
 </section>
 </main>''' % (bfilter, esc(json.dumps(dict(CATEGORIES, **TAGS), ensure_ascii=False), quote=True).replace('&#x27;', "'"), card(ARTICLES[0], big=True) + ''.join(card(x) for x in ARTICLES[1:]))
+# Вопросы и ответы внизу блога — SEO-блок (ответы — из фактов, которые уже есть на страницах сайта)
+BLOG_FAQ = [('С чего начать заниматься скалолазанием?', 'С пробной тренировки. Это час с тренером: опыт и своё снаряжение не нужны, а в конце вы поймёте, куда двигаться дальше.'),
+            ('Чем боулдеринг отличается от трудности?', 'Боулдеринг — короткие трассы без верёвки над мягкими матами. Трудность — длинные трассы на стенах до 13 метров со страховкой.'),
+            ('Нужно ли покупать снаряжение?', 'Нет. Скальные туфли, страховочную систему и магнезию выдадим на месте.'),
+            ('Что надеть на первую тренировку?', 'Удобную спортивную форму, в которой легко двигаться.'),
+            ('С какого возраста можно заниматься?', 'Детей берём с 5 лет — в детскую секцию. Взрослые программы — с 16 лет.'),
+            ('Где находится скалодром К2?', 'В центре Петербурга, в 7 минутах пешком от метро «Площадь Ленина».')]
+_fd = lambda its, first: ''.join('<details%s><summary>%s<i></i></summary><div class="faq__a"><p>%s</p></div></details>' % (' open' if first and i == 0 else '', esc(q), esc(a)) for i, (q, a) in enumerate(its))
+_h = (len(BLOG_FAQ) + 1) // 2
+body = body.replace('</section>\n</main>', '</section>\n<section class="sec neutral" id="faq">\n  <div class="wrap">\n'
+                    '    <div class="sechead"><div><h2 class="d h2">Вопросы и&nbsp;ответы</h2></div></div>\n'
+                    '    <div class="faq"><div class="faq__col">%s</div><div class="faq__col">%s</div></div>\n  </div>\n</section>\n</main>' % (_fd(BLOG_FAQ[:_h], True), _fd(BLOG_FAQ[_h:], False)), 1)
 doc = page('Блог о скалолазании — скалодром К2', 'Статьи о тренировках, снаряжении, путешествиях и жизни скалодрома К2', body, 'page--list')
 io.open(os.path.join(OUT, 'index.html'), 'w', encoding='utf-8').write(typograph(doc))
 print('список статей: blog/index.html')

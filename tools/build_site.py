@@ -27,7 +27,12 @@ I_GIFT = ico('<rect x="4" y="10" width="16" height="10" rx="1"/><path d="M3 7h18
 I_SHIELD = ico('<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/>')
 I_UP = ico('<path d="M4 20l6-8 4 4 6-9"/><path d="M15 7h5v5"/>')
 
-PRICE = '<span class="price"><b class="price__new"><span class="sr">Цена: </span>от [___] ₽</b></span>'
+# Цены — ПРИМЕРНЫЕ (рыба для вида), реальные даст скалодром. rub(1500) → «1 500 ₽»; price(новая, старая) — блок цены карточки
+def rub(v): return '{:,}'.format(v).replace(',', '&nbsp;') + '&nbsp;₽'
+def price(v, old=None, frm=True):
+    o = '<s class="price__old"><span class="sr">Старая цена: </span>%s%s</s>' % ('от&nbsp;' if frm else '', rub(old)) if old else ''
+    return '<span class="price" data-price="%d" data-price-old="%s">%s<b class="price__new"><span class="sr">Цена: </span>%s%s</b></span>' % (v, old or '', o, 'от&nbsp;' if frm else '', rub(v))
+PRICE = price(1500)
 DOC_STUB = '[Текст документа предоставит скалодром. В MODX — отдельный ресурс или поле страницы.]'
 
 
@@ -168,10 +173,26 @@ def gal(items, more_from=7):
         '<button class="lp-gal__i%s" type="button" data-i="%d" aria-label="Открыть фото: %s"><img src="assets/img/%s" alt="%s" loading="lazy"></button>' % (' is-more' if i >= more_from else '', i, a, f, a)
         for i, (f, a) in enumerate(items)), '<div class="lp-center"><button class="btn btn--sec js-gal-more" type="button" aria-expanded="false">Показать ещё</button></div>' if len(items) > more_from else '')
 
+# ---------- Карточка тренера: по клику (Enter/пробел) открывается окно с описанием (js/landing.js, .js-coach) ----------
+# Описание лежит в карточке скрытым блоком .lp-coach__bio — в MODX это поля тренера (о себе, специализация, с кем работает, достижения).
+COACH_PLUS = '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>'
+COACH_BIO_STUB = ('[Пара абзацев о&nbsp;тренере: как пришёл в&nbsp;скалолазание, какой опыт, как строит тренировки и&nbsp;что важно в&nbsp;работе с&nbsp;учениками.]',
+                  '[Боулдеринг, трудность, страховка]', '[Новички, взрослые, дети, подготовка к&nbsp;соревнованиям]', '[Разряды, соревнования, выезды на&nbsp;скалы]')
+def coach_card(n, r, q, img, bio=None):
+    about, spec, who, ach = bio or COACH_BIO_STUB
+    bio = ('<div class="lp-coach__bio" hidden><p class="cm__about">%s</p>'
+           '<dl class="cm__facts"><div><dt>Специализация</dt><dd>%s</dd></div>'
+           '<div><dt>С&nbsp;кем работает</dt><dd>%s</dd></div>'
+           '<div><dt>Достижения</dt><dd>%s</dd></div></dl>' % (about, spec, who, ach) +
+           '<button class="btn btn--primary js-join cm__go" type="button" aria-haspopup="dialog" aria-controls="join" data-join-title="Запись к&nbsp;тренеру">Записаться к&nbsp;тренеру</button></div>')
+    return ('<article class="lp-coach reveal js-coach" tabindex="0" role="button" aria-haspopup="dialog" aria-label="Подробнее о тренере: %s">'
+            '<div class="lp-coach__img"><img src="assets/img/%s" alt="Фото-заглушка" loading="lazy"><span class="lp-coach__plus">%s</span></div>'
+            '<b class="lp-coach__n">%s</b><span class="lp-coach__r">%s</span><span class="lp-coach__q">%s</span>'
+            '<span class="lp-coach__go">Подробнее о&nbsp;тренере</span>%s</article>') % (n.replace('&nbsp;', ' '), img, COACH_PLUS, n, r, q, bio)
+
 def coaches(items):
-    return '<div class="lp-coaches">%s</div>' % ''.join(
-        '<article class="lp-coach reveal"><div class="lp-coach__img"><img src="assets/img/coach-%d.jpg" alt="Фото-заглушка" loading="lazy"></div>'
-        '<b class="lp-coach__n">%s</b><span class="lp-coach__r">%s</span><span class="lp-coach__q">%s</span></article>' % ((i % 4 + 1,) + tuple(c)) for i, c in enumerate(items))  # фото — временные заглушки
+    # фото — временные заглушки (не наши тренеры), заменить снимками тренеров К2
+    return '<div class="lp-coaches">%s</div>' % ''.join(coach_card(c[0], c[1], c[2], 'coach-%d.jpg' % (i % 4 + 1), c[3] if len(c) > 3 else None) for i, c in enumerate(items))
 
 NEXT_MARK = '<svg class="lp-next__mark" viewBox="19 24 698 322" aria-hidden="true"><path d="M716.4,59.9v89l-90,62.4l90-1v133.8h-347V219.8l90-35.4l-90-35.4V24.5h257L716.4,59.9z"/><path d="M167.4,167.2l23.7-143h146.3v4l-24,145h24v171H190.8l-23.3-141v141h-148v-320h148V167.2z"/></svg>'
 def nextcta(h2, text, btn, orbit='оставьте заявку · перезвоним · '):
@@ -181,7 +202,8 @@ def nextcta(h2, text, btn, orbit='оставьте заявку · перезв�
                    h2, text, NEXT_MARK, orbit, btn), tone='neutral', cls='sec--flush')
 
 def helpbox(b, text, btn):
-    return '<div class="lp-help reveal"><p><b>%s</b> %s</p>%s</div>' % (b, text, btn)
+    # заголовок плашки — отдельной крупной строкой, под ним мелкий текст, справа кнопка
+    return '<div class="lp-help reveal"><div class="lp-help__txt"><b class="lp-help__t d">%s</b><p>%s</p></div>%s</div>' % (b, text, btn)
 
 def tiles(items):
     """Карточки-ссылки на разделы: [(заголовок, подпись, ссылка, картинка)]"""
@@ -193,6 +215,35 @@ CONTACT = sec(P['CONTACT'], 'contacts', cls='sec--flush')
 REVIEWS = lambda t='Отзывы': sec(sechead(t) + '\n<div class="widget reveal"><b>[Виджет отзывов]</b><span>Подтягивается с внешнего сервиса — [Яндекс Карты / 2ГИС]</span></div>', 'reviews', cls='lp-alt')
 COACH_STUB = [('[Имя Фамилия]', 'Старший тренер', '[Квалификация · стаж]'), ('[Имя Фамилия]', 'Тренер по боулдерингу', '[Квалификация · стаж]'),
               ('[Имя Фамилия]', 'Тренер по трудности', '[Квалификация · стаж]'), ('[Имя Фамилия]', 'Детский тренер', '[Квалификация · стаж]')]
+# Рыба: вымышленные тренеры (страница «Тренеры», детская секция): вымышленные тренеры и тексты-заглушки — заменить реальными данными скалодрома
+COACH_FISH_ADULT = [
+    ('Артём Соколов', 'Старший тренер', 'КМС по&nbsp;скалолазанию · стаж 10&nbsp;лет',
+     ('Пришёл в&nbsp;скалолазание студентом и&nbsp;за&nbsp;десять лет прошёл путь от&nbsp;новичка до&nbsp;кандидата в&nbsp;мастера спорта. На&nbsp;тренировках начинает с&nbsp;техники и&nbsp;безопасности, а&nbsp;силу добавляет постепенно&nbsp;— так прогресс держится долго и&nbsp;без травм.',
+      'Трудность, нижняя страховка, подготовка к&nbsp;соревнованиям', 'Взрослые новички и&nbsp;спортсмены', 'Призёр чемпионата Санкт-Петербурга, сотни трасс на&nbsp;скалах Крыма и&nbsp;Карелии')),
+    ('Максим Лебедев', 'Тренер по боулдерингу', 'I&nbsp;спортивный разряд · стаж 6&nbsp;лет',
+     ('Любит короткие сложные задачи и&nbsp;учит «читать» трассу до&nbsp;первого движения. Объясняет просто и&nbsp;с&nbsp;юмором, поэтому на&nbsp;его тренировках не&nbsp;страшно пробовать новое и&nbsp;ошибаться.',
+      'Боулдеринг, техника движения, работа ног', 'Новички и&nbsp;те, кто лазает от&nbsp;года', 'Финалист городских фестивалей боулдеринга, постановщик трасс')),
+    ('Илья Морозов', 'Тренер по трудности', 'Инструктор-методист · стаж 8&nbsp;лет',
+     ('Отвечает за&nbsp;высокую стену: учит страховать, работать с&nbsp;верёвкой и&nbsp;не&nbsp;бояться высоты. Каждого ученика доводит до&nbsp;уверенного самостоятельного лазания на&nbsp;13&nbsp;метрах.',
+      'Трудность, верхняя и&nbsp;нижняя страховка, выносливость', 'Взрослые, пары и&nbsp;группы', 'Инструктор по&nbsp;спортивному туризму, руководитель выездов на&nbsp;скалы')),
+    ('Ольга Кузнецова', 'Тренер', 'Мастер спорта по&nbsp;скалолазанию · стаж 5&nbsp;лет',
+     ('Сочетает лазание с&nbsp;ОФП и&nbsp;растяжкой: помогает стать сильнее и&nbsp;гибче без&nbsp;перегрузок. Строит тренировки под&nbsp;цель ученика&nbsp;— от&nbsp;первой трассы до&nbsp;подготовки к&nbsp;старту.',
+      'ОФП, растяжка, персональные тренировки', 'Взрослые любого уровня', 'Чемпионка Северо-Западного округа, участница всероссийских соревнований')),
+]
+COACH_FISH_KIDS = [
+    ('Дмитрий Орлов', 'Детский тренер', 'Педагог по&nbsp;физкультуре · стаж 7&nbsp;лет',
+     ('Работает с&nbsp;младшей группой и&nbsp;превращает тренировку в&nbsp;игру: задания, эстафеты, маленькие победы на&nbsp;каждом занятии. Родители отмечают, что дети идут к&nbsp;нему с&nbsp;радостью.',
+      'Игровые тренировки, координация, первые трассы', 'Дети 5–7 лет', 'Автор программы детских тренировок К2')),
+    ('Никита Павлов', 'Детский тренер', 'I&nbsp;спортивный разряд · стаж 4&nbsp;года',
+     ('Ведёт группу школьников: учит технике, страховке и&nbsp;командной работе. Следит, чтобы нагрузка была по&nbsp;возрасту, а&nbsp;каждый ребёнок видел свой прогресс.',
+      'Техника, боулдеринг, основы страховки', 'Дети 8–10 лет', 'Подготовил воспитанников к&nbsp;первым городским стартам')),
+    ('Сергей Волков', 'Детский тренер', 'КМС по&nbsp;скалолазанию · стаж 9&nbsp;лет',
+     ('Тренирует подростков, которые хотят большего: соревнования, выезды на&nbsp;скалы, сложные трассы. Требовательный, но&nbsp;всегда на&nbsp;стороне ученика.',
+      'Трудность, соревновательная подготовка, скалы', 'Подростки 11–16 лет', 'Ученики&nbsp;— призёры первенства города, ежегодные выезды в&nbsp;Карелию')),
+    ('Анна Смирнова', 'Детский тренер', 'Тренер-преподаватель · стаж 5&nbsp;лет',
+     ('Помогает детям, которые только пришли в&nbsp;секцию: спокойно знакомит с&nbsp;залом, правилами и&nbsp;первыми трассами. Особенно хорошо находит подход к&nbsp;стеснительным ребятам.',
+      'Пробные тренировки, адаптация новичков, растяжка', 'Дети 5–10 лет', 'Провела больше 300&nbsp;пробных занятий для детей')),
+]
 GAL_HALL = [('p-blue.jpg', 'Синяя стена с нависанием'), ('p-mat.jpg', 'Отдых на матах'), ('p-cave.jpg', 'Под нависанием'),
             ('k2-first-1.jpg', 'Боулдеринг в зале'), ('p-roof.jpg', 'Лазание по потолку'), ('k2-first-2.jpg', 'Трасса на нависании'),
             ('k2-hall.jpg', 'Зал скалодрома К2'), ('p-dyno.jpg', 'Прыжок к зацепу'), ('k2-first-3.jpg', 'Вместе на скалодроме')]
@@ -255,16 +306,16 @@ body = hero([('Для взрослых', '')], 'Скалолазание для 
 PLAY_FIRST = '<a class="lp-f__play" href="pervyj-raz.html#video"><i>' + ico('<path d="M8 5v14l11-7z"/>') + '</i><span class="lp-f__pl">Видео: как проходит первая тренировка</span><span class="lp-f__ps">Смотреть видео</span></a>'
 body += sec('<h2 class="lp-k reveal">Новичкам</h2>\n' + offers([
     offer('Первый раз', ['для любого возраста от 16 лет', 'для любого уровня подготовки', 'всё снаряжение выдаём', '60 минут', 'персонально или в группе'],
-          'Час с тренером: разберём основы и пройдём первые трассы.', PRICE + link_btn('Подробнее', 'pervyj-raz.html', 'btn btn--primary'), 'Пробная тренировка', img='k2-first-3.jpg', play=PLAY_FIRST),
+          'Час с тренером: разберём основы и пройдём первые трассы.', price(1500, 1900) + link_btn('Подробнее', 'pervyj-raz.html', 'btn btn--primary'), 'Пробная тренировка', img='k2-first-3.jpg', play=PLAY_FIRST),
     offer('Базовые курсы', ['программа из 3–5 тренировок', 'всё снаряжение выдаём', 'персонально или в группе'],
-          'Освоите боулдеринг, трудность и страховку — и сможете лазать без тренера.', PRICE + link_btn('Подробнее', 'bazovye-kursy.html', 'btn btn--primary'), 'Курс', img='p-chalk.jpg')]) +
+          'Освоите боулдеринг, трудность и страховку — и сможете лазать без тренера.', price(6900) + link_btn('Подробнее', 'bazovye-kursy.html', 'btn btn--primary'), 'Курс', img='p-chalk.jpg')]) +
     '\n<h2 class="lp-k lp-k--gap reveal">Уже занимаюсь</h2>\n' + offers([
     offer('Тренировки в группе', ['регулярно, по расписанию', 'с тренером', 'техника, сила, прогресс'], 'Школа скалолазания: программа, группа своего уровня и заметный прогресс.',
-          PRICE + link_btn('Подробнее', 'shkola.html', 'btn btn--primary'), img='k2-first-1.jpg'),
+          price(1200) + link_btn('Подробнее', 'shkola.html', 'btn btn--primary'), img='k2-first-1.jpg'),
     offer('Индивидуальные тренировки', ['персонально с тренером', 'под вашу задачу', 'удобное время'], 'Самый быстрый путь к цели — один на один с тренером.',
-          PRICE + link_btn('Подробнее', 'individualnye.html', 'btn btn--primary'), dark=True, img='p-cave.jpg'),
+          price(3500) + link_btn('Подробнее', 'individualnye.html', 'btn btn--primary'), dark=True, img='p-cave.jpg'),
     offer('Самостоятельные посещения', ['разовые и абонементы', 'боулдеринг и трудность', 'прокат снаряжения'], 'Приходите, когда удобно, и лазайте в своём ритме.',
-          PRICE + link_btn('Подробнее', 'samostoyatelno.html', 'btn btn--primary'), img='k2-hall.jpg')], 3), 'formats')
+          price(900) + link_btn('Подробнее', 'samostoyatelno.html', 'btn btn--primary'), img='k2-hall.jpg')], 3), 'formats')
 body += sec(sechead('Наш скалодром: боулдеринг и трудность', 'Нажмите на фото — откроется галерея', link_btn('О скалодроме', 'o-skalodrome.html', 'btn btn--sec reveal')) + '\n' + gal(GAL_HALL), 'photos', cls='lp-alt')
 body += CONTACT + faq_sec(FAQ_ADULT)
 page('dlya-vzroslyh.html', 'Скалолазание для взрослых — скалодром К2', 'Пробные тренировки, базовые курсы, школа скалолазания, индивидуальные тренировки и самостоятельные посещения для взрослых. Скалодром К2, м. Площадь Ленина.', body, gallery=True)
@@ -280,9 +331,11 @@ body += sec('<div class="lp-intro"><h2 class="d h2 reveal">Зачем курс, 
                    ('Свобода', 'После курса можно ходить в зал без тренера и лазать в паре.'), ('Уверенность', 'Тренер рядом, нагрузка растёт постепенно — без рывков и страха.')]), 'why')
 packs = re.findall(r'<a class="pack" href="pakety\.html#([\w-]+)"><span class="pack__img"><img src="assets/img/([^"]+)".*?<span class="pack__t">(.*?)</span><span class="pack__d">(.*?)</span><span class="badges">(.*?)</span>', MAIN)
 PK = {s: dict(img=i, t=t, d=d, b=re.findall(r'<span class="badge">(.*?)</span>', b)) for s, i, t, d, b in packs}
+PACK_PRICE = {'start': (6900, 7500), 'baza': (8900, 9900), 'rasshirennyj': (11900, 12900), 'nizhnyaya-strahovka': (7900, 8900),
+              'uroven': (9900, 10900), 'sila': (8900, 9900), 'vynoslivost': (8900, 9900), 'skaly': (9900, 10900), 'tehnika': (5900, 6500)}
 def pack_offer(s, dark=False, btn=None):
     p = PK[s]
-    return offer(p['t'], p['b'], p['d'], PRICE + (btn or join_btn('Записаться', 'Пакет «%s»' % re.sub('<[^>]+>', '', p['t']), 'trial')), dark=dark, id=s, img=p['img'])
+    return offer(p['t'], p['b'], p['d'], price(*PACK_PRICE[s]) + (btn or join_btn('Записаться', 'Пакет «%s»' % re.sub('<[^>]+>', '', p['t']), 'trial')), dark=dark, id=s, img=p['img'])
 body += sec(sechead('Программы курса', 'Выберите, с чего начать. Сомневаетесь — тренер подскажет на пробной тренировке.') + '\n' +
             offers([pack_offer('start'), pack_offer('baza'), pack_offer('rasshirennyj')], 3) + '\n' +
             helpbox('Уже умеете лазать с верхней страховкой?', 'Следующий шаг — курс «Нижняя страховка».', link_btn('Подробнее', 'pakety.html#nizhnyaya-strahovka')), 'programs')
@@ -315,19 +368,39 @@ body = hero([('Для взрослых', 'dlya-vzroslyh.html'), ('Школа с�
             join_btn('Записаться в школу', 'Запись в школу скалолазания', 'sub') + link_btn('Расписание', '#schedule', 'btn btn--sec'), 'Тренировка скалолаза')
 body += sec('<div class="lp-intro"><h2 class="d h2 reveal">Чем школа отличается от пробной тренировки</h2><p class="lead muted reveal">Пробная тренировка — знакомство. В школе вы занимаетесь регулярно по программе: тренер видит ваш прогресс и ставит следующую цель.</p></div>\n' +
             cards([('Техника', 'Работа ног, баланс, умение «читать» трассу.'), ('Сила', 'ОФП и специальные упражнения для скалолазов.'), ('Прогресс', 'Каждый месяц — трассы сложнее.'), ('Цели', 'Подготовка к выездам на скалы и соревнованиям.')], imgs=['k2-first-1.jpg', 'p-chalk.jpg', 'k2-hall.jpg', 'k2-rock.jpg']), 'who')
+# «Почему К2» — блок с «Первого раза» (фото на весь экран, цифры, шкала 0 → 13 м; логика — js/landing.js, setupWhy); кнопка — запись в школу
+_pr = io.open(os.path.join(ROOT, 'pervyj-raz.html'), encoding='utf-8').read()
+_a = _pr.index('<section class="lp-why2 dark" id="why">'); _b = _pr.index('</section>', _a) + len('</section>')
+body += (_pr[_a:_b].replace('Почему первое занятие стоит провести в&nbsp;К2', 'Почему постоянные тренировки в&nbsp;К2&nbsp;— это ТОП!')
+         .replace('<button class="btn btn--light js-book" type="button">Выбрать формат и&nbsp;записаться</button>',
+                  join_btn('Записаться в&nbsp;школу', 'Запись в школу скалолазания', 'sub', 'btn btn--light')) + '\n')
 body += sec(sechead('Форматы') + '\n' + offers([
-    offer('Групповые тренировки', ['по расписанию', 'группа [до __ человек]', 'с тренером', 'абонемент на [__] занятий'], 'Тренируйтесь в группе своего уровня — так прогресс идёт быстрее и веселее.', PRICE + join_btn('Записаться', 'Групповые тренировки в школе', 'sub'), 'Регулярно', img='k2-first-3.jpg'),
-    offer('Индивидуальные тренировки', ['персонально с тренером', 'под вашу цель', 'удобное время'], 'Один на один с тренером — самый быстрый прогресс.', PRICE + link_btn('Подробнее', 'individualnye.html', 'btn btn--primary'), 'Персонально', dark=True, img='p-cave.jpg')]), 'formats', cls='stack')
+    offer('Групповые тренировки', ['по расписанию', 'группа до 8 человек', 'с тренером', 'абонемент на 8 занятий'], 'Тренируйтесь в группе своего уровня — так прогресс идёт быстрее и веселее.', price(9600) + join_btn('Записаться', 'Групповые тренировки в школе', 'sub'), 'Регулярно', img='k2-first-3.jpg'),
+    offer('Индивидуальные тренировки', ['персонально с тренером', 'под вашу цель', 'удобное время'], 'Один на один с тренером — самый быстрый прогресс.', price(3500) + link_btn('Подробнее', 'individualnye.html', 'btn btn--primary'), 'Персонально', dark=True, img='p-cave.jpg')]), 'formats', cls='stack')
 body += sec(sechead('Уровни подготовки', 'Тренер определит уровень на первом занятии') + '\n' + cards([('Начальный', 'После пробной тренировки или базового курса. [Описание уточняется.]'),
                                                                                                      ('Средний', 'Уверенно лазаете и страхуете, хотите сложнее. [Описание уточняется.]'),
                                                                                                      ('Продвинутый', 'Подготовка к соревнованиям и скалам. [Описание уточняется.]')], 3), 'levels', 'dark', 'stack')
 body += sec(sechead('Расписание') + '\n<div class="widget reveal"><b>[Расписание групп]</b><span>Дни и время занятий — из CRM или таблицы в админке</span></div>', 'schedule')
+# Видео: лента вертикальных роликов со стрелками, как на главной (листание — js/landing.js)
+SH_VIDEO = [('razminka', 'k2-07.jpg', 'Разминка и&nbsp;заминка'), ('sovety', 'k2-13.jpg', 'Советы новичку'), ('more', 'p-rope.jpg', '[Видео с&nbsp;тренировки школы]'),
+            ('more', 'p-dyno.jpg', '[Видео: техника]'), ('more', 'k2-12.jpg', '[Видео: сила и&nbsp;ОФП]'), ('obzor', 'k2-01.jpg', 'Обзор скалодрома')]
+SH_CTL = ('<div class="sechead__ctl reveal"><button class="ibtn ibtn--line js-prev" type="button" aria-label="Назад">' + ico('<path d="M19 12H5M11 6l-6 6 6 6"/>') + '</button>'
+          '<button class="ibtn ibtn--line js-next" type="button" aria-label="Вперёд">' + ARROW + '</button>' + link_btn('Все видео', 'video.html') + '</div>')
+body += ('<section class="sec dark videos stack" id="video"><div class="wrap">' + sechead('Видео с&nbsp;тренировок', '', SH_CTL) + '</div>'
+         '<div class="shorts" tabindex="0" aria-label="Видео школы, листается">' + ''.join(
+             '<a class="short" href="video.html#%s"><img src="assets/img/%s" alt="" loading="lazy"><span class="scrim"></span>'
+             '<span class="play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span><span class="short__c"><b>%s</b><small>[0:45]</small></span></a>' % x for x in SH_VIDEO) + '</div></section>')
 body += sec(sechead('Тренеры школы', '', link_btn('Все тренеры', 'trenery.html', 'btn btn--sec reveal')) + '\n' + coaches(COACH_STUB), 'coaches', cls='lp-alt')
+# Фотогалерея: высокие ячейки сетки (1, 5, 8) — вертикальные фото, остальные — горизонтальные
+GAL_SCHOOL = [('p-wall.jpg', 'Скалолазка на высокой стене'), ('k2-first-1.jpg', 'Боулдеринг в зале'), ('p-chalk.jpg', 'Руки в магнезии'),
+              ('k2-first-2.jpg', 'Трасса на нависании'), ('p-blue.jpg', 'Синяя стена с нависанием'), ('p-cave.jpg', 'Под нависанием'),
+              ('k2-first-3.jpg', 'Вместе на скалодроме'), ('p-roof.jpg', 'Лазание по потолку'), ('k2-hall.jpg', 'Зал скалодрома К2')]
+body += sec(sechead('Фотогалерея', 'Нажмите на фото — откроется галерея') + '\n' + gal(GAL_SCHOOL), 'photos')
 body += REVIEWS('Отзывы и результаты') + faq_sec([('Можно ли прийти в школу без опыта?', 'Лучше начать с пробной тренировки или базового курса — тогда в школе вы сразу начнёте прогрессировать.'),
                                                    ('Как оплачивать занятия?', 'Абонементом на несколько занятий. [Условия уточняются.]'),
                                                    ('Что, если пропущу тренировку?', '[Условия переноса уточняются.]'), ('Можно ли заниматься в любой день?', 'Группы занимаются по расписанию. Если неудобно — подойдут индивидуальные тренировки.')])
 body += nextcta('Хотите тренироваться регулярно?', 'Оставьте заявку — подберём группу под ваш уровень и расписание.', join_btn('Оставить заявку', 'Запись в школу скалолазания', 'sub', 'btn btn--light'), 'группа под ваш уровень · ')
-page('shkola.html', 'Школа скалолазания для взрослых — скалодром К2', 'Регулярные тренировки с тренером: техника, сила, подготовка к выездам и соревнованиям. Группы по уровням и индивидуальные занятия.', body)
+page('shkola.html', 'Школа скалолазания для взрослых — скалодром К2', 'Регулярные тренировки с тренером: техника, сила, подготовка к выездам и соревнованиям. Группы по уровням и индивидуальные занятия.', body, gallery=True)
 
 
 # ======================= ИНДИВИДУАЛЬНЫЕ =======================
@@ -338,13 +411,15 @@ body = hero([('Для взрослых', 'dlya-vzroslyh.html'), ('Индивид
 body += sec(sechead('Когда это лучший выбор') + '\n' + cards([('Хочется быстрее', 'Всё внимание тренера — только вам.'), ('Есть конкретная задача', 'Пройти трассу, освоить нижнюю страховку, подготовиться к выезду.'),
                                                              ('Неудобно расписание групп', 'Время подбираем под вас.'), ('Нужен свой темп', 'Нагрузка и программа — под ваш уровень.')]), 'who')
 body += sec(sechead('Форматы и цены') + '\n' + offers([
-    offer('Разовая тренировка', ['персонально с тренером', '[60] минут', 'снаряжение — [условия уточняются]'], 'Чтобы попробовать формат или решить одну конкретную задачу.', PRICE + join_btn('Записаться', 'Индивидуальная тренировка')),
-    offer('Пакет тренировок', ['[__] тренировок', 'программа под вашу цель', 'выгоднее разовых'], 'Для системного прогресса по плану.', PRICE + link_btn('Пакеты', 'pakety.html', 'btn btn--primary'), dark=True)]) + '\n' +
+    offer('Разовая тренировка', ['персонально с тренером', '60 минут', 'снаряжение включено'], 'Чтобы попробовать формат или решить одну конкретную задачу.', price(3500, frm=False) + join_btn('Записаться', 'Индивидуальная тренировка')),
+    offer('Пакет тренировок', ['5 тренировок', 'программа под вашу цель', 'выгоднее разовых'], 'Для системного прогресса по плану.', price(15000, 17500, frm=False) + link_btn('Пакеты', 'pakety.html', 'btn btn--primary'), dark=True)]) + '\n' +
     helpbox('Вы новичок?', 'Персональная пробная тренировка для 1–3 участников — на странице «Первый раз».', link_btn('Первый раз', 'pervyj-raz.html')), 'formats', cls='stack')
 body += sec(sechead('Тренеры', '', link_btn('Все тренеры', 'trenery.html', 'btn btn--sec reveal')) + '\n' + coaches(COACH_STUB), 'coaches', cls='lp-alt')
+# Фотогалерея — стандартный блок после тренеров
+body += sec(sechead('Фотогалерея', 'Нажмите на фото — откроется галерея', link_btn('О скалодроме', 'o-skalodrome.html', 'btn btn--sec reveal')) + gal(GAL_HALL), 'photos')
 body += CONTACT + faq_sec([('Можно ли прийти вдвоём?', '[Условия для 2–3 участников уточняются.] Для новичков есть персональная пробная тренировка для 1–3 человек.'),
                            ('Можно ли выбрать тренера?', 'Да, укажите это в заявке.'), ('Как перенести тренировку?', '[Условия переноса уточняются.]'), ('Нужно ли своё снаряжение?', 'Нет, выдадим на месте.')])
-page('individualnye.html', 'Индивидуальные тренировки по скалолазанию — скалодром К2', 'Персональные тренировки с тренером под вашу цель и в удобное время. Скалодром К2, м. Площадь Ленина.', body)
+page('individualnye.html', 'Индивидуальные тренировки по скалолазанию — скалодром К2', 'Персональные тренировки с тренером под вашу цель и в удобное время. Скалодром К2, м. Площадь Ленина.', body, gallery=True)
 
 
 # ======================= САМОСТОЯТЕЛЬНЫЕ =======================
@@ -356,7 +431,7 @@ body = hero([('Для взрослых', 'dlya-vzroslyh.html'), ('Самосто
 I_ROPE = ico('<path d="M9 3h6l-1 5a2 2 0 0 1-4 0z"/><path d="M12 10v3"/><circle cx="12" cy="17" r="4"/>')
 WHO = [(I_UP, 'Умеете лазать', 'Прошли пробную тренировку, базовый курс или&nbsp;лазали где-то ещё.', 'Боулдеринг и&nbsp;трудность'),
        (I_SHIELD, 'Знаете технику безопасности', 'Перед первым посещением&nbsp;— инструктаж. [Порядок уточняется.]', 'Боулдеринг и&nbsp;трудность'),
-       (I_ROPE, 'Умеете страховать', 'Нужен допуск к&nbsp;страховке и&nbsp;напарник. [Условия допуска уточняются.]', 'Только трудность')]
+       (I_ROPE, 'Умеете страховать', 'Нужен допуск к&nbsp;страховке и&nbsp;напарник. На&nbsp;трассах с&nbsp;автостраховкой&nbsp;— не&nbsp;нужен. [Условия допуска уточняются.]', 'Трудность с&nbsp;верёвкой')]
 body += sec(sechead('Кто может лазать самостоятельно') + '<div class="who">'
     '<div class="who__pass reveal"><div class="who__head"><span class="who__k">Допуск</span><b class="d">Самостоятельное лазание</b><span class="who__hint">Нужно всё по&nbsp;списку</span></div><ul class="who__list">' + ''.join(
         '<li><span class="who__ic">%s</span><div><b>%s</b><p>%s</p></div><span class="who__z">%s</span><span class="who__ok" aria-hidden="true">%s</span></li>' % (ic, t, d, z, CHECK) for ic, t, d, z in WHO) + '</ul></div>'
@@ -371,20 +446,26 @@ ZONES = [('Боулдеринг', 'Без страховки', 'k2-first-1.jpg',
           'Короткие задачи: лазаете, спрыгиваете на&nbsp;мат, пробуете снова.', 'Подойдёт, если вы&nbsp;пришли без&nbsp;напарника'),
          ('Трудность', 'Со страховкой', 'k2-hall.jpg', 'o-skalodrome.html#trudnost',
           [(I_HEIGHT, 'Стены 13&nbsp;метров'), (I_ROPE, 'Лазание со&nbsp;страховкой верёвкой'), (I_PEOPLE, 'Вдвоём: один лезет, второй страхует')],
-          'Длинные трассы на&nbsp;высокой стене.', 'Нужен напарник и&nbsp;допуск к&nbsp;страховке')]
+          'Длинные трассы на&nbsp;высокой стене.', 'Для трасс с&nbsp;верёвкой нужен напарник и&nbsp;допуск к&nbsp;страховке')]
+# Трудность в одиночку: зона с автостраховками — акцентная плашка в карточке «Трудность»
+I_AUTO = ico('<circle cx="12" cy="8" r="5"/><path d="M12 5v3l2 1.5"/><path d="M12 13v8"/><path d="M9.5 18.5L12 21l2.5-2.5"/>')
+ZN_AUTO = ('<div class="zn__auto"><span class="zn__auto-ic">%s</span><div><b class="d">Пришли один? Есть автостраховки</b>'
+           '<p>В&nbsp;зоне трудности есть трассы с&nbsp;автостраховкой: устройство само выбирает верёвку и&nbsp;плавно опускает вас вниз. Напарник не&nbsp;нужен&nbsp;— можно лазать на&nbsp;высоту в&nbsp;одиночку. [Количество трасс и&nbsp;условия допуска уточняются.]</p></div></div>') % I_AUTO
 body += sec(sechead('Какие зоны доступны', 'Для самостоятельных посещений открыты обе зоны&nbsp;— условия у&nbsp;них разные.') + '<div class="zn">' + ''.join(
     '<article class="zn__c reveal"><a class="zn__ph" href="%s"><img src="assets/img/%s" alt="" loading="lazy"><span class="zn__tag">%s</span><b class="zn__t d">%s</b></a>'
-    '<div class="zn__b"><ul class="zn__f">%s</ul><p class="zn__d">%s</p><p class="zn__must">%s<span>%s</span></p>%s</div></article>' % (
-        h, img, tag, t, ''.join('<li><span class="zn__ic">%s</span>%s</li>' % f for f in facts), d, I_SHIELD if k == 1 else CHECK, must, link_btn('О зоне', h, 'btn btn--sec'))
+    '<div class="zn__b"><ul class="zn__f">%s</ul>%s<p class="zn__d">%s</p><p class="zn__must">%s<span>%s</span></p>%s</div></article>' % (
+        h, img, tag, t, ''.join('<li><span class="zn__ic">%s</span>%s</li>' % f for f in facts), ZN_AUTO if k == 1 else '', d, I_SHIELD if k == 1 else CHECK, must, link_btn('О зоне', h, 'btn btn--sec'))
     for k, (t, tag, img, h, facts, d, must) in enumerate(ZONES)) + '</div>', 'zones', 'dark', 'stack')
 body += sec('<div class="prices__grid"><div class="prices__main">' + sechead('Разовое посещение и абонементы') + plist([
-    ('Разовое посещение', 'Самостоятельно, боулдеринг и трудность', '[___] ₽'), ('Абонемент [на месяц]', 'Самостоятельные посещения', '[___] ₽'),
-    ('Абонемент [на __ посещений]', 'Самостоятельные посещения', '[___] ₽'), ('Прокат снаряжения', 'Скальники, страховочная система', '[___] ₽')]) +
+    ('Разовое посещение', 'Самостоятельно, боулдеринг и трудность', '900 ₽'), ('Абонемент на месяц', 'Безлимит самостоятельных посещений', '6 500 ₽'),
+    ('Абонемент на 8 посещений', 'Самостоятельные посещения, 2 месяца', '5 600 ₽'), ('Прокат снаряжения', 'Скальники, страховочная система', '400 ₽')]) +
     '<div class="prices__all reveal">' + link_btn('Все цены', 'ceny.html') + '</div></div><aside class="prices__aside"><div class="note reveal"><b>Часы посещения</b><p>[Ежедневно, __:__–__:__]</p>' +
     link_btn('Правила посещения', 'dokumenty.html#pravila', 'btn btn--light') + '</div></aside></div>', 'prices')
-body += CONTACT + faq_sec([('Нужно ли записываться заранее?', '[Порядок записи уточняется.]'), ('Можно ли прийти без напарника?', 'На боулдеринг — да. Для трудности нужен напарник со страховкой.'),
+# Фотогалерея — стандартный блок (как на «Для взрослых»): клик по фото — во весь экран
+body += sec(sechead('Фотогалерея', 'Нажмите на фото — откроется галерея', link_btn('О скалодроме', 'o-skalodrome.html', 'btn btn--sec reveal')) + gal(GAL_HALL), 'photos', cls='lp-alt')
+body += CONTACT + faq_sec([('Нужно ли записываться заранее?', '[Порядок записи уточняется.]'), ('Можно ли прийти без напарника?', 'Да. Без напарника можно лазать на боулдеринге и на трассах с автостраховкой в зоне трудности. Для остальных трасс трудности нужен напарник с допуском к страховке.'),
                            ('Что входит в прокат?', 'Скальные туфли, страховочная система. [Список уточняется.]'), ('Есть ли раздевалка и душ?', 'Да: раздевалки, душевые, шкафчики, аренда полотенец.')])
-page('samostoyatelno.html', 'Самостоятельные посещения скалодрома — К2', 'Разовые посещения и абонементы для тех, кто умеет лазать: боулдеринг и трудность, прокат снаряжения. Скалодром К2.', body)
+page('samostoyatelno.html', 'Самостоятельные посещения скалодрома — К2', 'Разовые посещения и абонементы для тех, кто умеет лазать: боулдеринг и трудность, прокат снаряжения. Скалодром К2.', body, gallery=True)
 
 
 # ======================= ДЛЯ ДЕТЕЙ (хаб) =======================
@@ -454,12 +535,21 @@ body += sec(sechead('Своя группа для каждого возраст�
             '<div class="kgrp">' + ''.join(
                 '<article class="kgrp__c reveal"><span class="kgrp__ph"><img src="assets/img/%s" alt="%s" loading="lazy"></span><div class="kgrp__top"><b class="d kgrp__age">%s</b><span class="badge">%s</span></div><p class="kgrp__who">%s</p><p class="kgrp__d">%s</p>'
                 '<a class="kgrp__go" href="#schedule" data-tab-go="schedule:%s">Группа %s: расписание и цена%s</a></article>' % (KPH[k][0], KPH[k][1], t, m, w, d, k, t, ARROW) for k, t, w, m, d in KGROUPS) + '</div>', 'groups')
-# 4. Расписание (вид пока не определён: виджет или своё)
+# 4. Расписание — ПРИМЕРНОЕ (рыба): дни, время, зал и тренер. В MODX — таблица или виджет CRM
+KSCHED = {'5': [('Вторник, четверг', '17:00–18:00', 'Зал боулдеринга · тренер Дмитрий Орлов'), ('Суббота', '11:00–12:00', 'Зал боулдеринга · тренер Анна Смирнова')],
+          '8': [('Понедельник, среда', '17:30–19:00', 'Боулдеринг и&nbsp;трудность · тренер Никита Павлов'), ('Суббота', '12:30–14:00', 'Боулдеринг и&nbsp;трудность · тренер Никита Павлов')],
+          '11': [('Вторник, четверг', '18:30–20:00', 'Трудность, 13&nbsp;м · тренер Сергей Волков'), ('Воскресенье', '12:00–13:30', 'Трудность и&nbsp;ОФП · тренер Сергей Волков')]}
 body += sec('<p class="lp-k reveal">Расписание</p>' + sechead('Выберите группу и удобное время', 'Регулярные занятия проходят по абонементам. Посмотрите расписание своей возрастной группы и доступное количество тренировок в месяц.') +
             tabs('schedule', [(k, t) for k, t, _, _, _ in KGROUPS]) +
-            ''.join('<div class="widget reveal in" data-tab-of="schedule" data-t="%s"%s><b>[Расписание: группа %s]</b><span>Вид расписания определяется: виджет или таблица на сайте</span></div>' % (k, '' if i == 0 else ' hidden', t) for i, (k, t, _, _, _) in enumerate(KGROUPS)), 'schedule', cls='lp-alt')
+            ''.join('<div class="ksch reveal in" data-tab-of="schedule" data-t="%s"%s>%s<p class="ksch__note">Расписание примерное. Точное время и&nbsp;свободные места подскажет администратор.</p></div>' % (
+                k, '' if i == 0 else ' hidden', ''.join('<div class="ksch__row"><b>%s</b><span class="d">%s</span><small>%s</small></div>' % r for r in KSCHED[k]))
+                for i, (k, t, _, _, _) in enumerate(KGROUPS)), 'schedule', cls='lp-alt')
 # 5. Абонементы: карточка переворачивается по клику (список абонементов уточняется)
-ABO_BACK = [('Срок действия', '[точные условия]'), ('Порядок записи', '[условия]'), ('Пропуски и переносы', '[правила]'), ('Снаряжение', '[включено или нет]'), ('Дополнительные платежи', '[если есть]')]
+# Условия абонемента — ПРИМЕРНЫЕ (рыба)
+ABO_BACK = [('Срок действия', '30 дней с&nbsp;первого занятия'), ('Порядок записи', 'Заявка на&nbsp;сайте или по&nbsp;телефону, место в&nbsp;группе закрепляется после оплаты'),
+            ('Пропуски и переносы', 'По&nbsp;болезни&nbsp;— перенос в&nbsp;пределах срока абонемента, если предупредить до&nbsp;начала занятия'),
+            ('Снаряжение', 'Включено: скальные туфли, система, каска'), ('Дополнительные платежи', 'Нет')]
+ABO_PRICE = {'5': (8, 7200), '8': (8, 8400), '11': (8, 8800)}  # (тренировок в месяц, цена) — ПРИМЕРНЫЕ
 TURN = ico('<path d="M4 12a8 8 0 0 1 14-5.3L20 9"/><path d="M20 4v5h-5"/><path d="M20 12a8 8 0 0 1-14 5.3L4 15"/><path d="M4 20v-5h5"/>')
 ABO_PH = {'5': 'p-fun.jpg', '8': 'k2-09.jpg', '11': 'k2-11.jpg'}
 def abo(k, t, m):
@@ -468,11 +558,11 @@ def abo(k, t, m):
     return ('<button class="abo reveal" type="button" aria-pressed="false" aria-label="Абонемент для группы %s: подробнее об условиях"><span class="abo__in">'
             '<span class="abo__s abo__f"><span class="abo__top"><span class="abo__tag"><i></i>Абонемент</span><img class="abo__ph" src="assets/img/%s" alt="" loading="lazy"></span>'
             '<span class="abo__age d">%s<small>лет</small></span>'
-            '<span class="abo__fs"><span class="abo__fi">%s<span>[Количество] тренировок в&nbsp;месяц</span></span><span class="abo__fi">%s<span>Занятие %s</span></span></span>'
-            '<span class="abo__pr"><span class="abo__p d">[Стоимость] ₽</span><span class="abo__n">В стоимость входит: [утверждённый состав услуги]. Срок действия: [точные условия].</span></span>'
+            '<span class="abo__fs"><span class="abo__fi">%s<span>%d тренировок в&nbsp;месяц</span></span><span class="abo__fi">%s<span>Занятие %s</span></span></span>'
+            '<span class="abo__pr"><span class="abo__p d">%s</span><span class="abo__n">В стоимость входит: тренировки с&nbsp;тренером, снаряжение и&nbsp;страховка. Срок действия: 30 дней.</span></span>'
             '<span class="abo__turn">Условия абонемента%s</span></span>'
             '<span class="abo__s abo__r"><span class="abo__g">Для группы %s</span>%s<span class="abo__turn">Назад%s</span></span></span></button>') % (
-        t, ABO_PH[k], age, I_CAL, I_TIME, m, TURN, t, ''.join('<span class="abo__row"><b>%s</b><span>%s</span></span>' % x for x in ABO_BACK), TURN)
+        t, ABO_PH[k], age, I_CAL, ABO_PRICE[k][0], I_TIME, m, rub(ABO_PRICE[k][1]), TURN, t, ''.join('<span class="abo__row"><b>%s</b><span>%s</span></span>' % x for x in ABO_BACK), TURN)
 body += sec(sechead('Абонементы') + '<div class="abos">' + ''.join(abo(k, t, m) for k, t, _, m, _ in KGROUPS) + '</div>', 'abonementy', 'dark', 'stack')
 # 6. Навыки
 # Иконки навыков: фигура на стене, маршрут по точкам, мишень
@@ -489,7 +579,7 @@ body += sec('<div class="ktrial"><figure class="ktrial__img reveal"><img src="as
             '<p class="lp-k reveal">Пробная тренировка в секции</p><h2 class="d h2 reveal">Сначала попробуйте занятие в секции</h2>'
             '<p class="lead muted reveal">Пробная тренировка проходит в общей группе соответствующего возраста. Ребёнок знакомится с тренером и форматом занятий, а вы можете решить, подходит ли ему секция.</p>'
             '<p class="ktrial__mark reveal">Это занятие в группе секции, а не индивидуальная тренировка.</p>'
-            '<dl class="ktrial__list reveal"><div><dt>Стоимость</dt><dd><span class="price"><s class="price__old"><span class="sr">Старая цена: </span>[____] ₽</s><b class="price__new"><span class="sr">Цена: </span>[____] ₽</b></span></dd></div>'
+            '<dl class="ktrial__list reveal"><div><dt>Стоимость</dt><dd>' + price(1200, 1500, frm=False) + '</dd></div>'
             '<div><dt>Продолжительность</dt><dd>60–90 минут, зависит от возраста</dd></div><div><dt>В стоимость входит</dt><dd>Всё снаряжение, работа тренера</dd></div></dl>'
             '<div class="reveal">' + trial_btn() + '</div></div></div>' +
             helpbox('Остались вопросы?', 'Свяжитесь с нами — ответим и поможем определиться.', link_btn('Связаться с нами', '#contacts')), 'trial', cls='lp-alt')
@@ -500,17 +590,19 @@ KDOCS = [('zayavlenie', I_DOC, 'Заявление от&nbsp;родителей'
 KSTEPS = [('Прочитайте документы', 'Заявление и&nbsp;технику безопасности&nbsp;— кнопкой «Открыть» у&nbsp;каждого документа.'),
           ('Подпишите заявление', 'Его заполняет родитель или законный представитель ребёнка.'),
           ('Возьмите спортивную форму', 'Удобную одежду для движения. Снаряжение выдадим на&nbsp;месте.')]
-body += sec(sechead('Документы и материалы для родителей', 'Всё, что понадобится до&nbsp;первого занятия: документы можно открыть и&nbsp;распечатать заранее.') + '<div class="kdoc">'
+# Блок «Документы и материалы для родителей» — общий: стоит в детской секции и на детской пробной
+KDOC_SEC = sec(sechead('Документы и материалы для родителей', 'Всё, что понадобится до&nbsp;первого занятия: документы можно открыть и&nbsp;распечатать заранее.') + '<div class="kdoc">'
     '<div class="kdoc__list">' + ''.join(
         '<article class="kdoc__c reveal"><span class="kdoc__ic">%s</span><div class="kdoc__b"><b class="kdoc__t d">%s</b><p>%s</p>'
-        '<p class="kdoc__meta"><span>%s</span><span>Редакция от&nbsp;[дата]</span></p></div>'
+        '<p class="kdoc__meta"><span>%s</span><span>Редакция от&nbsp;1&nbsp;сентября 2026</span></p></div>'
         '<a class="btn btn--sec kdoc__go" href="dokumenty.html#%s">Открыть%s</a></article>' % (ic, t, d, who, k, ARROW) for k, ic, t, d, who in KDOCS) + '</div>'
     '<aside class="kdoc__side reveal"><p class="kdoc__st d">Перед первым занятием</p><ol class="kdoc__steps">' + ''.join(
         '<li><b>%s</b><span>%s</span></li>' % x for x in KSTEPS) + '</ol>'
     '<p class="kdoc__more">Другие документы: <a href="dokumenty.html#pravila">Правила посещения</a>, <a href="dokumenty.html#oferta">Договор оферты</a></p>'
     + join_btn('Задать вопрос по&nbsp;документам', 'Вопрос по документам', 'kids', 'btn btn--light') + '</aside></div>', 'docs')
+body += KDOC_SEC
 # 9. Тренеры
-body += sec(sechead('Тренеры детской секции', '', link_btn('Все тренеры', 'trenery.html', 'btn btn--sec reveal')) + '\n' + coaches([('[Имя Фамилия]', 'Детский тренер', '[Квалификация · стаж]')] * 4), 'coaches', cls='lp-alt')
+body += sec(sechead('Тренеры детской секции', '', link_btn('Все тренеры', 'trenery.html', 'btn btn--sec reveal')) + '\n' + coaches(COACH_FISH_KIDS), 'coaches', cls='lp-alt')
 # 10. Выезды и соревнования
 body += sec(sechead('Выезды на скалы и соревнования') + offers([
     offer('На настоящие скалы — в школьные каникулы', [], 'Секция проводит детские выезды на скалы в Ленинградскую область и Карелию. Это возможность познакомиться с лазанием на естественном рельефе вместе с секцией.',
@@ -526,8 +618,9 @@ body += sec(sechead('Фотогалерея') + tabs('kgal', [('train', 'Тре�
 # 12. Отзывы: видеолента, как на главной, и виджет
 PLAY = '<span class="play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>'
 body += '<section class="sec dark videos stack" id="reviews"><div class="wrap">' + sechead('Отзывы') + '</div><div class="shorts" tabindex="0" aria-label="Видеоотзывы, листается">' + ''.join(
-    '<a class="short" href="video.html"><img src="assets/img/%s" alt="" loading="lazy"><span class="scrim"></span>%s<span class="short__c"><b>[Видеоотзыв]</b><small>[0:45]</small></span></a>' % (f, PLAY)
-    for f in ['k2-10.jpg', 'k2-02.jpg', 'p-fun.jpg', 'p-smile.jpg', 'k2-13.jpg', 'k2-12.jpg']) + '</div><div class="wrap"><div class="widget reveal kreviews"><b>[Виджет отзывов]</b><span>Подтягивается с внешнего сервиса — [Яндекс Карты / 2ГИС]</span></div></div></section>'
+    '<a class="short" href="video.html"><img src="assets/img/%s" alt="" loading="lazy"><span class="scrim"></span>%s<span class="short__c"><b>%s</b><small>%s</small></span></a>' % (f, PLAY, t, d)
+    for f, t, d in [('k2-10.jpg', 'Родители группы 5–7 лет', '0:45'), ('k2-02.jpg', 'Первая тренировка в&nbsp;секции', '1:10'), ('p-fun.jpg', 'Родители группы 8–10 лет', '0:58'),
+                    ('p-smile.jpg', 'Как прошёл выезд на&nbsp;скалы', '1:24'), ('k2-13.jpg', 'Родители группы 11–16 лет', '0:52'), ('k2-12.jpg', 'Наши первые соревнования', '1:05')]) + '</div><div class="wrap"><div class="widget reveal kreviews"><b>Отзывы с&nbsp;Яндекс Карт и&nbsp;2ГИС</b><span>Здесь подключится виджет отзывов внешнего сервиса</span></div></div></section>'
 # 13. Форма связи
 body += CONTACT
 # 14. Вопросы (ответы — из ТЗ; чего нет в ТЗ — в скобках)
@@ -535,8 +628,8 @@ body += faq_sec([('С какого возраста можно?', 'С 5 лет. 
                  ('Сколько длится занятие?', 'Для детей 5–7 лет — 60 минут, для школьников и подростков — 90 минут.'),
                  ('Можно ли сначала попробовать?', 'Да. Пробная тренировка проходит в общей группе соответствующего возраста: ребёнок знакомится с тренером и форматом занятий.'),
                  ('Что входит в пробную тренировку?', 'Всё снаряжение и работа тренера.'),
-                 ('Как оплачиваются занятия?', 'Регулярные занятия проходят по абонементам на месяц. [Условия уточняются.]'),
-                 ('Что, если ребёнок пропустит занятие?', '[Правила пропусков и переносов уточняются.]'),
+                 ('Как оплачиваются занятия?', 'Регулярные занятия проходят по абонементам на месяц: 8 тренировок. Оплатить можно на ресепшене картой или наличными, а также онлайн по ссылке от администратора.'),
+                 ('Что, если ребёнок пропустит занятие?', 'Предупредите администратора до начала тренировки: пропуски по болезни переносятся в пределах срока абонемента.'),
                  ('Есть ли выезды на скалы?', 'Да, в школьные каникулы: в Ленинградскую область и Карелию.'),
                  ('Участвуют ли дети в соревнованиях?', 'Да, дети секции выступают на городских соревнованиях в составе команды скалодрома.')])
 # Липкое меню по разделам — как на «Первом разе»
@@ -568,33 +661,85 @@ body = hero([('Для детей', 'dlya-detej.html'), ('Пробная трен
             'Час на скалодроме с тренером: покажет, подберёт трассы по силам и проследит за безопасностью. Для детей от 5 лет.',
             'k2-02.jpg', [(I_CHILD, 'От 5 лет'), (I_SPARK, 'Опыт не нужен'), (I_GEAR, 'Снаряжение включено'), (I_PEOPLE, 'В группе или персонально')],
             book_btn('Записать ребёнка', 'group', 0, 1) + link_btn('Вместе с ребёнком', '#family', 'btn btn--sec'), 'Взрослый и ребёнок на скалодроме')
-body += sec(sechead('Как проходит') + '\n' + steps([('Знакомство', 'Тренер знакомится с ребёнком и подбирает ему снаряжение.'), ('Инструктаж и разминка', 'Простые правила безопасности и разминка в игровой форме.'),
-                                                   ('Первые трассы', 'Сначала боулдеринг над матами, потом — высокая стена со страховкой.'), ('Итог', 'Тренер расскажет родителям, как ребёнку заниматься дальше.')]), 'how', 'dark', 'stack')
-body += sec(sechead('Выберите формат') + '\n' + offers([
-    offer('Детская пробная в группе', ['для детей от 5 лет', 'группа до 8 человек', 'работа тренера', 'необходимое снаряжение'], 'Весело, в компании ровесников.', PRICE + book_btn('Записаться', 'group', 0, 1), 'Группа до 8 человек'),
-    offer('Персональная детская пробная', ['для 1–3 детей', 'индивидуальный темп', 'работа тренера', 'необходимое снаряжение'], 'Больше внимания тренера — удобно для братьев и сестёр.', PRICE + book_btn('Записаться', 'personal', 0, 1), '1–3 участника', dark=True)]), 'formats', cls='stack')
+# «Как проходит» — сцена «60 минут», как на «Первом разе» (таймер 0→60, шаги и фото переключаются при прокрутке; логика — js/landing.js, setupHour)
+KID_HOUR = [(0, 5, 'p-gear.jpg', 'Знакомство и&nbsp;экипировка', '~5 мин', 'Тренер знакомится с&nbsp;ребёнком и&nbsp;подбирает ему снаряжение.'),
+            (5, 15, 'p-fun.jpg', 'Инструктаж и&nbsp;разминка', '~10 мин', 'Простые правила безопасности и&nbsp;разминка в&nbsp;игровой форме.'),
+            (15, 55, 'k2-10.jpg', 'Первые трассы', '~40 мин', 'Сначала боулдеринг над матами, потом&nbsp;— высокая стена со&nbsp;страховкой.'),
+            (55, 60, 'p-smile.jpg', 'Итог', '~5 мин', 'Тренер расскажет родителям, как ребёнку заниматься дальше.')]
+body += ('<section class="sec dark stack lp-hour" id="how"><div class="lp-hour__track"><div class="lp-hour__stage wrap">'
+         '<div class="lp-hour__head"><h2 class="d h2 reveal">Что будет происходить 60&nbsp;минут?<sup class="lp-hour__star">*</sup></h2>'
+         '<p class="lp-hour__clock reveal" aria-hidden="true"><b class="d">00</b><span>мин<br>из&nbsp;60</span></p></div>'
+         '<div class="lp-hour__g"><div class="lp-hour__pics reveal" aria-hidden="true">' +
+         ''.join('<img%s src="assets/img/%s" alt="" loading="lazy">' % (' class="is-on"' if i == 0 else '', x[2]) for i, x in enumerate(KID_HOUR)) +
+         '<span class="lp-hour__badge"><i></i><span>Шаг 01 · ~5 мин</span></span></div><ol class="lp-hour__steps">' +
+         ''.join('<li%s data-from="%d" data-to="%d"><img class="lp-hour__ph" src="assets/img/%s" alt="" loading="lazy"><button type="button"><span class="lp-hour__n d">%02d</span>'
+                 '<span><b>%s</b><small>%s</small></span></button><p>%s</p></li>' % (' class="is-on"' if i == 0 else '', f, t, img, i + 1, h, d, txt)
+                 for i, (f, t, img, h, d, txt) in enumerate(KID_HOUR)) + '</ol></div>'
+         '<div class="lp-hour__bar reveal" aria-hidden="true">' + ''.join('<span style="--w:%d"></span>' % (t - f) for f, t, *_ in KID_HOUR) +
+         ''.join('<small style="--x:%d">%d</small>' % (f, f) for f, *_ in KID_HOUR) + '<small style="--x:60">60 мин</small></div>'
+         '<p class="lp-hour__note reveal">* Распределение времени может отличаться на&nbsp;усмотрение тренера.</p></div></div></section>\n')
+# Видео о детской пробной — как на «Первом разе»: пока ролика нет, по кнопке — пометка «Видео скоро»; ссылку на ролик — в data-video
+# В MODX: ссылка на ролик (TV). Пока ссылки нет — показывается пометка «Видео скоро»
+body += ('<section class="sec dark lp-video-sec" id="video"><div class="wrap">'
+         '<div class="sechead"><div><h2 class="d h2 reveal">Как проходит детская пробная тренировка</h2>'
+         '<p class="lead muted reveal">Короткий видеообзор: от&nbsp;знакомства с&nbsp;тренером до&nbsp;первых трасс</p></div></div>'
+         '<div class="lp-video reveal" data-video=""><picture><source media="(max-width: 767px)" srcset="assets/img/k2-12.jpg"><img src="assets/img/k2-first-3.jpg" alt="" loading="lazy"></picture>'
+         '<span class="lp-video__shade"></span><button class="lp-video__play" type="button" aria-label="Смотреть видеообзор детской пробной тренировки"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>'
+         '<span class="lp-video__soon">Видео скоро</span><span class="lp-video__meta"><b>Детская пробная тренировка</b><small>[0:00]</small></span></div></div></section>\n')
+# «Выберите удобный формат» — как на «Первом разе» (две большие карточки + плашка «Не знаете, какой выбрать?»)
+KPRICE = {'group': price(1200, 1500), 'personal': price(2000, 2500)}  # за ребёнка
+def kfmt(top, badge, title, sub, items, text, typ, dark=False):
+    return ('<article class="lp-f%s reveal"><div class="lp-f__top"><span class="lp-f__k">%s</span><span class="badge%s">%s</span></div>'
+            '<h3 class="d lp-f__t lp-f__t--big">%s</h3>%s<ul class="lp-list%s">%s</ul><p class="lp-f__d">%s</p>'
+            '<div class="lp-f__foot">%s%s</div></article>') % (
+        ' lp-f--dark' if dark else '', top, ' badge--dark' if dark else '', badge, title, '<p class="lp-f__sub">%s</p>' % sub if sub else '',
+        '' if dark else ' lp-list--dark', ''.join('<li>%s%s</li>' % (CHECK, x) for x in items), text, KPRICE[typ], book_btn('Записаться', typ, 0, 1))
+body += sec(sechead('Выберите удобный формат', 'Оба варианта подходят для первого знакомства ребёнка со&nbsp;скалолазанием. Отличаются размер группы, количество внимания тренера и&nbsp;стоимость.') +
+            '<div class="lp-formats">' +
+            kfmt('Пробная тренировка', 'Группа до 8 человек', 'Групповая', 'в&nbsp;спортивном клубе', ['60 минут', 'для детей от&nbsp;5&nbsp;лет', 'группа до&nbsp;8&nbsp;человек', 'работа тренера', 'необходимое снаряжение'],
+                 'Ребёнок занимается вместе с&nbsp;группой секции своего возраста: знакомится с&nbsp;тренером, ровесниками и&nbsp;форматом занятий. Весело, в&nbsp;компании ровесников.', 'group') +
+            kfmt('Пробная тренировка', '1–3 участника', 'Персональная', '', ['60 минут', 'для 1–3 детей', 'индивидуальный темп', 'работа тренера', 'необходимое снаряжение'],
+                 'Больше внимания тренера&nbsp;— удобно для братьев и&nbsp;сестёр.', 'personal', dark=True) + '</div>' +
+            helpbox('Не знаете, какой формат выбрать?', 'Оставьте заявку&nbsp;— администратор поможет подобрать подходящий вариант для ребёнка.', join_btn('Оставить заявку', 'Поможем выбрать формат', 'kids', 'btn btn--sec')),
+            'formats', cls='stack lp-fmt')
 body += sec('<div class="lp-next lp-next--red reveal" id="family"><div><span class="mark">Для всей семьи</span><h2 class="d h2">Взрослый + ребёнок</h2><p class="lead">Полазайте вместе: тренер покажет основы обоим, а вы будете поддерживать друг друга на стене. В форме записи отметьте, сколько придёт взрослых и детей.</p></div>' +
             book_btn('Записаться вместе', 'group', 1, 1, 'btn btn--light') + '</div>', tone='neutral', cls='sec--flush')
+# «Почему ребёнку стоит заниматься в К2» — копия блока из детской секции; кнопка здесь открывает запись на пробную (окно бронирования)
+body += KWHY.replace(trial_btn(cls='btn btn--light'), book_btn('Записать ребёнка на&nbsp;пробное', 'group', 0, 1, 'btn btn--light'))
 body += sec('<div class="lp-bring"><div class="lp-bring__main reveal"><h2 class="d h2">С собой — только удобная спортивная форма</h2><p class="lead muted">Скальные туфли, страховочную систему и магнезию выдадим на месте.</p>'
             '<p class="lp-bring__note">%s<span>Приходите за 10–15 минут до начала</span></p></div><div class="lp-bring__side reveal"><p class="lp-k">Для родителей</p>' % I_TIME +
             li(['раздевалка и шкафчики', 'душевые', 'аренда полотенец', 'можно посмотреть, как ребёнок лазает']) + '</div></div>', 'bring')
+# Фотогалерея — стандартный блок, детские кадры (высокие ячейки 1, 5, 8 — вертикальные фото)
+GAL_KIDS = [('k2-10.jpg', 'Ребёнок на стене'), ('k2-first-2.jpg', 'Трасса на нависании'), ('p-mat.jpg', 'Отдых на матах'),
+            ('k2-first-3.jpg', 'Вместе на скалодроме'), ('p-focus.jpg', 'На трассе'), ('k2-first-1.jpg', 'Боулдеринг в зале'),
+            ('k2-rock.jpg', 'На скале'), ('p-heart.jpg', 'На вершине скалы'), ('p-cave.jpg', 'Под нависанием')]
+body += sec(sechead('Фотогалерея', 'Нажмите на фото — откроется галерея', link_btn('Детская секция', 'detskaya-sekciya.html', 'btn btn--sec reveal')) + gal(GAL_KIDS), 'photos', cls='lp-alt')
+# Документы для родителей — тот же блок, что в детской секции
+body += KDOC_SEC
 body += faq_sec(FAQ_KIDS)
 body += nextcta('Понравилось?', 'Продолжайте в детской секции — регулярно и с детскими тренерами.', link_btn('Детская секция', 'detskaya-sekciya.html', 'btn btn--light'), 'детская секция · следующий шаг · ')
+# Липкое меню по разделам — как в детской секции и на «Первом разе» (логика — js/landing.js)
+TSUB = [('how', 'Как проходит'), ('video', 'Видео'), ('formats', 'Форматы'), ('family', 'Вместе с ребёнком'),
+        ('why', 'Почему К2'), ('bring', 'Что взять'), ('photos', 'Фото'), ('docs', 'Документы'), ('faq', 'Вопросы')]
+_tsub = _sub.replace(_sub[_sub.index('<div class="wrap lp-sub__in">'):], '<div class="wrap lp-sub__in">' + ''.join(
+    '<a href="#%s" style="--i:%d">%s<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6"/></svg></a>' % (h, i, t) for i, (h, t) in enumerate(TSUB)) + '</div></nav>\n')
+_i = body.index('</section>') + len('</section>')
+body = body[:_i] + '\n' + _tsub + body[_i:]
 fab = book_btn('Записаться на тренировку', 'group', 0, 1)
-page('deti-pervyj-raz.html', 'Детская пробная тренировка по скалолазанию — скалодром К2', 'Пробная тренировка для детей от 5 лет и формат «взрослый + ребёнок»: с тренером, снаряжение включено. Скалодром К2.', body, book=True, fab=fab)
+page('deti-pervyj-raz.html', 'Детская пробная тренировка по скалолазанию — скалодром К2', 'Пробная тренировка для детей от 5 лет и формат «взрослый + ребёнок»: с тренером, снаряжение включено. Скалодром К2.', body, book=True, fab=fab, gallery=True)
 
 
 # ======================= ЦЕНЫ =======================
-GROUPS = [('probnye', 'Пробные тренировки', [('Пробная тренировка в группе', '60 минут, группа до 8 человек, снаряжение включено', '[___] ₽', 'pervyj-raz.html#formats'),
-                                             ('Персональная пробная тренировка', '60 минут, для 1–3 участников', '[___] ₽', 'pervyj-raz.html#formats'),
-                                             ('Детская пробная тренировка', 'Для детей от 5 лет', '[___] ₽', 'deti-pervyj-raz.html')]),
-          ('razovye', 'Разовые посещения', [('Разовое посещение', 'Самостоятельно, боулдеринг и трудность', '[___] ₽', 'samostoyatelno.html'), ('Разовое посещение [выходные]', '[Условия уточняются]', '[___] ₽')]),
-          ('abonementy', 'Абонементы', [('Абонемент [на месяц]', 'Самостоятельные посещения', '[___] ₽', 'samostoyatelno.html#prices'), ('Абонемент [на __ посещений]', 'Самостоятельные посещения', '[___] ₽', 'samostoyatelno.html#prices'),
-                                         ('Абонемент в школу', '[__] групповых тренировок', '[___] ₽', 'shkola.html')]),
-          ('trener', 'Тренировки с тренером', [('Индивидуальная тренировка', 'С тренером', '[___] ₽', 'individualnye.html'), ('Базовый курс', '3–5 тренировок', 'от [___] ₽', 'bazovye-kursy.html')]),
-          ('deti', 'Для детей', [('Детская секция', 'Абонемент на [__] занятий', '[___] ₽', 'detskaya-sekciya.html'), ('Взрослый + ребёнок', 'Пробная тренировка', '[___] ₽', 'deti-pervyj-raz.html#family')]),
-          ('prokat', 'Прокат и услуги', [('Прокат снаряжения', 'Скальники, страховочная система', '[___] ₽'), ('Аренда полотенца', '', '[___] ₽'),
-                                         ('Подарочный сертификат', 'На пробную тренировку', '[___] ₽', 'sertifikaty.html')])]
+GROUPS = [('probnye', 'Пробные тренировки', [('Пробная тренировка в группе', '60 минут, группа до 8 человек, снаряжение включено', '1 500 ₽', 'pervyj-raz.html#formats'),
+                                             ('Персональная пробная тренировка', '60 минут, для 1–3 участников, цена за человека', '2 500 ₽', 'pervyj-raz.html#formats'),
+                                             ('Детская пробная тренировка', 'Для детей от 5 лет', '1 200 ₽', 'deti-pervyj-raz.html')]),
+          ('razovye', 'Разовые посещения', [('Разовое посещение', 'Самостоятельно, боулдеринг и трудность', '900 ₽', 'samostoyatelno.html'), ('Разовое посещение в выходные', 'Суббота, воскресенье и праздники', '1 100 ₽')]),
+          ('abonementy', 'Абонементы', [('Абонемент на месяц', 'Безлимит самостоятельных посещений', '6 500 ₽', 'samostoyatelno.html#prices'), ('Абонемент на 8 посещений', 'Самостоятельные посещения, 2 месяца', '5 600 ₽', 'samostoyatelno.html#prices'),
+                                         ('Абонемент в школу', '8 групповых тренировок', '9 600 ₽', 'shkola.html')]),
+          ('trener', 'Тренировки с тренером', [('Индивидуальная тренировка', 'С тренером, 60 минут', '3 500 ₽', 'individualnye.html'), ('Базовый курс', '3–5 тренировок', 'от 6 900 ₽', 'bazovye-kursy.html')]),
+          ('deti', 'Для детей', [('Детская секция', 'Абонемент на 8 занятий в месяц', 'от 7 200 ₽', 'detskaya-sekciya.html'), ('Взрослый + ребёнок', 'Пробная тренировка', '2 700 ₽', 'deti-pervyj-raz.html#family')]),
+          ('prokat', 'Прокат и услуги', [('Прокат снаряжения', 'Скальники, страховочная система', '400 ₽'), ('Аренда полотенца', '', '200 ₽'),
+                                         ('Подарочный сертификат', 'На пробную тренировку', 'от 1 500 ₽', 'sertifikaty.html')])]
 SHORT = {'probnye': 'Пробные', 'razovye': 'Разовые', 'abonementy': 'Абонементы', 'trener': 'С тренером', 'deti': 'Детям', 'prokat': 'Прокат'}
 chips = ''.join('<a class="chip" href="#%s"><span class="pnav__l">%s</span><span class="pnav__s">%s</span></a>' % (g, t, SHORT[g]) for g, t, _ in GROUPS) + '<a class="chip" href="pakety.html">Пакеты</a>'
 body = head([('Цены', '')], 'Цены скалодрома К2', 'Все тренировки, абонементы и прокат на одной странице. Пакеты — отдельно, там выгоднее.')
@@ -625,8 +770,8 @@ body = hero([('Сертификаты', '')], 'Подарочные сертиф
             'k2-12.jpg', [(I_GIFT, 'Красивый подарок'), (I_SPARK, 'Опыт не нужен'), (I_GEAR, 'Снаряжение включено'), (I_CAL, 'Срок действия [__]')],
             join_btn('Заказать сертификат', 'Подарочный сертификат'), 'Вместе на скалодроме')
 body += sec(sechead('Выберите сертификат') + '\n' + offers([
-    offer('Пробная тренировка в группе', ['60 минут', 'группа до 8 человек', 'с инструктором', 'снаряжение включено'], 'Для того, кто хочет попробовать в компании таких же новичков.', PRICE + join_btn('Заказать', 'Сертификат: пробная в группе')),
-    offer('Персональная пробная тренировка', ['60 минут', 'для 1–3 участников', 'индивидуальный темп', 'снаряжение включено'], 'Подарок на двоих или на троих — для пары или друзей.', PRICE + join_btn('Заказать', 'Сертификат: персональная пробная'), dark=True)]), 'formats')
+    offer('Пробная тренировка в группе', ['60 минут', 'группа до 8 человек', 'с инструктором', 'снаряжение включено'], 'Для того, кто хочет попробовать в компании таких же новичков.', price(1500, frm=False) + join_btn('Заказать', 'Сертификат: пробная в группе')),
+    offer('Персональная пробная тренировка', ['60 минут', 'для 1–3 участников', 'индивидуальный темп', 'снаряжение включено'], 'Подарок на двоих или на троих — для пары или друзей.', price(2500) + join_btn('Заказать', 'Сертификат: персональная пробная'), dark=True)]), 'formats')
 body += sec(sechead('Как подарить') + '\n' + cards([('Оставьте заявку', 'Выберите сертификат — администратор свяжется и всё оформит.'), ('Оплатите', '[Способы оплаты и получения сертификата уточняются.]'),
                                                   ('Получатель записывается', 'В удобный ему день — по телефону или на сайте.')], 3), 'how', 'dark', 'stack')
 body += faq_sec([('Сколько действует сертификат?', '[Срок действия уточняется.]'), ('Можно ли подарить ребёнку?', 'Да, есть детские пробные тренировки — для детей от 5 лет.'),
@@ -635,17 +780,46 @@ page('sertifikaty.html', 'Подарочные сертификаты на ск�
 
 
 # ======================= МЕРОПРИЯТИЯ =======================
-EVENTS = [('adults', 'Для взрослых', 'Соревнования по боулдерингу', 'k2-first-1.jpg'), ('adults', 'Для взрослых', 'Выезд на скалы', 'k2-rock.jpg'),
-          ('kids', 'Для детей', 'Детские соревнования', 'k2-first-2.jpg'), ('kids', 'Для детей', '[Мероприятие для детей]', 'p-mat.jpg'),
-          ('adults', 'Для взрослых', '[Мероприятие]', 'k2-hall.jpg')]
-body = head([('О нас', 'o-skalodrome.html'), ('Мероприятия', '')], 'Мероприятия скалодрома', 'Соревнования, выезды на скалы и события для детей и взрослых — следите за расписанием.',
-            '<div class="chips chips--dark" role="group" aria-label="Для кого"><button type="button" class="chip" aria-pressed="true" data-f="all">Все</button>'
+# Даты — примерные, для вида (крупное число + месяц, день недели и время); реальные даст скалодром
+# Дата: (число, месяц, день недели · время). Многодневное — диапазоном через «–»: ('24–26', 'ноября', 'пт–вс · …'),
+# через месяц: ('30–2', 'ноября – декабря', …). Диапазон автоматически получает класс ev__date--range (цифры мельче, месяц — строкой ниже)
+# Обложки — вертикальные, пропорции А4 (на обложку грузят афишу); пока — вертикальные фото зала
+EVENTS = [('adults', 'Для взрослых', 'Соревнования по боулдерингу', 'k2-01.jpg', ('5', 'декабря', 'сб · 12:00')),
+          ('adults', 'Для взрослых', 'Выезд на скалы', 'p-heart.jpg', ('12–13', 'декабря', 'сб–вс · старт в 09:00')),
+          ('kids', 'Для детей', 'Детские соревнования', 'k2-10.jpg', ('19', 'декабря', 'сб · 11:00')),
+          ('kids', 'Для детей', '[Мероприятие для детей]', 'k2-02.jpg', ('27', 'декабря', 'вс · 15:00')),
+          ('adults', 'Для взрослых', '[Мероприятие]', 'p-blue.jpg', ('16', 'января', 'сб · 19:00'))]
+# Архив: прошедшие мероприятия (примерные, для вида) — ч/б обложки А4, по одному ряду на страницу, переключатели страниц (js/landing.js)
+ARCHIVE = [('8 ноября 2026', 'Соревнования по боулдерингу', 'Для взрослых', 'k2-05.jpg'), ('25 октября 2026', 'Детские соревнования', 'Для детей', 'p-fun.jpg'),
+           ('10–11 октября 2026', 'Выезд на скалы', 'Для взрослых', 'p-forest.jpg'), ('27 сентября 2026', '[Мероприятие]', 'Для взрослых', 'k2-03.jpg'),
+           ('13 сентября 2026', '[Мероприятие для детей]', 'Для детей', 'p-smile.jpg'), ('30 августа 2026', 'Выезд на скалы', 'Для взрослых', 'p-rope.jpg'),
+           ('16 августа 2026', 'Соревнования по боулдерингу', 'Для взрослых', 'k2-09.jpg'), ('26 июля 2026', 'Детские соревнования', 'Для детей', 'k2-12.jpg'),
+           ('12 июля 2026', '[Мероприятие]', 'Для взрослых', 'p-roof.jpg'), ('21 июня 2026', '[Мероприятие для детей]', 'Для детей', 'k2-13.jpg'),
+           ('7 июня 2026', 'Выезд на скалы', 'Для взрослых', 'p-wall.jpg'), ('24 мая 2026', '[Мероприятие]', 'Для взрослых', 'k2-07.jpg')]
+ARC_PAGER = ('<nav class="arc-pager" aria-label="Страницы архива"><button class="ibtn ibtn--line arc-pager__prev" type="button" aria-label="Предыдущая страница">' + ico('<path d="M19 12H5M11 6l-6 6 6 6"/>') + '</button>'
+             '<span class="arc-pager__pages"></span><button class="ibtn ibtn--line arc-pager__next" type="button" aria-label="Следующая страница">' + ARROW + '</button></nav>')
+body = head([('О нас', 'o-skalodrome.html'), ('Мероприятия', '')], 'Мероприятия скалодрома', 'Соревнования, выезды на скалы и события для детей и взрослых — следите за расписанием.')
+# Фильтр «для кого» — над карточками, на светлом фоне, вместе со списком одним блоком
+EV_CHIPS = ('<div class="chips" role="group" aria-label="Для кого"><button type="button" class="chip" aria-pressed="true" data-f="all">Все</button>'
             '<button type="button" class="chip" aria-pressed="false" data-f="adults">Для взрослых</button><button type="button" class="chip" aria-pressed="false" data-f="kids">Для детей</button></div>')
-body += sec('<div class="bgrid">%s</div><p class="bempty" hidden>Скоро здесь появятся мероприятия</p>' % ''.join(
+body += sec(EV_CHIPS + '<div class="bgrid bgrid--ev">%s</div><p class="bempty" hidden>Скоро здесь появятся мероприятия</p>' % ''.join(
     '<article class="bcard ev reveal" data-cat="%s"><span class="bcard__img"><img src="assets/img/%s" alt="" loading="lazy"></span><span class="bcard__b"><span class="badge">%s</span>'
-    '<span class="bcard__t">%s</span><span class="bcard__m">[дата] · [время]</span>%s</span></article>' % (c, img, cn, t, join_btn('Записаться', t, 'kids' if c == 'kids' else '', 'btn btn--sec btn--sm'))
-    for c, cn, t, img in EVENTS) + '\n<!-- В MODX: мероприятия — ресурсы (дата, для кого, обложка, описание), список — pdoResources -->', 'list', cls='blog-list')
+    '<span class="bcard__t">%s</span><span class="ev__date%s"><b class="d">%s</b><span><b>%s</b><small>%s</small></span></span>%s</span></article>' % ((c, img, cn, t, ' ev__date--range' if '–' in dt[0] else '') + dt + (join_btn('Записаться', t, 'kids' if c == 'kids' else '', 'btn btn--sec btn--sm'),))
+    for c, cn, t, img, dt in EVENTS) + '\n<!-- В MODX: мероприятия — ресурсы (дата, для кого, обложка, описание), список — pdoResources -->', 'list', cls='blog-list')
+body += sec(sechead('Прошедшие мероприятия', 'Архив соревнований, выездов и событий скалодрома') + '<div class="arc-grid">' + ''.join(
+    '<article class="arc"><span class="arc__img"><img src="assets/img/%s" alt="" loading="lazy"></span><span class="arc__b"><span class="arc__date">%s</span>'
+    '<b class="arc__t">%s</b><span class="badge">%s</span></span></article>' % (img, d, t, who) for d, t, who, img in ARCHIVE) + '</div>' + ARC_PAGER +
+    '\n<!-- В MODX: прошедшие мероприятия — те же ресурсы с датой в прошлом, от новых к старым -->', 'archive')
 body += nextcta('Хотите первыми узнавать о мероприятиях?', 'Оставьте телефон — сообщим о ближайших соревнованиях и выездах.', join_btn('Оставить заявку', 'Мероприятия скалодрома', '', 'btn btn--light'), 'соревнования · выезды · события · ')
+# Вопросы и ответы — внизу страницы (факты — из других страниц сайта; чего нет — в скобках)
+body += faq_sec([('Как записаться на мероприятие?', 'Нажмите «Записаться» в карточке мероприятия и оставьте телефон — администратор перезвонит и всё подтвердит. Или позвоните нам.'),
+                 ('Нужен ли опыт, чтобы участвовать?', '[Зависит от мероприятия: условия участия указаны в описании каждого события.]'),
+                 ('Сколько стоит участие?', '[Стоимость указывается в карточке мероприятия.]'),
+                 ('Нужно ли своё снаряжение?', 'Нет. Скальные туфли, страховочную систему и магнезию выдадим на месте. [Условия проката на выездах уточняются.]'),
+                 ('Можно ли прийти просто поболеть?', '[Условия для зрителей уточняются.]'),
+                 ('Куда ездят на выезды?', 'Детские выезды на скалы проходят в школьные каникулы — в Ленинградскую область и Карелию. [Выезды для взрослых уточняются.]'),
+                 ('Участвуют ли дети в соревнованиях?', 'Да, дети секции выступают на городских соревнованиях в составе команды скалодрома.'),
+                 ('Как узнавать о новых мероприятиях?', 'Оставьте заявку в блоке выше — сообщим о ближайших соревнованиях и выездах.')], 'Вопросы и ответы')
 page('meropriyatiya.html', 'Мероприятия — скалодром К2', 'Соревнования, выезды на скалы и мероприятия для детей и взрослых на скалодроме К2.', body)
 
 
@@ -654,6 +828,15 @@ body = hero([('О скалодроме', '')], 'Новый скалодром в
             'Боулдеринг и трудность под одной крышей: 1300 м², стены 13 метров, 7 минут пешком от м. Площадь Ленина.',
             'p-blue.jpg', [(I_UP, '13 метров высоты'), (I_SPARK, '1300 м²'), (I_CAL, '7 дней в неделю'), (I_PIN, '7 минут от метро')],
             link_btn('Первый раз', 'pervyj-raz.html', 'btn btn--primary') + link_btn('Как добраться', 'kontakty.html#route', 'btn btn--sec'), 'Зал скалодрома К2')
+# Обращение команды — сразу после первого экрана, как цитата. Текст — пример (написан для вида); потом его заменят куском SEO-текста. Фото — временное: нужно общее фото команды
+body += sec('<figure class="hello reveal"><div class="hello__ph"><img src="assets/img/k2-first-3.jpg" alt="Команда скалодрома К2" loading="lazy"><span class="hello__tag">[Фото команды]</span></div>'
+            '<blockquote class="hello__q"><span class="hello__mark d" aria-hidden="true">“</span>'
+            '<p class="hello__t d">Привет! Добро пожаловать на&nbsp;скалодром К2</p>'
+            '<p class="lead">Мы ещё молодые, но&nbsp;нам есть чем вас порадовать.</p>'
+            '<p class="muted">Мы открыли К2, чтобы в&nbsp;центре Петербурга появилось место, куда хочется возвращаться: после работы, всей семьёй или с&nbsp;друзьями на&nbsp;выходных. '
+            'Здесь 1300&nbsp;м² боулдеринга и&nbsp;трудности, стены высотой 13&nbsp;метров и&nbsp;тренеры, которые одинаково внимательны к&nbsp;новичку и&nbsp;к&nbsp;тому, кто готовится к&nbsp;соревнованиям.</p>'
+            '<p class="muted">Не&nbsp;умеете лазать&nbsp;— научим с&nbsp;первой тренировки, снаряжение выдадим на&nbsp;месте. Уже лазаете&nbsp;— приходите за&nbsp;новыми трассами, компанией и&nbsp;атмосферой. Мы только начинаем, и&nbsp;нам важно, чтобы вам у&nbsp;нас понравилось.</p></blockquote>'
+            '<figcaption class="hello__sign"><b>Команда К2</b><span>[Имя Фамилия, должность]</span></figcaption></figure>', 'hello')
 body += sec(sechead('Две зоны для лазания') + '\n' + offers([
     offer('Боулдеринг', ['невысокие трассы', 'без верёвки, над мягкими матами', '[__] трасс', 'подходит новичкам'], 'Короткие трассы без верёвки над мягкими матами. Идеально для первого знакомства и отработки техники.', link_btn('Первый раз', 'pervyj-raz.html', 'btn btn--primary'), 'Зона боулдеринга', id='bouldering', img='k2-first-1.jpg'),
     offer('Трудность', ['стены 13 метров', 'со страховкой верёвкой', '[__] трасс', 'есть автостраховка'], 'Длинные трассы на стенах до 13 метров со страховкой. Здесь занимаются с тренером и самостоятельно.', link_btn('Базовые курсы', 'bazovye-kursy.html', 'btn btn--primary'), 'Зона трудности', dark=True, id='trudnost', img='k2-hall.jpg')]), 'zones')
@@ -678,14 +861,24 @@ I_TOWEL = ico('<path d="M3 5h18"/><path d="M7 5v13a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2
 I_SHOE = ico('<path d="M3 17v-4.5c2-.5 3.5-2 4.5-4l1-2 3 2.5c1.5 1.3 3 2 5 2.3 2.4.4 4.5 1.4 4.5 3.7v2z"/><path d="M3 20h18M9.5 9.5l1.5 1.2M11.5 8l1.5 1.2"/>')
 I_PARK = ico('<rect x="4" y="4" width="16" height="16" rx="4"/><path d="M10 17V7h3a3 3 0 0 1 0 6h-3"/>')
 AM_FLOW = [(I_PIN, 'После работы'), (I_HANGER, 'Переоделись'), (I_UP, 'Тренировка'), (I_SHOWER, 'Душ')]
-AM_TILES = [(I_HANGER, 'Раздевалки', ''), (I_SHOWER, 'Душевые', ''), (I_LOCK, 'Шкафчики', ''),
-            (I_TOWEL, 'Аренда полотенец', ''), (I_SHOE, 'Прокат снаряжения', ''), (I_PARK, 'Парковка', '[уточнить]')]
-body += sec('<div class="am"><div class="am__main reveal"><h2 class="d h2">Всё для&nbsp;комфортных тренировок</h2>'
-            '<p class="lead muted">Можно прийти сразу после работы: переодеться, потренироваться и&nbsp;принять душ.</p>'
-            '<ol class="am__flow" aria-label="Как проходит визит">' + ''.join('<li><span class="am__fi">%s</span><span>%s</span></li>' % x for x in AM_FLOW) + '</ol>'
-            '<p class="lp-bring__note">%s<span>[Ежедневно, __:__–__:__]</span></p></div>' % I_TIME +
-            '<div class="am__side"><p class="lp-k reveal">В&nbsp;К2 есть</p><ul class="am__tiles">' + ''.join(
-                '<li class="reveal"><span class="am__ti">%s</span><b>%s</b>%s</li>' % (ic, t, '<small>%s</small>' % n if n else '') for ic, t, n in AM_TILES) + '</ul></div></div>', 'amenities')
+I_SAUNA = ico('<path d="M4 20h16"/><path d="M6 20v-6h12v6"/><path d="M9 10c-1-1.5 1-2.5 0-4M12 10c-1-1.5 1-2.5 0-4M15 10c-1-1.5 1-2.5 0-4"/>')
+I_STRETCH = ico('<circle cx="12" cy="5" r="2"/><path d="M4 10l8 1 8-1"/><path d="M12 11v4l-4 6M12 15l4 6"/>')
+I_BAR = ico('<path d="M3 5h18"/><path d="M6 5v3M18 5v3"/><circle cx="12" cy="11" r="2"/><path d="M9 5l2 4.5M15 5l-2 4.5M12 13v4l-2 4M12 17l2 4"/>')
+# Плитки «В К2 есть»: (иконка, название, пометка, превью). Фото — ВРЕМЕННЫЕ (кадры зала): заменить реальными фото зон.
+# В MODX: каждая зона — строка MIGX (иконка, название, фото); по клику фото открывается во весь экран и листается по всем зонам.
+AM_TILES = [(I_HANGER, 'Раздевалки', '', 'p-mat.jpg'), (I_SHOWER, 'Душевые', '', 'k2-first-2.jpg'), (I_SAUNA, 'Сауна', '', 'p-cave.jpg'),
+            (I_LOCK, 'Шкафчики', '', 'k2-first-3.jpg'), (I_STRETCH, 'Зал для&nbsp;стретчинга', '', 'k2-hall.jpg'), (I_BAR, 'Турники', '', 'k2-first-1.jpg'),
+            (I_CHILD, 'Детская зона', '', 'k2-rock.jpg'), (I_TOWEL, 'Аренда полотенец', '', 'p-chalk.jpg'), (I_SHOE, 'Прокат снаряжения', '', 'p-mat.jpg'),
+            (I_PARK, 'Парковка', '[уточнить]', 'k2-hall.jpg')]
+body += sec('<div class="am am--wide"><div class="am__main reveal"><h2 class="d h2">Всё для&nbsp;комфортных тренировок</h2>'
+            '<p class="lead muted">Можно прийти сразу после работы: переодеться, потренироваться и&nbsp;принять душ.</p></div>'
+            '<div class="am__route reveal"><ol class="am__flow" aria-label="Как проходит визит">' + ''.join('<li><span class="am__fi">%s</span><span>%s</span></li>' % x for x in AM_FLOW) + '</ol>'
+            '<p class="lp-bring__note">%s<span>[Ежедневно, __:__–__:__]</span></p></div></div>' % I_TIME +
+            '<div class="am__side"><p class="lp-k reveal">В&nbsp;К2 есть <span class="am__hint">— нажмите, чтобы посмотреть фото</span></p><ul class="am__tiles am__tiles--ph" data-lb>' + ''.join(
+                '<li class="reveal"><button class="am__t" type="button" data-lb-i data-cap="%s" aria-label="Фото: %s"><span class="am__ph"><img src="assets/img/%s" alt="%s" loading="lazy">'
+                '<span class="am__zoom" aria-hidden="true">%s</span></span><span class="am__ti">%s</span><b>%s</b>%s</button></li>' % (
+                    t.replace('&nbsp;', ' '), t.replace('&nbsp;', ' '), img, t.replace('&nbsp;', ' '), ico('<circle cx="11" cy="11" r="6"/><path d="M20 20l-4.5-4.5M11 8v6M8 11h6"/>'), ic, t,
+                    '<small>%s</small>' % n if n else '') for ic, t, n, img in AM_TILES) + '</ul></div>', 'amenities')
 body += sec(sechead('Атмосфера К2', 'Нажмите на фото — откроется галерея') + '\n' + gal(GAL_HALL), 'photos', cls='lp-alt')
 body += sec(sechead('Команда', '', link_btn('Все тренеры', 'trenery.html', 'btn btn--sec reveal')) + '\n' + coaches(COACH_STUB), 'coaches')
 body += REVIEWS('Отзывы о К2') + CONTACT
@@ -694,8 +887,8 @@ page('o-skalodrome.html', 'О скалодроме К2 — боулдеринг 
 
 # ======================= ТРЕНЕРЫ =======================
 body = head([('О нас', 'o-skalodrome.html'), ('Тренеры', '')], 'Тренеры скалодрома К2', 'Хороший тренер не только сильно лазает, но и спокойно, понятно объясняет. Наши работают и со взрослыми, и с детьми.')
-body += sec(sechead('Тренеры для взрослых') + '\n' + coaches(COACH_STUB[:3] + [('[Имя Фамилия]', 'Тренер', '[Квалификация · стаж]')]) + '\n<!-- В MODX: тренеры — ресурсы или MIGX (фото, имя, должность, квалификация) -->', 'adults')
-body += sec(sechead('Детские тренеры') + '\n' + coaches([('[Имя Фамилия]', 'Детский тренер', '[Квалификация · стаж]')] * 4), 'kids', cls='lp-alt')
+body += sec(sechead('Тренеры для взрослых') + '\n' + coaches(COACH_FISH_ADULT) + '\n<!-- В MODX: тренеры — ресурсы или MIGX (фото, имя, должность, квалификация) -->', 'adults')
+body += sec(sechead('Детские тренеры') + '\n' + coaches(COACH_FISH_KIDS), 'kids', cls='lp-alt')
 body += nextcta('Хотите заниматься с тренером?', 'Оставьте заявку — подберём тренера под ваш уровень и цель.', join_btn('Оставить заявку', 'Занятия с тренером', 'trial', 'btn btn--light'), 'персонально · с тренером · ')
 page('trenery.html', 'Тренеры — скалодром К2', 'Тренеры скалодрома К2: тренировки для взрослых и детей, пробные занятия, школа скалолазания.', body)
 
@@ -712,22 +905,104 @@ page('video.html', 'Видео — скалодром К2', 'Видео со с�
 
 
 # ======================= ВАКАНСИИ =======================
+# Каждая вакансия: шапка (название, условия коротко, пара строк) + «Подробнее» — полное описание разделами (большой текст помещается).
+# «Откликнуться» открывает окно заявки в режиме вакансии: data-join-job — название уходит в заявку, выбор тренировки скрыт (js/landing.js).
+# В MODX: вакансия — ресурс (название, короткие условия, анонс, разделы описания — в контенте); список — pdoResources.
+JOB_SECTIONS = [('Чем предстоит заниматься', ['[Обязанность — например, проводить групповые и персональные тренировки]', '[Обязанность]', '[Обязанность]', '[Обязанность]']),
+                ('Кого мы ищем', ['[Требование — опыт, квалификация, навыки]', '[Требование]', '[Требование]', '[Будет плюсом]']),
+                ('Что мы предлагаем', ['[Условие — оформление, оплата, бонусы]', '[Условие]', '[Условие]', '[Условие]']),
+                ('График и оплата', ['[График — например, 2/2 или по сменам]', '[Оплата — оклад, процент, от __ ₽]', '[Испытательный срок]'])]
+JOBS = [('trener', '[Тренер по скалолазанию]', ['[Полная занятость]', '[от ___ ₽]', '[Опыт от 1 года]']),
+        ('administrator', '[Администратор скалодрома]', ['[Сменный график]', '[от ___ ₽]', '[Без опыта]']),
+        ('detskij-trener', '[Детский тренер]', ['[Частичная занятость]', '[от ___ ₽]', '[Опыт работы с детьми]'])]
+def job_btn(t, cls='btn btn--primary'):
+    tt = re.sub(r'[\[\]]', '', t)
+    return '<button class="%s js-join" type="button" aria-haspopup="dialog" aria-controls="join" data-join-title="Отклик на&nbsp;вакансию" data-join-job="%s">Откликнуться</button>' % (cls, tt)
+def job(slug, t, tags):
+    secs = ''.join('<div class="job__sec"><h3 class="job__h">%s</h3><ul class="job__ul">%s</ul></div>' % (h, ''.join('<li>%s</li>' % x for x in items)) for h, items in JOB_SECTIONS)
+    return ('<article class="job reveal" id="%s"><div class="job__head"><div class="job__info"><h2 class="d job__t">%s</h2>'
+            '<ul class="job__tags">%s</ul><p class="job__lead">[Пара предложений о&nbsp;вакансии: кого ищем и&nbsp;чем интересна работа.]</p></div>'
+            '<div class="job__btns">%s</div></div>'
+            '<details class="job__more"><summary><span class="job__open">Подробнее о&nbsp;вакансии</span><span class="job__close">Свернуть описание</span><i aria-hidden="true"></i></summary>'
+            '<div class="job__body"><p class="job__about">[Вводный абзац: о&nbsp;скалодроме, команде и&nbsp;о&nbsp;том, почему эта роль важна. Здесь может быть большой текст со&nbsp;всеми нюансами&nbsp;— он разворачивается по&nbsp;кнопке «Подробнее».]</p>'
+            '<div class="job__secs">%s</div><div class="job__foot"><p>Подходит? Оставьте телефон&nbsp;— перезвоним и&nbsp;расскажем подробнее.</p>%s</div></div></details></article>') % (
+        slug, t, ''.join('<li>%s</li>' % x for x in tags), job_btn(t), secs, job_btn(t))
 body = head([('О нас', 'o-skalodrome.html'), ('Вакансии', '')], 'Вакансии', 'Ищем людей, которые любят скалолазание и умеют работать с людьми.')
-body += sec('<h2 class="sr">Открытые вакансии</h2>' + offers([offer('[Вакансия]', ['[Условия]', '[График]', '[Требования]'], '[Описание вакансии.]', join_btn('Откликнуться', 'Отклик на вакансию', '', 'btn btn--primary')) for _ in range(3)], 3) +
-            '\n' + helpbox('Не нашли подходящую вакансию?', 'Напишите нам — расскажите о себе и опыте.', '<a class="btn btn--sec" href="mailto:[почта]">Написать на почту</a>') +
-            '\n<!-- В MODX: вакансии — ресурсы или MIGX -->', 'list')
+body += sec('<h2 class="sr">Открытые вакансии</h2><div class="jobs">' + ''.join(job(*j) for j in JOBS) + '</div>' +
+            '\n' + helpbox('Не нашли подходящую вакансию?', 'Напишите нам — расскажите о себе и опыте.', '<a class="btn btn--sec" href="mailto:[почта]">Написать на почту</a>'), 'list')
 page('vakansii.html', 'Вакансии — скалодром К2', 'Работа на скалодроме К2: тренеры, администраторы и другие вакансии.', body)
 
 
 # ======================= ДОКУМЕНТЫ =======================
 DOCS = [('pravila', 'Правила посещения'), ('tb', 'Техника безопасности'), ('zayavlenie', 'Заявление от родителей'), ('oferta', 'Договор оферты'), ('privacy', 'Политика обработки персональных данных')]
+DOC_PAGE = {'privacy': 'politika-personalnyh-dannyh.html'}  # документы, вынесенные на отдельную текстовую страницу
 body = head([('О нас', 'o-skalodrome.html'), ('Документы', '')], 'Документы', 'Правила посещения, техника безопасности, оферта и политика обработки персональных данных.')
-body += '''<section class="neutral docs-sec"><div class="art__wrap wrap docs">
+body += """<section class="neutral docs-sec"><div class="art__wrap wrap docs">
   <aside class="art__side"><p class="art__side-t">Документы</p><ol class="toc">%s</ol></aside>
   <div class="art__body">%s</div>
-</div></section>''' % (''.join('<li><a href="#%s">%s</a></li>' % d for d in DOCS), ''.join(
+</div></section>""" % (''.join('<li><a href="%s">%s</a></li>' % (DOC_PAGE.get(i, '#' + i), t) for i, t in DOCS), ''.join(
+    ('<section class="doc" id="%s"><h2>%s</h2><p>Документ опубликован на&nbsp;отдельной странице.</p><p><a class="btn btn--sec" href="%s">Открыть документ</a></p></section>' % (i, t, DOC_PAGE[i])) if i in DOC_PAGE else
     '<section class="doc" id="%s"><h2>%s</h2><p>%s</p><p class="doc__meta">Редакция от [дата]</p></section>' % (i, t, DOC_STUB) for i, t in DOCS))
 page('dokumenty.html', 'Документы — скалодром К2', 'Правила посещения, техника безопасности, договор оферты и политика обработки персональных данных скалодрома К2.', body)
+
+
+# ======================= ТЕКСТОВАЯ СТРАНИЦА (шаблон) =======================
+# Информационная страница на шаблоне «Документов»: слева — название, редакция и оглавление (липкое), справа — текст.
+# sections: [(id, заголовок, html-текст раздела)]. В MODX: обычный ресурс — заголовок + контент (h2 разделов собираются в оглавление).
+def textpage(slug, crumb, title, desc, lead, sections, side='Документ', meta='Редакция от [дата]', back=('Все документы', 'dokumenty.html')):
+    b = head([('О нас', 'o-skalodrome.html'), (crumb, '')], title, lead)
+    b += ('<section class="neutral docs-sec"><div class="art__wrap wrap docs tpage">'
+          '<aside class="art__side"><p class="art__side-t">%s</p><p class="tpage__t d">%s</p>%s'
+          '<ol class="toc">%s</ol>%s</aside><div class="art__body">%s</div></div></section>') % (
+        side, title, '<p class="tpage__meta">%s</p>' % meta if meta else '',
+        ''.join('<li><a href="#%s">%s</a></li>' % (i, re.sub(r'^\d+\.\s*', '', h)) for i, h, _ in sections),  # номер в оглавлении ставит сам .toc
+        '<a class="tpage__back" href="%s">%s</a>' % (back[1], back[0]) if back else '',
+        ''.join('<section class="doc" id="%s"><h2>%s</h2>%s</section>' % (i, h, t) for i, h, t in sections))
+    page(slug, title + ' — скалодром К2', desc, b)
+
+def _ul(*items): return '<ul>%s</ul>' % ''.join('<li>%s</li>' % x for x in items)
+OPER = '[ООО «Название»] (ИНН [__________], ОГРН [_____________], адрес: [г.&nbsp;Санкт-Петербург, ул.&nbsp;____, д.&nbsp;__])'
+# Текст политики — ПРИМЕР по 152-ФЗ «О персональных данных»; реквизиты в [скобках]. Перед публикацией — проверить юристу.
+PRIVACY = [
+    ('obshchie', '1. Общие положения',
+     '<p>Настоящая политика определяет, как %s (далее&nbsp;— «Оператор», «скалодром К2») обрабатывает и&nbsp;защищает персональные данные посетителей сайта [адрес сайта] и&nbsp;клиентов скалодрома.</p>'
+     '<p>Политика составлена в&nbsp;соответствии с&nbsp;Федеральным законом от&nbsp;27.07.2006 №&nbsp;152-ФЗ «О&nbsp;персональных данных». Оставляя данные на&nbsp;сайте, вы&nbsp;подтверждаете, что ознакомились с&nbsp;политикой и&nbsp;согласны с&nbsp;ней.</p>' % OPER),
+    ('ponyatiya', '2. Основные понятия',
+     _ul('<b>Персональные данные</b>&nbsp;— любая информация, относящаяся к&nbsp;прямо или косвенно определённому физическому лицу.',
+         '<b>Обработка</b>&nbsp;— любое действие с&nbsp;персональными данными: сбор, запись, хранение, уточнение, использование, передача, удаление.',
+         '<b>Субъект персональных данных</b>&nbsp;— человек, чьи данные обрабатываются: посетитель сайта, клиент скалодрома, родитель или законный представитель ребёнка.')),
+    ('dannye', '3. Какие данные мы обрабатываем',
+     '<p>Мы просим только то, что нужно для записи и&nbsp;связи с&nbsp;вами:</p>' +
+     _ul('имя;', 'номер телефона;', '[адрес электронной почты&nbsp;— если вы оставляете его в&nbsp;форме];',
+         'данные ребёнка (имя, возраст)&nbsp;— только со&nbsp;слов и&nbsp;с&nbsp;согласия родителя или законного представителя;',
+         'технические данные: cookie-файлы, IP-адрес, сведения о&nbsp;браузере и&nbsp;действиях на&nbsp;сайте&nbsp;— [если подключена Яндекс&nbsp;Метрика].')),
+    ('celi', '4. Цели обработки',
+     _ul('запись на&nbsp;тренировки, курсы, мероприятия и&nbsp;в&nbsp;детскую секцию;', 'обратная связь: ответ на&nbsp;заявку, звонок или сообщение;',
+         'заключение и&nbsp;исполнение договора (оферты), продажа абонементов и&nbsp;сертификатов;', 'рассмотрение откликов на&nbsp;вакансии;',
+         'улучшение работы сайта и&nbsp;анализ посещаемости [при использовании Яндекс&nbsp;Метрики].')),
+    ('osnovaniya', '5. Правовые основания',
+     '<p>Мы обрабатываем данные на&nbsp;основании вашего согласия, которое вы даёте, отмечая галочку в&nbsp;форме на&nbsp;сайте, а&nbsp;также для&nbsp;заключения и&nbsp;исполнения договора, стороной которого вы являетесь.</p>'),
+    ('poryadok', '6. Как мы обрабатываем и храним данные',
+     _ul('Данные обрабатываются с&nbsp;использованием средств автоматизации и&nbsp;без них.',
+         'Данные хранятся на&nbsp;серверах, расположенных на&nbsp;территории Российской Федерации.',
+         'Мы храним данные не&nbsp;дольше, чем этого требуют цели обработки, или до&nbsp;отзыва согласия. [Срок хранения&nbsp;— уточнить.]',
+         'Мы не&nbsp;передаём данные третьим лицам, кроме случаев, предусмотренных законом, и&nbsp;подрядчиков, которые помогают нам работать (например, [CRM-система, сервис рассылок]),&nbsp;— на&nbsp;условиях конфиденциальности.')),
+    ('prava', '7. Ваши права',
+     '<p>Вы можете в&nbsp;любой момент:</p>' +
+     _ul('узнать, какие ваши данные мы обрабатываем;', 'попросить уточнить, исправить или удалить данные;', 'отозвать согласие на&nbsp;обработку;',
+         'обжаловать действия Оператора в&nbsp;Роскомнадзоре или в&nbsp;суде.') +
+     '<p>Для этого напишите нам на&nbsp;[почта] или отправьте письмо по&nbsp;адресу Оператора. Мы ответим в&nbsp;течение 10&nbsp;рабочих дней.</p>'),
+    ('cookie', '8. Cookie-файлы',
+     '<p>Сайт использует cookie, чтобы корректно работать и&nbsp;понимать, какие страницы полезны посетителям. Вы можете отключить cookie в&nbsp;настройках браузера&nbsp;— при этом часть функций сайта может работать хуже.</p>'),
+    ('zashchita', '9. Защита данных',
+     '<p>Мы принимаем правовые, организационные и&nbsp;технические меры, чтобы защитить данные от&nbsp;неправомерного доступа, изменения, распространения и&nbsp;уничтожения. Доступ к&nbsp;данным есть только у&nbsp;сотрудников, которым он нужен для работы.</p>'),
+    ('kontakty', '10. Контакты и изменения политики',
+     '<p>Оператор: %s.<br>Электронная почта: [почта]. Телефон: +7&nbsp;(812)&nbsp;000-00-00.</p>'
+     '<p>Мы можем обновлять политику. Новая редакция действует с&nbsp;момента публикации на&nbsp;этой странице, если в&nbsp;ней не&nbsp;указано иное.</p>' % OPER),
+]
+textpage('politika-personalnyh-dannyh.html', 'Политика обработки персональных данных', 'Политика обработки персональных данных',
+         'Как скалодром К2 собирает, использует и защищает персональные данные посетителей сайта и клиентов.',
+         'Как мы собираем, используем и&nbsp;защищаем ваши данные.', PRIVACY)
 
 
 # ======================= КОНТАКТЫ =======================

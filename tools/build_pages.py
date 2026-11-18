@@ -23,8 +23,13 @@ I_SHOWER = ico('<path d="M4 20V8a4 4 0 0 1 8 0"/><path d="M8 8h8"/><path d="M14 
 I_HANGER = ico('<path d="M12 7a2 2 0 1 1 2-2"/><path d="M12 7v2L3 15a1 1 0 0 0 .6 1.8h16.8a1 1 0 0 0 .6-1.8L12 9"/>')
 I_TOWEL = ico('<path d="M6 3h12v14a3 3 0 0 1-3 3H9a3 3 0 0 1-3-3z"/><path d="M6 8h12"/>')
 ARROW = '<svg class="ico" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>'
-PRICE = ('<span class="price" data-price="" data-price-old=""><s class="price__old"><span class="sr">Старая цена: </span>от [____]&nbsp;₽</s>'
-         '<b class="price__new"><span class="sr">Цена: </span>от [____]&nbsp;₽</b></span>')
+# Цены — ПРИМЕРНЫЕ (рыба для вида), реальные даст скалодром
+def rub(v): return '{:,}'.format(v).replace(',', '&nbsp;') + '&nbsp;₽'
+def price(v, old):
+    return ('<span class="price" data-price="%d" data-price-old="%d"><s class="price__old"><span class="sr">Старая цена: </span>от&nbsp;%s</s>'
+            '<b class="price__new"><span class="sr">Цена: </span>от&nbsp;%s</b></span>') % (v, old, rub(old), rub(v))
+PRICE = price(1500, 1900)          # пробная в группе
+PRICE_PERSONAL = price(2500, 3000)  # персональная пробная, за человека
 
 def li(items): return ''.join('<li>%s%s</li>' % (CHECK, x) for x in items)
 
@@ -171,11 +176,11 @@ body = '''<main class="lp">
         <h3 class="d lp-f__t lp-f__t--big">Персональная</h3>
         <ul class="lp-list">%(F2)s</ul>
         <p class="lp-f__d">Больше внимания тренера и&nbsp;возможность двигаться в&nbsp;своём темпе. Можно прийти одному, вдвоём или втроём.</p>
-        <div class="lp-f__foot">%(PRICE)s<button class="btn btn--primary js-book" type="button" data-book-type="personal">Записаться</button></div>
+        <div class="lp-f__foot">%(PRICE2)s<button class="btn btn--primary js-book" type="button" data-book-type="personal">Записаться</button></div>
       </article>
     </div>
     <div class="lp-help reveal">
-      <p><b>Не знаете, какой формат выбрать?</b> Оставьте заявку&nbsp;— администратор поможет подобрать подходящий вариант.</p>
+      <div class="lp-help__txt"><b class="lp-help__t d">Не знаете, какой формат выбрать?</b><p>Оставьте заявку&nbsp;— администратор поможет подобрать подходящий вариант.</p></div>
       <button class="btn btn--sec js-join" type="button" aria-haspopup="dialog" aria-controls="join" data-join-title="Поможем выбрать формат" data-join-topic="trial">Оставить заявку</button>
     </div>
   </div>
@@ -298,10 +303,23 @@ FIN = ''.join('<li><span class="lp-fin__ic">%s</span><span class="lp-fin__tx">%s
     (ico('<path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/>'), 'поймёте, хотите ли заниматься дальше'),
     (ico('<path d="M4 20l6-8 4 4 6-9"/><path d="M15 7h5v5"/>'), 'получите рекомендацию по следующему формату')])
 
+# ---------- Карточка тренера: по клику (Enter/пробел) открывается окно с описанием (js/landing.js, .js-coach) ----------
+# Описание лежит в карточке скрытым блоком .lp-coach__bio — в MODX это поля тренера (о себе, специализация, с кем работает, достижения).
+COACH_PLUS = '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>'
+def coach_card(n, r, q, img):
+    bio = ('<div class="lp-coach__bio" hidden><p class="cm__about">[Пара абзацев о&nbsp;тренере: как пришёл в&nbsp;скалолазание, какой опыт, как строит тренировки и&nbsp;что важно в&nbsp;работе с&nbsp;учениками.]</p>'
+           '<dl class="cm__facts"><div><dt>Специализация</dt><dd>[Боулдеринг, трудность, страховка]</dd></div>'
+           '<div><dt>С&nbsp;кем работает</dt><dd>[Новички, взрослые, дети, подготовка к&nbsp;соревнованиям]</dd></div>'
+           '<div><dt>Достижения</dt><dd>[Разряды, соревнования, выезды на&nbsp;скалы]</dd></div></dl>'
+           '<button class="btn btn--primary js-join cm__go" type="button" aria-haspopup="dialog" aria-controls="join" data-join-title="Запись к&nbsp;тренеру">Записаться к&nbsp;тренеру</button></div>')
+    return ('<article class="lp-coach reveal js-coach" tabindex="0" role="button" aria-haspopup="dialog" aria-label="Подробнее о тренере: %s">'
+            '<div class="lp-coach__img"><img src="assets/img/%s" alt="Фото-заглушка" loading="lazy"><span class="lp-coach__plus">%s</span></div>'
+            '<b class="lp-coach__n">%s</b><span class="lp-coach__r">%s</span><span class="lp-coach__q">%s</span>'
+            '<span class="lp-coach__go">Подробнее о&nbsp;тренере</span>%s</article>') % (n.replace('&nbsp;', ' '), img, COACH_PLUS, n, r, q, bio)
+
 def coach(c, i=0):
     # фото — временные заглушки (не наши тренеры), заменить снимками тренеров К2
-    return ('<article class="lp-coach reveal"><div class="lp-coach__img"><img src="assets/img/coach-%d.jpg" alt="Фото-заглушка" loading="lazy"></div>'
-            '<b class="lp-coach__n">%s</b><span class="lp-coach__r">%s</span><span class="lp-coach__q">%s</span></article>') % (i % 4 + 1, c[0], c[1], c[2])
+    return coach_card(c[0], c[1], c[2], 'coach-%d.jpg' % (i % 4 + 1))
 def faq(items, first=False):
     return ''.join('<details class="reveal"%s><summary>%s<i></i></summary><div class="faq__a"><p>%s</p></div></details>' % (' open' if (first and i == 0) else '', q, a) for i, (q, a) in enumerate(items))
 def gal(items):
@@ -314,13 +332,14 @@ body = body % {
     'F1': li(['60 минут', 'группа до 8 человек', 'для взрослых новичков', 'работа тренера', 'необходимое снаряжение', 'вход на скалодром']),
     'F2': li(['60 минут', 'для 1–3 участников', 'индивидуальный темп', 'работа тренера', 'необходимое снаряжение', 'вход на скалодром [подтвердить включение]']),
     'PRICE': PRICE,
+    'PRICE2': PRICE_PERSONAL,
     'COACHES': ''.join(coach(c, i) for i, c in enumerate(COACHES)),
     'FAQ1': faq(FAQ[:4], True), 'FAQ2': faq(FAQ[4:]),
     'GAL': gal(GAL),
 }
 
 BOOK = '''<!-- ЕДИНАЯ форма бронирования с калькулятором. Цены — data-атрибуты (в MODX из прайса), оплата — переход в банк (подключит разработчик) -->
-<dialog class="modal book" id="book" aria-labelledby="book-t" data-price-group="" data-price-group-kid="" data-price-personal="" data-price-personal-kid="">
+<dialog class="modal book" id="book" aria-labelledby="book-t" data-price-group="1500" data-price-group-kid="1200" data-price-personal="2500" data-price-personal-kid="2000">
   <div class="modal__card book__card">
     <form class="cform cform--modal book__form" novalidate>
       <button class="modal__x js-book-close" type="button" aria-label="Закрыть"><svg class="ico" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
@@ -351,10 +370,10 @@ BOOK = '''<!-- ЕДИНАЯ форма бронирования с кальку�
         </div>
         <div class="book__sum" aria-live="polite">
           <div class="book__rows"></div>
-          <div class="book__total"><span>Итого</span><b class="book__total-v">[____]&nbsp;₽</b></div>
+          <div class="book__total"><span>Итого</span><b class="book__total-v">1&nbsp;500&nbsp;₽</b></div>
         </div>
         <div class="cform__agree">
-          <label class="agree"><input type="checkbox" name="agree" required><span class="agree__box"></span><span>Согласен на&nbsp;<a href="dokumenty.html#privacy">обработку персональных данных</a> и&nbsp;<a href="dokumenty.html#oferta">условия оферты</a></span></label>
+          <label class="agree"><input type="checkbox" name="agree" required><span class="agree__box"></span><span>Согласен на&nbsp;<a href="politika-personalnyh-dannyh.html">обработку персональных данных</a> и&nbsp;<a href="dokumenty.html#oferta">условия оферты</a></span></label>
           <span class="field__err field__err--agree">Нужно согласие, чтобы оформить запись</span>
         </div>
         <button class="btn btn--primary cform__go" type="submit">Перейти к&nbsp;оплате</button>
