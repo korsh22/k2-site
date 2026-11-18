@@ -1229,3 +1229,19 @@ a.chip{display:inline-flex;align-items:center;text-decoration:none}
 .ksch__row small{color:var(--grey-600);font-size:var(--t-small);line-height:var(--l-small)}
 .ksch__note{margin:0;padding:16px 0 12px;color:var(--grey-600);font-size:var(--t-small)}
 @media (max-width:767px){.ksch{padding:4px var(--pad-s)}.ksch__row{grid-template-columns:1fr auto;padding:16px 0}.ksch__row small{grid-column:1/-1}}
+
+/* «Почему К2» на «Школе» — компактнее (примерно на 20 % меньше заголовок, цифры и карточки) + новое фото боулдеринга */
+.lp-why2--compact .lp-why2__t{font-size:clamp(28px,3.6vw,52px)}
+.lp-why2--compact .lp-why2__stats li > span{font-size:var(--t-small);line-height:var(--l-small)}
+.lp-why2--compact .lp-why2__c b{font-size:var(--t-h5);line-height:var(--l-h5)}
+.lp-why2--compact .lp-why2__c p{font-size:var(--t-small);line-height:var(--l-small)}
+@media (min-width:1041px){
+  .lp-why2--compact .lp-why2__stats b{font-size:min(104px,6.4vw,11vh)}
+  .lp-why2--compact .lp-why2__cards{max-width:900px}
+  .lp-why2--compact .lp-why2__bg img{width:118%;max-width:none;object-position:0 40%}
+}
+@media (min-width:1041px) and (min-height:620px){
+  .lp-why2--compact .lp-why2__t{font-size:min(clamp(28px,3.6vw,52px),5.8vh)}
+  .lp-why2--compact .lp-why2__stats b{font-size:min(104px,6.4vw,11vh)}
+}
+@media (max-width:767px){.lp-why2--compact .lp-why2__stats b{font-size:min(68px,26cqi)}.lp-why2--compact .lp-why2__stats li:nth-child(2) b{font-size:min(80px,22cqi)}}

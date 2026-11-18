@@ -372,6 +372,8 @@ body += sec('<div class="lp-intro"><h2 class="d h2 reveal">Чем школа о�
 _pr = io.open(os.path.join(ROOT, 'pervyj-raz.html'), encoding='utf-8').read()
 _a = _pr.index('<section class="lp-why2 dark" id="why">'); _b = _pr.index('</section>', _a) + len('</section>')
 body += (_pr[_a:_b].replace('Почему первое занятие стоит провести в&nbsp;К2', 'Почему постоянные тренировки в&nbsp;К2&nbsp;— это ТОП!')
+         .replace('<section class="lp-why2 dark" id="why">', '<section class="lp-why2 lp-why2--compact dark" id="why">', 1)
+         .replace('<img src="assets/img/k2-rock.jpg"', '<img src="assets/img/p-boulder.jpg"', 1)
          .replace('<button class="btn btn--light js-book" type="button">Выбрать формат и&nbsp;записаться</button>',
                   join_btn('Записаться в&nbsp;школу', 'Запись в школу скалолазания', 'sub', 'btn btn--light')) + '\n')
 body += sec(sechead('Форматы') + '\n' + offers([
@@ -806,11 +808,12 @@ body += sec(EV_CHIPS + '<div class="bgrid bgrid--ev">%s</div><p class="bempty" h
     '<article class="bcard ev reveal" data-cat="%s"><span class="bcard__img"><img src="assets/img/%s" alt="" loading="lazy"></span><span class="bcard__b"><span class="badge">%s</span>'
     '<span class="bcard__t">%s</span><span class="ev__date%s"><b class="d">%s</b><span><b>%s</b><small>%s</small></span></span>%s</span></article>' % ((c, img, cn, t, ' ev__date--range' if '–' in dt[0] else '') + dt + (join_btn('Записаться', t, 'kids' if c == 'kids' else '', 'btn btn--sec btn--sm'),))
     for c, cn, t, img, dt in EVENTS) + '\n<!-- В MODX: мероприятия — ресурсы (дата, для кого, обложка, описание), список — pdoResources -->', 'list', cls='blog-list')
+body += nextcta('Хотите первыми узнавать о мероприятиях?', 'Оставьте телефон — сообщим о ближайших соревнованиях и выездах.', join_btn('Оставить заявку', 'Мероприятия скалодрома', '', 'btn btn--light'), 'соревнования · выезды · события · ')
+# Архив прошедших мероприятий — под плашкой «Хотите первыми узнавать…»
 body += sec(sechead('Прошедшие мероприятия', 'Архив соревнований, выездов и событий скалодрома') + '<div class="arc-grid">' + ''.join(
     '<article class="arc"><span class="arc__img"><img src="assets/img/%s" alt="" loading="lazy"></span><span class="arc__b"><span class="arc__date">%s</span>'
     '<b class="arc__t">%s</b><span class="badge">%s</span></span></article>' % (img, d, t, who) for d, t, who, img in ARCHIVE) + '</div>' + ARC_PAGER +
     '\n<!-- В MODX: прошедшие мероприятия — те же ресурсы с датой в прошлом, от новых к старым -->', 'archive')
-body += nextcta('Хотите первыми узнавать о мероприятиях?', 'Оставьте телефон — сообщим о ближайших соревнованиях и выездах.', join_btn('Оставить заявку', 'Мероприятия скалодрома', '', 'btn btn--light'), 'соревнования · выезды · события · ')
 # Вопросы и ответы — внизу страницы (факты — из других страниц сайта; чего нет — в скобках)
 body += faq_sec([('Как записаться на мероприятие?', 'Нажмите «Записаться» в карточке мероприятия и оставьте телефон — администратор перезвонит и всё подтвердит. Или позвоните нам.'),
                  ('Нужен ли опыт, чтобы участвовать?', '[Зависит от мероприятия: условия участия указаны в описании каждого события.]'),
