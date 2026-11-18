@@ -184,6 +184,8 @@ body = '''<main>
     <div class="bpick" hidden data-names='%s'><span>Подборка: <b></b></span><button class="bpick__x btn btn--sec btn--sm" type="button"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>Сбросить фильтр</button></div>
     <div class="bgrid">%s</div>
     <p class="bempty" hidden>В этой рубрике пока нет статей</p>
+    <!-- «Показать ещё»: сначала 10 статей, по кнопке — ещё 9 (js/blog.js). В MODX под кнопкой — обычная постраничная навигация (?page=2) для поисковиков -->
+    <div class="bmore" hidden><span class="bmore__n"></span><button class="btn btn--sec js-bmore" type="button">Показать ещё</button></div>
   </div>
 </section>
 </main>''' % (bfilter, esc(json.dumps(dict(CATEGORIES, **TAGS), ensure_ascii=False), quote=True).replace('&#x27;', "'"), card(ARTICLES[0], big=True) + ''.join(card(x) for x in ARTICLES[1:]))

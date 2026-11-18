@@ -111,7 +111,10 @@
   var boxes = $$('.bf input'), heads = $$('.bf__name');
   var names = pick ? JSON.parse(pick.dataset.names) : {};
   var known = function (k) { return !!names[k] || chips.some(function (c) { return c.dataset.f === k && k !== 'all'; }); };
-  function show(sel, keepHash) {
+  // «Показать ещё» (только список блога): сначала MORE0 статей, по кнопке — ещё MORE_STEP; лимит считается по выбранной подборке
+  var bmore = $('.bmore'), MORE0 = 10, MORE_STEP = 9, lim = MORE0, lastSel = [];
+  function show(sel, keepHash, more) {
+    if (!more) lim = MORE0; lastSel = sel;
     boxes.forEach(function (b) { b.checked = sel.indexOf(b.value) >= 0; });
     heads.forEach(function (h) { h.setAttribute('aria-pressed', String(sel.indexOf(h.dataset.f) >= 0)); });
     chips.forEach(function (c) { c.setAttribute('aria-pressed', String(sel.length ? sel.indexOf(c.dataset.f) >= 0 : c.dataset.f === 'all')); });
@@ -119,9 +122,17 @@
     cards.forEach(function (c) {
       var tags = (c.dataset.tags || c.dataset.cat).split(' ');
       var on = !sel.length || sel.some(function (k) { return tags.indexOf(k) >= 0; });
-      c.hidden = !on;
-      if (on) { shown++; c.classList.add('in'); }
+      if (on) shown++;
+      var vis = on && (!bmore || shown <= lim);
+      c.hidden = !vis;
+      if (vis) c.classList.add('in');
     });
+    if (bmore) {
+      var left = shown - lim;
+      bmore.hidden = left <= 0;
+      $('.bmore__n', bmore).textContent = 'Показано ' + Math.min(lim, shown) + ' из ' + shown;
+      $('.js-bmore', bmore).textContent = 'Показать ещё ' + Math.min(MORE_STEP, Math.max(left, 0));
+    }
     if (empty) empty.hidden = shown > 0;
     if (pick) { pick.hidden = !sel.length; $('b', pick).textContent = sel.map(function (k) { return names[k]; }).join(', '); }
     if (!keepHash) history.replaceState(null, '', sel.length ? '#' + sel.join(',') : location.pathname);
@@ -135,6 +146,7 @@
     boxes.forEach(function (b) { b.addEventListener('change', function () { show(current()); }); });
     heads.forEach(function (h) { h.addEventListener('click', function () { h.setAttribute('aria-pressed', String(h.getAttribute('aria-pressed') !== 'true')); show(current()); }); });
     if (pick) $('.bpick__x', pick).addEventListener('click', function () { show([]); });
+    if (bmore) $('.js-bmore', bmore).addEventListener('click', function () { lim += MORE_STEP; show(lastSel, true, true); });
     // темы раздела — по стрелке. Компьютер: выпадающий список поверх статей, открыт один, закрывается кликом мимо и Esc.
     // Телефон: разделы листаются в строку, темы — панелью под строкой; тоже открыт один, закрывается тапом мимо
     var groups = $$('.bf__g'), mob = window.matchMedia('(max-width: 767px)');

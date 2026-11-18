@@ -366,3 +366,8 @@ a.art__main-tag:hover{background:var(--white);color:var(--graphite)}
 @media (prefers-reduced-motion:reduce){.bf-wrap::before{transition:none}}
 /* Самые узкие телефоны: длинное слово в заголовке шапки («скалолазании») должно помещаться */
 @media (max-width:359px){.blog-head h1.blog-head__t{font-size:23px;line-height:29px}}
+/* «Показать ещё» под списком статей */
+.bmore{display:flex;flex-direction:column;align-items:center;gap:12px;margin-top:var(--head)}
+.bmore[hidden]{display:none}
+.bmore__n{color:var(--grey-600);font-size:var(--t-small)}
+@media (max-width:767px){.bmore .btn{width:100%}}
