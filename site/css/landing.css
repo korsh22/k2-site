@@ -1314,3 +1314,71 @@ a.chip{display:inline-flex;align-items:center;text-decoration:none}
   .dcx__go{grid-column:1/-1;justify-content:center}
   .dcx__body{padding:0 16px 20px}
 }
+
+/* Карточка мероприятия кликабельна целиком: ссылка на названии растянута на всю карточку, «Записаться» — поверх */
+.ev{position:relative;cursor:pointer;transition:transform .35s var(--ease),box-shadow .3s}
+.ev:hover{transform:translateY(-4px);box-shadow:0 16px 40px rgba(0,0,0,.1)}
+.ev__link{color:inherit;text-decoration:none}
+.ev__link::after{content:"";position:absolute;inset:0;z-index:1;border-radius:inherit}
+.ev:hover .ev__link{color:var(--red)}
+.ev__link:focus-visible{outline:none}
+.ev:has(.ev__link:focus-visible){box-shadow:0 0 0 3px var(--red)}
+.ev .btn{position:relative;z-index:2}
+.bgrid--ev3{grid-template-columns:repeat(3,minmax(0,1fr))}
+@media (max-width:1040px){.bgrid--ev3{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:767px){.bgrid--ev3{grid-template-columns:1fr}}
+
+/* Страница мероприятия: афиша А4 + ключевые данные */
+.evp{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(28px,5vw,72px);align-items:start}
+.evp__poster{position:relative;margin:0;aspect-ratio:210/297;border-radius:var(--r-xl);overflow:hidden;background:var(--graphite);box-shadow:0 24px 60px rgba(0,0,0,.15)}
+.evp__poster img{width:100%;height:100%;object-fit:cover}
+.evp__poster .badge{position:absolute;left:16px;top:16px;background:var(--white)}
+.evp__b{display:flex;flex-direction:column;gap:28px;padding-top:8px}
+.evp__date>b{font-size:clamp(72px,8vw,120px)}
+.evp__date>span b{font-size:var(--t-h3);line-height:var(--l-h3)}
+.evp__date.ev__date--range>b{font-size:clamp(56px,6vw,96px)}
+.evp__facts{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.evp__facts li{display:flex;gap:14px;align-items:flex-start;padding:16px;border-radius:var(--r-lg);background:var(--white)}
+.evp__ic{flex:none;width:40px;height:40px;border-radius:var(--r-md);background:rgba(217,73,62,.1);color:var(--red);display:grid;place-items:center}
+.evp__ic .ico{width:20px;height:20px}
+.evp__facts small{display:block;color:var(--grey-600);font-size:var(--t-caption);text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px}
+.evp__facts b{font-weight:600;line-height:1.3}
+.evp__go{display:flex;flex-wrap:wrap;gap:12px}
+.evp__about{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:clamp(28px,5vw,72px);align-items:start}
+.evp__about .h2{margin:0 0 20px}
+.evp__about .lead{margin:0 0 14px;max-width:640px}
+.evp__prog{background:var(--white);border-radius:var(--r-xl);padding:var(--pad)}
+.evp__prog .lp-k{margin-bottom:12px}
+.evp__prog ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.evp__prog li{display:grid;grid-template-columns:84px minmax(0,1fr);gap:12px;padding:14px 0;border-bottom:1px solid var(--stone-200)}
+.evp__prog li:last-child{border-bottom:0}
+.evp__prog li b{color:var(--red);font-size:var(--t-h5)}
+.evp__cols{display:grid;grid-template-columns:1fr 1fr;gap:var(--g)}
+.evp__col{background:var(--white);border-radius:var(--r-xl);padding:var(--pad);display:flex;flex-direction:column;gap:16px}
+.evp__col .h3{margin:0}
+@media (max-width:1040px){.evp,.evp__about{grid-template-columns:1fr}.evp__poster{max-width:420px}}
+@media (max-width:767px){.evp__facts,.evp__cols{grid-template-columns:1fr}.evp__poster{max-width:none}.evp__go .btn{flex:1 1 auto}.evp__date>b{font-size:72px}}
+/* «О скалодроме»: обращение и «Две зоны» на одном фоне — не складываем два полных отступа */
+.sec#hello{padding-bottom:calc(var(--sec) * .25)}
+
+/* Окно «Где оставить отзыв» */
+.rv{width:min(520px,calc(100vw - 32px))}
+.rv__card{position:relative;background:var(--stone-100);border-radius:var(--r-xl);padding:clamp(24px,4vw,40px);display:flex;flex-direction:column;gap:12px}
+.rv[open] .rv__card{animation:modalIn .45s var(--ease)}
+.rv.is-closing .rv__card{animation:modalOut .22s ease forwards}
+.rv__t{font-size:var(--t-h3);line-height:var(--l-h3);margin:0;padding-right:52px}
+.rv__s{margin:0 0 8px;color:var(--grey-600);font-size:var(--t-small);line-height:var(--l-small)}
+.rv__list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.rv__i{display:flex;align-items:center;gap:14px;padding:12px 12px 12px 14px;border-radius:var(--r-lg);background:var(--white);color:var(--graphite);text-decoration:none;font-size:var(--t-body);transition:transform .25s var(--ease),box-shadow .25s}
+.rv__i:hover{transform:translateY(-2px);box-shadow:0 10px 26px rgba(0,0,0,.1)}
+.rv__i:focus-visible{outline:3px solid var(--red);outline-offset:2px}
+.rv__ic{flex:none;width:44px;height:44px;border-radius:12px;display:grid;place-items:center;color:var(--white)}
+.rv__ic .ico{width:22px;height:22px}
+.rv__i--yandex .rv__ic{background:#fc3f1d}
+.rv__i--dgis .rv__ic{background:#29b24a}
+.rv__i--google .rv__ic{background:#4285f4}
+.rv__i b{flex:1;font-weight:600}
+.rv__go{width:36px;height:36px;border-radius:50%;background:var(--grey-100);display:grid;place-items:center;transition:background-color .2s,color .2s}
+.rv__go .ico{width:18px;height:18px}
+.rv__i:hover .rv__go{background:var(--graphite);color:var(--white)}
+.zn__more{margin-top:var(--head)}

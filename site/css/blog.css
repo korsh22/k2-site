@@ -364,3 +364,5 @@ a.art__main-tag:hover{background:var(--white);color:var(--graphite)}
 .blog-list .bf__list{box-shadow:0 24px 60px rgba(0,0,0,.35),0 2px 8px rgba(0,0,0,.12)}
 .bf-wrap.is-open .bf__g:not(.is-closed){box-shadow:0 0 0 2px var(--graphite),0 12px 30px rgba(0,0,0,.25)}
 @media (prefers-reduced-motion:reduce){.bf-wrap::before{transition:none}}
+/* Самые узкие телефоны: длинное слово в заголовке шапки («скалолазании») должно помещаться */
+@media (max-width:359px){.blog-head h1.blog-head__t{font-size:23px;line-height:29px}}

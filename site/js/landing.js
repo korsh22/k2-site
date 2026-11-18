@@ -86,12 +86,16 @@
       b.addEventListener('click', function () {
         // Отклик на вакансию (data-join-job="Название"): без выбора тренировки, в окне и в заявке — название вакансии
         var job = b.dataset.joinJob || '';
+        var review = 'joinReview' in b.dataset; // «Оставить отзыв»: поле для текста вместо выбора тренировки
         join.classList.toggle('is-job', !!job);
+        join.classList.toggle('is-review', review);
+        var goTxt = $('.cform__go', jForm); goTxt = goTxt && [].filter.call(goTxt.childNodes, function (n) { return n.nodeType === 3 && n.textContent.trim(); })[0];
+        if (goTxt) { if (!goTxt.k2orig) goTxt.k2orig = goTxt.textContent; goTxt.textContent = review ? 'Отправить отзыв' : goTxt.k2orig; }
         jT.innerHTML = b.dataset.joinTitle || jTitle;
-        if (jS) jS.innerHTML = job ? 'Вакансия: <b class="cform__job"></b><br>Оставьте телефон — перезвоним и расскажем подробнее' : jSub;
+        if (jS) jS.innerHTML = job ? 'Вакансия: <b class="cform__job"></b><br>Оставьте телефон — перезвоним и расскажем подробнее' : review ? 'Расскажите, как вам у нас. Оставьте телефон — если нужно, администратор ответит' : jSub;
         if (job) $('.cform__job', join).textContent = job;
-        var what = $('[name="what"]', join); if (what) what.value = job ? 'Отклик на вакансию: ' + job : jT.textContent; // в заявке видно, откуда её отправили
-        var t = !job && b.dataset.joinTopic && $('[name="topic"][value="' + b.dataset.joinTopic + '"]', join);
+        var what = $('[name="what"]', join); if (what) what.value = job ? 'Отклик на вакансию: ' + job : review ? 'Отзыв' : jT.textContent; // в заявке видно, откуда её отправили
+        var t = !job && !review && b.dataset.joinTopic && $('[name="topic"][value="' + b.dataset.joinTopic + '"]', join);
         if (t) t.checked = true;
         J.open();
       });
@@ -101,7 +105,7 @@
       e.preventDefault();
       if (!validate(jForm)) return;
       var who = $('[name="name"]', jForm).value.trim();
-      send(jForm, function () { showDone(jForm, who + (join.classList.contains('is-job') ? ', спасибо за отклик! Перезвоним и расскажем о вакансии.' : ', спасибо! Перезвоним в рабочее время и поможем выбрать формат.')); });
+      send(jForm, function () { showDone(jForm, who + (join.classList.contains('is-review') ? ', спасибо за отзыв! Нам важно каждое мнение.' : join.classList.contains('is-job') ?', спасибо за отклик! Перезвоним и расскажем о вакансии.' : ', спасибо! Перезвоним в рабочее время и поможем выбрать формат.')); });
     });
   }
 
@@ -139,6 +143,15 @@
       c.addEventListener('click', function () { cmOpen(c); });
       c.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); cmOpen(c); } });
     });
+  }
+
+  /* ---------- Окно «Где оставить отзыв» (страница «Отзывы»): Яндекс Карты, 2ГИС, Google ---------- */
+  var rv = $('#rv');
+  if (rv && rv.showModal) {
+    var RVD = setupDialog(rv);
+    $$('.js-rv').forEach(function (b) { b.addEventListener('click', RVD.open); });
+    $('.rv__x', rv).addEventListener('click', RVD.close);
+    $$('.rv__i', rv).forEach(function (a) { a.addEventListener('click', function () { RVD.close(); }); });
   }
 
   /* ---------- Форма заявки в блоке «Нужно связаться с нами?» ---------- */
