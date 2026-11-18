@@ -432,10 +432,11 @@
   var jobHash = location.hash && document.getElementById(decodeURIComponent(location.hash.slice(1)));
   if (jobHash && jobHash.classList.contains('job')) { var jm = $('.job__more', jobHash); if (jm) jm.open = true; }
 
-  /* ---------- Документы: ссылка dokumenty.html#oferta раскрывает нужный документ и прокручивает к нему ---------- */
+  /* ---------- Документы: старая ссылка dokumenty.html#oferta открывает страницу документа ---------- */
   var dcxOpen = function () {
     var el = location.hash && document.getElementById(decodeURIComponent(location.hash.slice(1)));
     if (el && el.classList.contains('dcx') && el.tagName === 'DETAILS') { el.open = true; setTimeout(function () { el.scrollIntoView({ block: 'start' }); }, 60); }
+    if (el && el.classList.contains('dcx') && el.tagName === 'A') location.replace(el.href); // документ теперь — отдельная страница
   };
   if ($('.dcx')) {
     dcxOpen(); window.addEventListener('hashchange', dcxOpen);

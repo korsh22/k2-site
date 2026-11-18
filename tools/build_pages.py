@@ -373,7 +373,7 @@ BOOK = '''<!-- ЕДИНАЯ форма бронирования с кальку�
           <div class="book__total"><span>Итого</span><b class="book__total-v">1&nbsp;500&nbsp;₽</b></div>
         </div>
         <div class="cform__agree">
-          <label class="agree"><input type="checkbox" name="agree" required><span class="agree__box"></span><span>Согласен на&nbsp;<a href="politika-personalnyh-dannyh.html">обработку персональных данных</a> и&nbsp;<a href="dokumenty.html#oferta">условия оферты</a></span></label>
+          <label class="agree"><input type="checkbox" name="agree" required><span class="agree__box"></span><span>Согласен на&nbsp;<a href="politika-personalnyh-dannyh.html">обработку персональных данных</a> и&nbsp;<a href="dogovor-oferty.html">условия оферты</a></span></label>
           <span class="field__err field__err--agree">Нужно согласие, чтобы оформить запись</span>
         </div>
         <button class="btn btn--primary cform__go" type="submit">Перейти к&nbsp;оплате</button>
