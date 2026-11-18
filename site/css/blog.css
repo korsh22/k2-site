@@ -311,3 +311,56 @@ a.art__main-tag:hover{background:var(--white);color:var(--graphite)}
 .tpage__meta{margin:0;color:var(--grey-600);font-size:var(--t-small)}
 .tpage .toc{margin-top:8px}
 .tpage__back{font-size:var(--t-small);color:var(--graphite);text-underline-offset:4px;margin-top:8px}
+
+/* Блог, телефон: разделы — одной строкой чипсами (листаются пальцем), темы — панелью под строкой */
+.bf-wrap{position:relative;z-index:5}
+@media (max-width:767px){
+  .bf-wrap{margin:0 calc(var(--side) * -1) 12px}
+  .blog-list .bf{position:static;display:flex;flex-wrap:nowrap;gap:8px;margin:0;padding:2px var(--side) 6px;overflow-x:auto;scroll-snap-type:x proximity;scroll-padding-inline:var(--side);scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  .blog-list .bf::-webkit-scrollbar{display:none}
+  .blog-list .bf__g{flex:none;position:static;overflow:visible;border-radius:var(--pill);scroll-snap-align:start}
+  .blog-list .bf__h{min-height:0;gap:8px;padding:4px 4px 4px 4px}
+  .blog-list .bf__ic{width:34px;height:34px;border-radius:50%}
+  .blog-list .bf__ic .ico{width:18px;height:18px}
+  .blog-list .bf__t{flex:none;white-space:nowrap;font-size:var(--t-small);line-height:1.2}
+  .blog-list .bf__t small{font-size:12px}
+  .blog-list .bf__x{width:30px;height:30px}
+  .blog-list .bf__x .ico{width:16px;height:16px}
+  .blog-list .bf__list{position:absolute;left:var(--side);right:var(--side);top:calc(100% + 2px);width:auto;min-width:0;max-width:none;padding:8px 16px;border:0;border-radius:var(--r-lg);background:var(--white);box-shadow:0 20px 50px rgba(0,0,0,.18)}
+  .blog-list .bf__g:not(.is-closed){box-shadow:0 0 0 2px var(--graphite)}
+}
+/* Телефон: все 4 раздела помещаются в строку без прокрутки — плитки «иконка над названием» */
+@media (max-width:767px){
+  .bf-wrap{margin:0 0 12px}
+  .blog-list .bf{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;padding:0;overflow:visible;scroll-snap-type:none}
+  .blog-list .bf__g{border-radius:var(--r-md);scroll-snap-align:none}
+  .blog-list .bf__h{flex-direction:column;justify-content:center;gap:6px;padding:10px 2px 9px;text-align:center}
+  .blog-list .bf__ic{width:32px;height:32px}
+  .blog-list .bf__t{white-space:nowrap;font:600 11.5px/1.15 var(--font-text);letter-spacing:-.01em}
+  .blog-list .bf__t small,.blog-list .bf__x{display:none}
+  .blog-list .bf__list{left:0;right:0}
+}
+@media (max-width:359px){.blog-list .bf__t{font-size:10px}.blog-list .bf{gap:4px}.blog-list .bf__ic{width:28px;height:28px}}
+/* Крестик в выпадающем списке тем */
+.blog-list .bf__list{padding-right:52px}
+.bf__close{all:unset;box-sizing:border-box;position:absolute;top:8px;right:8px;width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:var(--grey-100);color:var(--graphite);cursor:pointer;transition:background-color .2s,color .2s,transform .3s var(--ease)}
+.bf__close .ico{width:16px;height:16px}
+.bf__close:hover{background:var(--graphite);color:var(--white);transform:rotate(90deg)}
+.bf__close:focus-visible{outline:2px solid var(--graphite);outline-offset:2px}
+/* Выпадающий список тем — компактнее: меньше отступы, строки и шрифт */
+.blog-list .bf__list{padding:6px 44px 6px 12px;gap:0}
+.blog-list .bf__i,.blog-list button.bf__name.bf__i{min-height:30px;font-size:var(--t-small);line-height:1.25;gap:8px}
+.blog-list .bf__box{width:18px;height:18px;border-radius:5px}
+.blog-list .bf__box::after{width:9px;height:4px}
+.bf__close{top:6px;right:6px;width:30px;height:30px}
+.bf__close .ico{width:14px;height:14px}
+@media (max-width:767px){
+  .blog-list .bf__list{padding:4px 42px 4px 12px}
+  .blog-list .bf__i,.blog-list button.bf__name.bf__i{min-height:36px;font-size:var(--t-small)}
+}
+/* Открытый список тем: затемнение страницы под ним и более заметная тень */
+.bf-wrap::before{content:"";position:fixed;inset:0;z-index:-1;background:rgba(18,18,18,.45);opacity:0;pointer-events:none;transition:opacity .25s ease}
+.bf-wrap.is-open::before{opacity:1;pointer-events:auto}
+.blog-list .bf__list{box-shadow:0 24px 60px rgba(0,0,0,.35),0 2px 8px rgba(0,0,0,.12)}
+.bf-wrap.is-open .bf__g:not(.is-closed){box-shadow:0 0 0 2px var(--graphite),0 12px 30px rgba(0,0,0,.25)}
+@media (prefers-reduced-motion:reduce){.bf-wrap::before{transition:none}}

@@ -432,6 +432,17 @@
   var jobHash = location.hash && document.getElementById(decodeURIComponent(location.hash.slice(1)));
   if (jobHash && jobHash.classList.contains('job')) { var jm = $('.job__more', jobHash); if (jm) jm.open = true; }
 
+  /* ---------- Документы: ссылка dokumenty.html#oferta раскрывает нужный документ и прокручивает к нему ---------- */
+  var dcxOpen = function () {
+    var el = location.hash && document.getElementById(decodeURIComponent(location.hash.slice(1)));
+    if (el && el.classList.contains('dcx') && el.tagName === 'DETAILS') { el.open = true; setTimeout(function () { el.scrollIntoView({ block: 'start' }); }, 60); }
+  };
+  if ($('.dcx')) {
+    dcxOpen(); window.addEventListener('hashchange', dcxOpen);
+    // при открытии страницы сразу с #документом браузер сбивает прокрутку загрузкой — докручиваем после load
+    window.addEventListener('load', function () { var el = location.hash && document.getElementById(decodeURIComponent(location.hash.slice(1))); if (el && el.classList.contains('dcx')) setTimeout(function () { el.scrollIntoView({ block: 'start', behavior: 'auto' }); }, 120); });
+  }
+
   /* ---------- Архив мероприятий: на странице один ряд сетки, ниже — переключатели страниц ---------- */
   $$('.arc-grid').forEach(function (grid) {
     var items = $$('.arc', grid), pager = grid.nextElementSibling;

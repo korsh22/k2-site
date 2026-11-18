@@ -212,7 +212,7 @@ def tiles(items):
         '<span class="ptile__f">%s<span class="go go--s">%s</span></span></span></a>' % (h, img, t, d, PRICE if pr else '<span></span>', ARROW) for t, d, h, img, pr in items)
 
 CONTACT = sec(P['CONTACT'], 'contacts', cls='sec--flush')
-REVIEWS = lambda t='Отзывы': sec(sechead(t) + '\n<div class="widget reveal"><b>[Виджет отзывов]</b><span>Подтягивается с внешнего сервиса — [Яндекс Карты / 2ГИС]</span></div>', 'reviews', cls='lp-alt')
+REVIEWS = lambda t='Отзывы': sec(sechead(t) + '<div class="widget reveal"><b>Отзывы с&nbsp;Яндекс Карт и&nbsp;2ГИС</b><span>Здесь подключится виджет отзывов внешнего сервиса</span></div>', 'reviews', cls='lp-alt')
 COACH_STUB = [('[Имя Фамилия]', 'Старший тренер', '[Квалификация · стаж]'), ('[Имя Фамилия]', 'Тренер по боулдерингу', '[Квалификация · стаж]'),
               ('[Имя Фамилия]', 'Тренер по трудности', '[Квалификация · стаж]'), ('[Имя Фамилия]', 'Детский тренер', '[Квалификация · стаж]')]
 # Рыба: вымышленные тренеры (страница «Тренеры», детская секция): вымышленные тренеры и тексты-заглушки — заменить реальными данными скалодрома
@@ -832,30 +832,30 @@ body = hero([('О скалодроме', '')], 'Новый скалодром в
             'p-blue.jpg', [(I_UP, '13 метров высоты'), (I_SPARK, '1300 м²'), (I_CAL, '7 дней в неделю'), (I_PIN, '7 минут от метро')],
             link_btn('Первый раз', 'pervyj-raz.html', 'btn btn--primary') + link_btn('Как добраться', 'kontakty.html#route', 'btn btn--sec'), 'Зал скалодрома К2')
 # Обращение команды — сразу после первого экрана, как цитата. Текст — пример (написан для вида); потом его заменят куском SEO-текста. Фото — временное: нужно общее фото команды
-body += sec('<figure class="hello reveal"><div class="hello__ph"><img src="assets/img/k2-first-3.jpg" alt="Команда скалодрома К2" loading="lazy"><span class="hello__tag">[Фото команды]</span></div>'
+body += sec('<figure class="hello reveal"><div class="hello__ph"><img src="assets/img/k2-first-3.jpg" alt="Команда скалодрома К2" loading="lazy"><span class="hello__tag">Команда К2</span></div>'
             '<blockquote class="hello__q"><span class="hello__mark d" aria-hidden="true">“</span>'
             '<p class="hello__t d">Привет! Добро пожаловать на&nbsp;скалодром К2</p>'
             '<p class="lead">Мы ещё молодые, но&nbsp;нам есть чем вас порадовать.</p>'
             '<p class="muted">Мы открыли К2, чтобы в&nbsp;центре Петербурга появилось место, куда хочется возвращаться: после работы, всей семьёй или с&nbsp;друзьями на&nbsp;выходных. '
             'Здесь 1300&nbsp;м² боулдеринга и&nbsp;трудности, стены высотой 13&nbsp;метров и&nbsp;тренеры, которые одинаково внимательны к&nbsp;новичку и&nbsp;к&nbsp;тому, кто готовится к&nbsp;соревнованиям.</p>'
             '<p class="muted">Не&nbsp;умеете лазать&nbsp;— научим с&nbsp;первой тренировки, снаряжение выдадим на&nbsp;месте. Уже лазаете&nbsp;— приходите за&nbsp;новыми трассами, компанией и&nbsp;атмосферой. Мы только начинаем, и&nbsp;нам важно, чтобы вам у&nbsp;нас понравилось.</p></blockquote>'
-            '<figcaption class="hello__sign"><b>Команда К2</b><span>[Имя Фамилия, должность]</span></figcaption></figure>', 'hello')
+            '<figcaption class="hello__sign"><b>Команда К2</b><span>Артём Соколов, старший тренер</span></figcaption></figure>', 'hello')
 body += sec(sechead('Две зоны для лазания') + '\n' + offers([
-    offer('Боулдеринг', ['невысокие трассы', 'без верёвки, над мягкими матами', '[__] трасс', 'подходит новичкам'], 'Короткие трассы без верёвки над мягкими матами. Идеально для первого знакомства и отработки техники.', link_btn('Первый раз', 'pervyj-raz.html', 'btn btn--primary'), 'Зона боулдеринга', id='bouldering', img='k2-first-1.jpg'),
-    offer('Трудность', ['стены 13 метров', 'со страховкой верёвкой', '[__] трасс', 'есть автостраховка'], 'Длинные трассы на стенах до 13 метров со страховкой. Здесь занимаются с тренером и самостоятельно.', link_btn('Базовые курсы', 'bazovye-kursy.html', 'btn btn--primary'), 'Зона трудности', dark=True, id='trudnost', img='k2-hall.jpg')]), 'zones')
-body += '''<section class="lp-why dark" id="why">
-  <div class="lp-why__photo"><img src="assets/img/k2-first-2.jpg" alt="Скалолаз на нависании" loading="lazy"></div>
-  <div class="wrap lp-why__in">
-    <h2 class="d h2 lp-why__t reveal">Почему лазать в К2</h2>
-    <div class="lp-why__cards">
-      <div class="lp-w reveal"><b class="d">13 метров высоты</b><p>Просторная зона трудности для занятий со страховкой.</p></div>
-      <div class="lp-w reveal"><b class="d">1300 м²</b><p>Боулдеринг и трудность под одной крышей.</p></div>
-      <div class="lp-w lp-w--accent reveal"><b class="d">Новый скалодром</b><p>Новые стены, зацепы и снаряжение.</p></div>
-      <div class="lp-w reveal"><b class="d">PRO команда</b><p>Тренеры для взрослых и детей.</p></div>
-      <div class="lp-w reveal"><b class="d">Прокат снаряжения</b><p>Всё необходимое — на месте.</p></div>
-    </div>
-  </div>
-</section>'''
+    offer('Боулдеринг', ['невысокие трассы', 'без верёвки, над мягкими матами', '120 трасс', 'подходит новичкам'], 'Короткие трассы без верёвки над мягкими матами. Идеально для первого знакомства и отработки техники.', link_btn('Первый раз', 'pervyj-raz.html', 'btn btn--primary'), 'Зона боулдеринга', id='bouldering', img='k2-first-1.jpg'),
+    offer('Трудность', ['стены 13 метров', 'со страховкой верёвкой', '40 трасс', 'есть автостраховка'], 'Длинные трассы на стенах до 13 метров со страховкой. Здесь занимаются с тренером и самостоятельно.', link_btn('Базовые курсы', 'bazovye-kursy.html', 'btn btn--primary'), 'Зона трудности', dark=True, id='trudnost', img='k2-hall.jpg')]), 'zones')
+# «Почему лазать в К2»: слева фото (горизонтальное), справа — заголовок, крупные цифры и три преимущества с иконками.
+# Фото ВРЕМЕННОЕ (чужой зал, на кадре метки и водяной знак другого скалодрома) — заменить снимком К2
+body += ('<section class="sec dark lp-why3" id="why"><div class="wrap lp-why3__g">'
+         '<figure class="lp-why3__ph reveal"><img src="assets/img/p-overhang.jpg" alt="Скалолаз на нависании в зоне боулдеринга" loading="lazy">'
+         '<figcaption class="lp-why3__tag"><b class="d">Новый скалодром</b><span>Новые стены, зацепы и&nbsp;снаряжение</span></figcaption></figure>'
+         '<div class="lp-why3__b"><span class="mark reveal">Почему К2</span><h2 class="d h2 reveal">Почему лазать в&nbsp;К2</h2>'
+         '<div class="lp-why3__stats reveal"><div><b class="d">13<small>м</small></b><span>высоты&nbsp;— просторная зона трудности для&nbsp;занятий со&nbsp;страховкой</span></div>'
+         '<div><b class="d">1300<small>м²</small></b><span>боулдеринг и&nbsp;трудность под&nbsp;одной крышей</span></div></div>'
+         '<ul class="lp-why3__list">' + ''.join('<li class="reveal"><span class="lp-why3__ic">%s</span><div><b>%s</b><p>%s</p></div></li>' % x for x in [
+             (I_SPARK, 'Новый скалодром', 'Новые стены, зацепы и&nbsp;снаряжение.'), (I_PEOPLE, 'PRO команда', 'Тренеры для&nbsp;взрослых и&nbsp;детей.'),
+             (I_GEAR, 'Прокат снаряжения', 'Всё необходимое&nbsp;— на&nbsp;месте.')]) + '</ul>'
+         '<div class="lp-why3__go reveal">' + link_btn('Первый раз', 'pervyj-raz.html', 'btn btn--primary') + link_btn('Как добраться', 'kontakty.html#route', 'btn btn--sec') + '</div>'
+         '</div></div></section>')
 # Удобства: «маршрут вечера» шагами + плитки с иконками
 I_HANGER = ico('<path d="M10 6a2 2 0 1 1 2 2v2"/><path d="M12 10l-8.5 6.5a1 1 0 0 0 .6 1.5h15.8a1 1 0 0 0 .6-1.5z"/>')
 I_SHOWER = ico('<path d="M5 21V9a5 5 0 0 1 9-3"/><path d="M11 9h7l-1.5 2.5h-4z"/><path d="M12.5 14.5l-.6 1.6M15 14.5v1.7M17.5 14.5l.6 1.6M13 19l-.4 1.2M16.6 19l.4 1.2"/>')
@@ -872,18 +872,18 @@ I_BAR = ico('<path d="M3 5h18"/><path d="M6 5v3M18 5v3"/><circle cx="12" cy="11"
 AM_TILES = [(I_HANGER, 'Раздевалки', '', 'p-mat.jpg'), (I_SHOWER, 'Душевые', '', 'k2-first-2.jpg'), (I_SAUNA, 'Сауна', '', 'p-cave.jpg'),
             (I_LOCK, 'Шкафчики', '', 'k2-first-3.jpg'), (I_STRETCH, 'Зал для&nbsp;стретчинга', '', 'k2-hall.jpg'), (I_BAR, 'Турники', '', 'k2-first-1.jpg'),
             (I_CHILD, 'Детская зона', '', 'k2-rock.jpg'), (I_TOWEL, 'Аренда полотенец', '', 'p-chalk.jpg'), (I_SHOE, 'Прокат снаряжения', '', 'p-mat.jpg'),
-            (I_PARK, 'Парковка', '[уточнить]', 'k2-hall.jpg')]
+            (I_PARK, 'Парковка', 'бесплатно', 'k2-hall.jpg')]
 body += sec('<div class="am am--wide"><div class="am__main reveal"><h2 class="d h2">Всё для&nbsp;комфортных тренировок</h2>'
             '<p class="lead muted">Можно прийти сразу после работы: переодеться, потренироваться и&nbsp;принять душ.</p></div>'
             '<div class="am__route reveal"><ol class="am__flow" aria-label="Как проходит визит">' + ''.join('<li><span class="am__fi">%s</span><span>%s</span></li>' % x for x in AM_FLOW) + '</ol>'
-            '<p class="lp-bring__note">%s<span>[Ежедневно, __:__–__:__]</span></p></div></div>' % I_TIME +
+            '<p class="lp-bring__note">%s<span>Ежедневно, 7:00–23:00</span></p></div></div>' % I_TIME +
             '<div class="am__side"><p class="lp-k reveal">В&nbsp;К2 есть <span class="am__hint">— нажмите, чтобы посмотреть фото</span></p><ul class="am__tiles am__tiles--ph" data-lb>' + ''.join(
                 '<li class="reveal"><button class="am__t" type="button" data-lb-i data-cap="%s" aria-label="Фото: %s"><span class="am__ph"><img src="assets/img/%s" alt="%s" loading="lazy">'
                 '<span class="am__zoom" aria-hidden="true">%s</span></span><span class="am__ti">%s</span><b>%s</b>%s</button></li>' % (
                     t.replace('&nbsp;', ' '), t.replace('&nbsp;', ' '), img, t.replace('&nbsp;', ' '), ico('<circle cx="11" cy="11" r="6"/><path d="M20 20l-4.5-4.5M11 8v6M8 11h6"/>'), ic, t,
                     '<small>%s</small>' % n if n else '') for ic, t, n, img in AM_TILES) + '</ul></div>', 'amenities')
 body += sec(sechead('Атмосфера К2', 'Нажмите на фото — откроется галерея') + '\n' + gal(GAL_HALL), 'photos', cls='lp-alt')
-body += sec(sechead('Команда', '', link_btn('Все тренеры', 'trenery.html', 'btn btn--sec reveal')) + '\n' + coaches(COACH_STUB), 'coaches')
+body += sec(sechead('Команда', '', link_btn('Все тренеры', 'trenery.html', 'btn btn--sec reveal')) + '\n' + coaches(COACH_FISH_ADULT[:3] + COACH_FISH_KIDS[:1]), 'coaches')
 body += REVIEWS('Отзывы о К2') + CONTACT
 page('o-skalodrome.html', 'О скалодроме К2 — боулдеринг и трудность в центре Петербурга', 'Новый скалодром: 1300 м², стены 13 метров, зоны боулдеринга и трудности, раздевалки и душевые. 7 минут от м. Площадь Ленина.', body, gallery=True)
 
@@ -936,16 +936,50 @@ body += sec('<h2 class="sr">Открытые вакансии</h2><div class="jo
 page('vakansii.html', 'Вакансии — скалодром К2', 'Работа на скалодроме К2: тренеры, администраторы и другие вакансии.', body)
 
 
+# ======================= ОТЗЫВЫ =======================
+# Шапка, виджет отзывов с внешнего сервиса и лента видеоотзывов со стрелками (листание — js/landing.js).
+# В MODX: виджет — код Яндекс Карт / 2ГИС; видеоотзывы — ссылки на ролики (обложка, подпись, длительность)
+REV_VIDEO = [('k2-02.jpg', 'После пробной тренировки', '0:45'), ('k2-10.jpg', 'Родители детской секции', '1:10'), ('p-smile.jpg', 'Ученики школы скалолазания', '0:58'),
+             ('k2-13.jpg', 'Базовый курс за&nbsp;месяц', '1:24'), ('p-fun.jpg', 'Как прошёл выезд на&nbsp;скалы', '0:52'), ('k2-12.jpg', 'Индивидуальные тренировки', '1:05'),
+             ('k2-07.jpg', 'Лазаем всей семьёй', '0:49')]
+REV_CTL = ('<div class="sechead__ctl reveal"><button class="ibtn ibtn--line js-prev" type="button" aria-label="Назад">' + ico('<path d="M19 12H5M11 6l-6 6 6 6"/>') + '</button>'
+           '<button class="ibtn ibtn--line js-next" type="button" aria-label="Вперёд">' + ARROW + '</button></div>')
+body = head([('О нас', 'o-skalodrome.html'), ('Отзывы', '')], 'Отзывы о скалодроме К2', 'Что говорят гости, ученики и&nbsp;родители наших спортсменов.')
+body += sec(sechead('Отзывы на картах', 'Честные оценки гостей с&nbsp;Яндекс Карт и&nbsp;2ГИС') +
+            '<div class="widget widget--rev reveal"><b>Отзывы с&nbsp;Яндекс Карт и&nbsp;2ГИС</b><span>Здесь подключится виджет отзывов внешнего сервиса</span></div>', 'widget')
+body += ('<section class="sec dark videos stack" id="video"><div class="wrap">' + sechead('Видеоотзывы', '', REV_CTL) + '</div>'
+         '<div class="shorts" tabindex="0" aria-label="Видеоотзывы, листается">' + ''.join(
+             '<a class="short" href="video.html"><img src="assets/img/%s" alt="" loading="lazy"><span class="scrim"></span>%s<span class="short__c"><b>%s</b><small>%s</small></span></a>' % (f, PLAY, t, d)
+             for f, t, d in REV_VIDEO) + '</div></section>')
+# Популярные вопросы (ответы — из фактов, которые уже есть на сайте)
+body += faq_sec([('Где оставить отзыв о К2?', 'На Яндекс Картах или в 2ГИС&nbsp;— найдите «Скалодром К2». Или расскажите администратору на ресепшене: мы читаем каждый отзыв.'),
+                 ('С чего начать, если я никогда не лазал?', 'С пробной тренировки. Это час с тренером: опыт и своё снаряжение не нужны.'),
+                 ('Нужно ли своё снаряжение?', 'Нет. Скальные туфли, страховочную систему и магнезию выдадим на месте.'),
+                 ('С какого возраста можно заниматься?', 'Детей берём с 5 лет&nbsp;— в детскую секцию. Взрослые программы&nbsp;— с 16 лет.'),
+                 ('Можно ли записать видеоотзыв?', 'Да. Скажите администратору или тренеру&nbsp;— снимем короткий ролик после тренировки.'),
+                 ('Где находится скалодром?', 'В центре Петербурга, в 7 минутах пешком от метро «Площадь Ленина».')], 'Популярные вопросы')
+page('otzyvy.html', 'Отзывы о скалодроме К2', 'Отзывы гостей, учеников и родителей о скалодроме К2: оценки на Яндекс Картах и 2ГИС и видеоотзывы.', body)
+
+
 # ======================= ДОКУМЕНТЫ =======================
-DOCS = [('pravila', 'Правила посещения'), ('tb', 'Техника безопасности'), ('zayavlenie', 'Заявление от родителей'), ('oferta', 'Договор оферты'), ('privacy', 'Политика обработки персональных данных')]
+# Список документов: карточка (название, о чём документ, редакция); нажатие раскрывает полный текст под карточкой.
+# Ссылка dokumenty.html#oferta сразу раскрывает нужный документ (js/landing.js). Политика ПДн — отдельной страницей.
+DOC_ICON = ico('<path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5M10 13h6M10 17h6"/>')
+DOCS = [('pravila', 'Правила посещения', 'Как посещать скалодром: допуск к&nbsp;лазанию, поведение в&nbsp;зале, детям и&nbsp;гостям.'),
+        ('tb', 'Техника безопасности', 'Страховка, маты, зоны лазания&nbsp;— что важно знать до&nbsp;первой тренировки.'),
+        ('zayavlenie', 'Заявление от родителей', 'Согласие родителя или законного представителя на&nbsp;занятия ребёнка.'),
+        ('oferta', 'Договор оферты', 'Условия оказания услуг, оплаты, переноса и&nbsp;возврата.'),
+        ('privacy', 'Политика обработки персональных данных', 'Как мы собираем, используем и&nbsp;защищаем ваши данные.')]
 DOC_PAGE = {'privacy': 'politika-personalnyh-dannyh.html'}  # документы, вынесенные на отдельную текстовую страницу
+def doc_head(i, t, d, go):
+    return ('<span class="dcx__ic">%s</span><span class="dcx__b"><b class="dcx__t d">%s</b><span class="dcx__d">%s</span>'
+            '<span class="dcx__meta">Редакция от&nbsp;1&nbsp;сентября 2026</span></span>%s') % (DOC_ICON, t, d, go)
+DOC_GO = '<span class="dcx__go"><span class="dcx__open">Открыть</span><span class="dcx__close">Свернуть</span><i aria-hidden="true"></i></span>'
 body = head([('О нас', 'o-skalodrome.html'), ('Документы', '')], 'Документы', 'Правила посещения, техника безопасности, оферта и политика обработки персональных данных.')
-body += """<section class="neutral docs-sec"><div class="art__wrap wrap docs">
-  <aside class="art__side"><p class="art__side-t">Документы</p><ol class="toc">%s</ol></aside>
-  <div class="art__body">%s</div>
-</div></section>""" % (''.join('<li><a href="%s">%s</a></li>' % (DOC_PAGE.get(i, '#' + i), t) for i, t in DOCS), ''.join(
-    ('<section class="doc" id="%s"><h2>%s</h2><p>Документ опубликован на&nbsp;отдельной странице.</p><p><a class="btn btn--sec" href="%s">Открыть документ</a></p></section>' % (i, t, DOC_PAGE[i])) if i in DOC_PAGE else
-    '<section class="doc" id="%s"><h2>%s</h2><p>%s</p><p class="doc__meta">Редакция от [дата]</p></section>' % (i, t, DOC_STUB) for i, t in DOCS))
+body += sec('<div class="dcx-list">' + ''.join(
+    ('<a class="dcx dcx--link reveal" id="%s" href="%s">%s</a>' % (i, DOC_PAGE[i], doc_head(i, t, d, '<span class="dcx__go">Открыть' + ARROW + '</span>'))) if i in DOC_PAGE else
+    ('<details class="dcx reveal" id="%s"><summary>%s</summary><div class="dcx__body"><p>%s</p></div></details>' % (i, doc_head(i, t, d, DOC_GO), DOC_STUB))
+    for i, t, d in DOCS) + '</div>', 'list')
 page('dokumenty.html', 'Документы — скалодром К2', 'Правила посещения, техника безопасности, договор оферты и политика обработки персональных данных скалодрома К2.', body)
 
 

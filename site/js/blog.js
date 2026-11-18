@@ -136,25 +136,32 @@
     heads.forEach(function (h) { h.addEventListener('click', function () { h.setAttribute('aria-pressed', String(h.getAttribute('aria-pressed') !== 'true')); show(current()); }); });
     if (pick) $('.bpick__x', pick).addEventListener('click', function () { show([]); });
     // темы раздела — по стрелке. Компьютер: выпадающий список поверх статей, открыт один, закрывается кликом мимо и Esc.
-    // Телефон: список раскрывается под разделом; раздел с выбранной темой открыт
+    // Телефон: разделы листаются в строку, темы — панелью под строкой; тоже открыт один, закрывается тапом мимо
     var groups = $$('.bf__g'), mob = window.matchMedia('(max-width: 767px)');
-    var setOpen = function (g, open) { g.classList.toggle('is-closed', !open); $('.bf__x', g).setAttribute('aria-expanded', String(open)); };
+    var bfWrap = $('.bf-wrap');
+    var setOpen = function (g, open) {
+      g.classList.toggle('is-closed', !open); $('.bf__x', g).setAttribute('aria-expanded', String(open));
+      // пока список тем открыт — страница под ним слегка затемнена (клик по затемнению закрывает список)
+      if (bfWrap) bfWrap.classList.toggle('is-open', groups.some(function (o) { return !o.classList.contains('is-closed'); }));
+    };
     groups.forEach(function (g) { $('.bf__x', g).addEventListener('click', function () {
       var open = g.classList.contains('is-closed');
-      if (open && !mob.matches) groups.forEach(function (o) { if (o !== g) setOpen(o, false); });
+      if (open) groups.forEach(function (o) { if (o !== g) setOpen(o, false); }); // открыт один раздел (и на телефоне)
       setOpen(g, open);
     }); });
+    // крестик в выпадающем списке тем — закрыть и вернуть фокус на раздел
+    groups.forEach(function (g) { var c = $('.bf__close', g); if (c) c.addEventListener('click', function (e) { e.stopPropagation(); setOpen(g, false); $('.bf__x', g).focus({ preventScroll: true }); }); });
     // клик в любом месте строки раздела — как по стрелке
     groups.forEach(function (g) { $('.bf__h', g).addEventListener('click', function (e) { if (!e.target.closest('.bf__x')) $('.bf__x', g).click(); }); });
-    document.addEventListener('click', function (e) { if (!mob.matches && !e.target.closest('.bf__g')) groups.forEach(function (g) { setOpen(g, false); }); });
+    document.addEventListener('click', function (e) { if (!e.target.closest('.bf__g')) groups.forEach(function (g) { setOpen(g, false); }); });
     document.addEventListener('keydown', function (e) {
-      if (e.key !== 'Escape' || mob.matches) return;
+      if (e.key !== 'Escape') return;
       groups.forEach(function (g) { if (!g.classList.contains('is-closed')) { setOpen(g, false); $('.bf__x', g).focus(); } });
     });
     var fromHash = function () {
       var sel = location.hash.slice(1).split(',').map(decodeURIComponent).filter(known);
       show(sel, true);
-      groups.forEach(function (g) { setOpen(g, mob.matches && $$('input', g).some(function (b) { return b.checked; })); });
+      groups.forEach(function (g) { setOpen(g, false); }); // выбранное видно в строке «Подборка», панель тем сама не открывается
     };
     window.addEventListener('hashchange', fromHash);
     fromHash();

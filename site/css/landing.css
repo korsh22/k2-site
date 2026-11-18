@@ -1245,3 +1245,72 @@ a.chip{display:inline-flex;align-items:center;text-decoration:none}
   .lp-why2--compact .lp-why2__stats b{font-size:min(104px,6.4vw,11vh)}
 }
 @media (max-width:767px){.lp-why2--compact .lp-why2__stats b{font-size:min(68px,26cqi)}.lp-why2--compact .lp-why2__stats li:nth-child(2) b{font-size:min(80px,22cqi)}}
+
+/* «Почему лазать в К2» (О скалодроме): фото слева, справа заголовок, цифры и преимущества */
+.lp-why3__g{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:clamp(32px,5vw,80px);align-items:center}
+.lp-why3__ph{position:relative;margin:0;aspect-ratio:3/2;border-radius:var(--r-xl);overflow:hidden;background:var(--graphite-raised)}
+.lp-why3__ph img{width:100%;height:100%;object-fit:cover;transition:transform 1.2s var(--ease)}
+.lp-why3__ph:hover img{transform:scale(1.03)}
+.lp-why3__tag{position:absolute;left:20px;bottom:20px;max-width:calc(100% - 40px);display:flex;flex-direction:column;gap:4px;padding:16px 20px;border-radius:var(--r-lg);background:var(--red);color:var(--white);box-shadow:0 12px 32px rgba(0,0,0,.25)}
+.lp-why3__tag b{font-size:var(--t-h4);line-height:var(--l-h4)}
+.lp-why3__tag span{font-size:var(--t-small);line-height:var(--l-small);opacity:.9}
+.lp-why3__b{display:flex;flex-direction:column;align-items:flex-start;gap:20px}
+.lp-why3__b .mark{margin-bottom:0}
+.lp-why3__b .h2{margin:0}
+.lp-why3__stats{display:grid;grid-template-columns:1fr 1fr;gap:16px 28px;width:100%;padding:20px 0;border-top:1px solid rgba(255,255,255,.16);border-bottom:1px solid rgba(255,255,255,.16)}
+.lp-why3__stats div{display:flex;flex-direction:column;gap:8px}
+.lp-why3__stats b{display:flex;align-items:baseline;gap:6px;font-size:clamp(48px,4.6vw,72px);line-height:.9;letter-spacing:-.03em}
+.lp-why3__stats b small{font-size:.36em;letter-spacing:0;color:var(--stone-300)}
+.lp-why3__stats span{color:var(--stone-300);font-size:var(--t-small);line-height:var(--l-small)}
+.lp-why3__list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:14px;width:100%}
+.lp-why3__list li{display:flex;gap:14px;align-items:flex-start}
+.lp-why3__ic{flex:none;width:44px;height:44px;border-radius:var(--r-md);background:var(--graphite-raised);color:var(--red);display:grid;place-items:center}
+.lp-why3__ic .ico{width:22px;height:22px}
+.lp-why3__list b{display:block;font:700 var(--t-h5)/var(--l-h5) var(--font-display)}
+.lp-why3__list p{margin:2px 0 0;color:var(--stone-300);font-size:var(--t-small);line-height:var(--l-small)}
+.lp-why3__go{display:flex;flex-wrap:wrap;gap:12px;margin-top:4px}
+@media (max-width:1040px){.lp-why3__g{grid-template-columns:1fr}}
+@media (max-width:767px){.lp-why3__tag{left:12px;bottom:12px;padding:12px 14px}.lp-why3__tag b{font-size:var(--t-h5);line-height:var(--l-h5)}.lp-why3__go .btn{flex:1 1 auto}}
+/* «Почему лазать в К2»: фото вертикальное — узкая колонка 5/12, рамка 4:5; текст по центру фото по высоте */
+@media (min-width:1041px){.lp-why3__g{grid-template-columns:minmax(0,5fr) minmax(0,7fr);align-items:center}}
+.lp-why3__ph{aspect-ratio:4/5}
+.lp-why3__ph img{object-position:50% 35%}
+.lp-why3__b{max-width:620px}
+@media (max-width:1040px){.lp-why3__ph{aspect-ratio:4/5;max-width:520px}}
+@media (max-width:767px){.lp-why3__ph{max-width:none}}
+
+/* Страница «Отзывы»: место под виджет внешнего сервиса */
+.widget--rev{min-height:clamp(320px,40vw,520px)}
+
+/* Документы: список карточек, полный текст раскрывается по нажатию */
+.dcx-list{display:flex;flex-direction:column;gap:12px;max-width:960px}
+.dcx{display:block;background:var(--white);border-radius:var(--r-lg);color:var(--graphite);text-decoration:none;scroll-margin-top:calc(var(--hdr) + 24px);transition:box-shadow .3s}
+.dcx:hover{box-shadow:0 14px 36px rgba(0,0,0,.08)}
+.dcx summary,.dcx--link{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:16px 20px;padding:20px 24px;cursor:pointer;list-style:none}
+.dcx summary::-webkit-details-marker{display:none}
+.dcx summary:focus-visible,.dcx--link:focus-visible{outline:3px solid var(--red);outline-offset:3px;border-radius:var(--r-lg)}
+.dcx__ic{width:52px;height:52px;border-radius:var(--r-md);background:rgba(217,73,62,.1);color:var(--red);display:grid;place-items:center}
+.dcx__ic .ico{width:24px;height:24px}
+.dcx__b{display:flex;flex-direction:column;gap:4px;min-width:0}
+.dcx__t{font-size:var(--t-h4);line-height:var(--l-h4)}
+.dcx__d{color:var(--grey-600);font-size:var(--t-small);line-height:var(--l-small)}
+.dcx__meta{color:var(--grey-600);font-size:var(--t-caption);margin-top:2px}
+.dcx__go{display:inline-flex;align-items:center;gap:10px;height:44px;padding:0 8px 0 18px;border-radius:var(--pill);border:1.5px solid var(--graphite);font:600 var(--t-small)/1 var(--font-text);white-space:nowrap;transition:background-color .2s,color .2s}
+.dcx__go .ico{width:18px;height:18px;margin-right:6px}
+.dcx__go i{position:relative;width:28px;height:28px;border-radius:50%;background:var(--grey-100);transition:transform .3s var(--ease),background-color .2s}
+.dcx__go i::before,.dcx__go i::after{content:"";position:absolute;left:50%;top:50%;width:12px;height:2px;margin:-1px 0 0 -6px;background:currentColor;border-radius:2px}
+.dcx__go i::after{transform:rotate(90deg);transition:transform .3s var(--ease)}
+.dcx:hover .dcx__go,.dcx[open] .dcx__go{background:var(--graphite);color:var(--white)}
+.dcx:hover .dcx__go i,.dcx[open] .dcx__go i{background:var(--red);color:var(--white)}
+.dcx[open] .dcx__go i::after{transform:rotate(0)}
+.dcx__close,.dcx[open] .dcx__open{display:none}
+.dcx[open] .dcx__close{display:inline}
+.dcx[open]{box-shadow:0 0 0 2px var(--graphite)}
+.dcx__body{padding:4px 24px 28px 96px;font-size:var(--t-body);line-height:var(--l-body);animation:jobIn .35s var(--ease) both}
+.dcx__body p{margin:0;max-width:720px}
+@media (max-width:767px){
+  .dcx summary,.dcx--link{grid-template-columns:auto minmax(0,1fr);padding:16px}
+  .dcx__ic{width:44px;height:44px}
+  .dcx__go{grid-column:1/-1;justify-content:center}
+  .dcx__body{padding:0 16px 20px}
+}
