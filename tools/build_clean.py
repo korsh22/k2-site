@@ -24,6 +24,9 @@ COMMENTS = [
     ('В MODX: тренеры — ресурсы/MIGX (фото, имя, должность, квалификация)', 'Тренеры: фото, имя, должность, квалификация'),
     ('(в MODX из прайса)', '(из прайса)'),
     ('(в MODX — из прайса)', '(из прайса)'),
+    ('В MODX: мероприятия — ресурсы (дата, для кого, обложка, описание), список — pdoResources', 'Мероприятия: дата, для кого, обложка, описание; список — от ближайших к дальним'),
+    ('В MODX: прошедшие мероприятия — те же ресурсы с датой в прошлом, от новых к старым', 'Прошедшие мероприятия: те же записи с датой в прошлом, от новых к старым'),
+    ('В MODX под кнопкой — обычная постраничная навигация (?page=2) для поисковиков', 'Под кнопкой нужна обычная постраничная навигация (?page=2) для поисковиков'),
 ]
 CMS = re.compile(r'modx|formit|ajaxform|migx|pdoresources|msearch|simplesearch|сниппет', re.I)
 
@@ -45,6 +48,8 @@ def build(page):
     out = os.path.join(K2, 'handoff', name)
     shutil.rmtree(out, ignore_errors=True)
     html = io.open(os.path.join(SITE, page), encoding='utf-8').read()
+    if '/' in page:  # страница из подпапки (blog/…) ложится в корень пакета рядом с css/ js/ assets/ — убираем «../» из путей
+        html = re.sub(r'(href|src|srcset)="\.\./', r'\1="', html)
     used = set(re.findall(r'(?:href|src)="((?:css|js)/[^"?]+)', html))
     html = re.sub(r'((?:css|js)/[^"?]+)\?v=\d+', r'\1', html)
     html = clean_text(html)

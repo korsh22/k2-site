@@ -154,7 +154,7 @@ body = '''<main class="lp">
       <span class="lp-video__shade"></span>
       <button class="lp-video__play" type="button" aria-label="Смотреть видеообзор пробной тренировки"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
       <span class="lp-video__soon">Видео скоро</span>
-      <span class="lp-video__meta"><b>Видеообзор пробной тренировки</b><small>[0:00]</small></span>
+      <span class="lp-video__meta"><b>Видеообзор пробной тренировки</b><small>1:30</small></span>
     </div>
   </div>
 </section>

@@ -227,6 +227,53 @@
     recalc();
   }
 
+  /* ---------- Форма «Покупка услуги» / «Запись на мероприятие» (шаблоны «Товар» и «Мероприятие») ----------
+     Данные берутся из data-атрибутов .itp: kind (product|event), name, img, meta (дата или цена), price, who (adults|kids), max.
+     Покупка: взрослые × цена, ФИО, телефон, почта → «Оплатить» (переход в банк подключит разработчик). Запись: дети или взрослые, имя, телефон, почта. */
+  var order = $('#order'), itp = $('.itp');
+  if (order && order.showModal && itp) {
+    var oForm = $('form', order), D = itp.dataset, buy = D.kind === 'product', kids = D.who === 'kids', MAX = +D.max || 6, n = 1;
+    var rubO = function (v) { return v.toLocaleString('ru-RU') + ' ₽'; };
+    $('.cform__t', order).textContent = buy ? 'Покупка услуги' : 'Запись на мероприятие';
+    $('.order__name', order).textContent = D.name;
+    $('.order__meta', order).textContent = D.meta;
+    $('.order__img', order).src = 'assets/img/' + D.img;
+    $('[name="item"]', oForm).value = D.name; $('[name="when"]', oForm).value = D.meta;
+    $('.order__leg', order).textContent = buy ? 'Количество' : 'Кто придёт';
+    $('.order__who', order).textContent = kids ? 'Дети' : 'Взрослые';
+    $('.order__age', order).textContent = kids ? '5⁠–⁠16 лет' : 'от 16 лет';
+    $('.order__nl', order).textContent = buy ? 'ФИО' : (kids ? 'Имя родителя' : 'Имя');
+    $('.cform__go', order).textContent = buy ? 'Оплатить' : 'Записаться';
+    $('.order__note', order).textContent = buy ? 'Оплата картой через банк. Чек придёт на почту.' : 'Дату и время подставили из описания мероприятия. Запись подтвердим звонком.';
+    $('.order__sum', order).hidden = !buy;
+    var oRecalc = function () {
+      $('.step__v', oForm).textContent = n; $('[name="count"]', oForm).value = n;
+      $('[data-d="-1"]', oForm).disabled = n <= 1; $('[data-d="1"]', oForm).disabled = n >= MAX;
+      if (buy) $('.book__total-v', oForm).textContent = rubO((+D.price || 0) * n);
+    };
+    $$('.step__b', oForm).forEach(function (b) { b.addEventListener('click', function () { n = clamp(n + +b.dataset.d, 1, MAX); oRecalc(); }); });
+    var mail = $('[name="email"]', oForm), okMail = function () { return /^\S+@\S+\.\S+$/.test(mail.value.trim()); };
+    mail.addEventListener('input', function () { if (okMail()) mail.parentNode.classList.remove('is-bad'); });
+    var O = setupDialog(order, function () { if (oForm.classList.contains('is-sent')) { resetForm(oForm); n = 1; oRecalc(); } });
+    $$('.js-order').forEach(function (b) { b.addEventListener('click', function () { oRecalc(); O.open(); }); });
+    $$('.js-order-close', order).forEach(function (b) { b.addEventListener('click', O.close); });
+    oForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var ok = validate(oForm), m = okMail();
+      mail.parentNode.classList.toggle('is-bad', !m);
+      if (!ok) return;
+      if (!m) { mail.focus(); return; }
+      var who = $('[name="name"]', oForm).value.trim().split(' ')[0];
+      // Здесь разработчик: отправить заявку в CRM; для покупки — перейти на страницу оплаты банка (сумма = цена × количество)
+      send(oForm, function () {
+        $('.order__done-t', order).textContent = buy ? 'Почти готово' : 'Вы записаны';
+        showDone(oForm, buy ? who + ', переходим к оплате: ' + D.name + ' × ' + n + ', ' + rubO((+D.price || 0) * n) + '. Демо: переход в банк подключит разработчик.'
+                            : who + ', записали: ' + D.name + ', ' + D.meta + ', участников: ' + n + '. Подтвердим звонком.');
+      });
+    });
+    oRecalc();
+  }
+
   /* ---------- Связь: статус «открыто/закрыто», копирование, «прогулка» от метро ---------- */
   var status = $('.status');
   if (status) {
@@ -296,7 +343,7 @@
     var hOnScroll = function () {
       if (!hScroll) return;
       var M = hMetrics();
-      hSet(clamp((scrollY - M.top) / M.len, 0, 1) * 60);
+      hSet(clamp((scrollY - M.top) / M.len, 0, 1) * (+hour.dataset.total || 60));
     };
     var hList = $('.lp-hour__steps', hour), hSwipe = false;
     var hMode = function () {
