@@ -227,15 +227,23 @@
     recalc();
   }
 
-  /* ---------- Шаблоны «Товар» / «Мероприятие»: правая карточка липкая. Помещается в экран — прилипает под шапкой;
-     выше экрана — прилипает так, чтобы была видна кнопка и «Возникли вопросы?» (низ карточки у нижнего края) ---------- */
+  /* ---------- Шаблоны «Товар» / «Мероприятие»: правая карточка липкая и всегда видна целиком — прилипает верхним краем
+     сразу под шапкой (шапка прячется при листании вниз — карточка поднимается к верху экрана).
+     Не помещается на невысоком экране — компактный вид (.is-compact: афиша-миниатюра рядом с названием), затем .is-tight (без фактов), .is-min (без мессенджеров) ---------- */
   var itpSide = $('.itp__side');
   if (itpSide) {
+    var itpWide = window.matchMedia('(min-width: 1041px)'), itpHd = $('#hdr');
+    var hdH = function () { return itpHd && !itpHd.classList.contains('is-hidden') ? itpHd.offsetHeight : 0; };
+    var itpTop = function () { if (itpWide.matches) itpSide.style.top = (hdH() + 16) + 'px'; };
     var itpFit = function () {
-      var hd = $('#hdr'), topGap = (hd ? hd.offsetHeight : 64) + 24;
-      itpSide.style.top = Math.min(topGap, window.innerHeight - itpSide.offsetHeight - 24) + 'px';
+      itpSide.classList.remove('is-compact', 'is-tight', 'is-min');
+      if (!itpWide.matches) { itpSide.style.top = ''; return; }
+      var avail = window.innerHeight - (itpHd ? itpHd.offsetHeight : 64) - 32;  // с учётом показанной шапки
+      ['is-compact', 'is-tight', 'is-min'].forEach(function (c) { if (itpSide.offsetHeight > avail) itpSide.classList.add(c); });
+      itpTop();
     };
     itpFit(); window.addEventListener('resize', itpFit); window.addEventListener('load', itpFit);
+    if (itpHd && window.MutationObserver) new MutationObserver(itpTop).observe(itpHd, { attributes: true, attributeFilter: ['class'] });
   }
 
   /* ---------- Форма «Покупка услуги» / «Запись на мероприятие» (шаблоны «Товар» и «Мероприятие») ----------

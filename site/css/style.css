@@ -1189,3 +1189,13 @@ html.has-cur.lb-open button{cursor:pointer!important}
 .mmenu__nav .mm-g__list a:hover{color:var(--white)}
 @media (max-width:767px){.mm-g summary{padding:9px 0;font-size:20px;line-height:1.25}.mm-g summary i{width:28px;height:28px}}
 @media (max-width:359px){.mm-g summary{padding:8px 0;font-size:18px}}
+
+/* Две светлые секции подряд (один фон): отступ между ними один (--sec), а не двойной */
+main > .sec.neutral + .sec.neutral:not(.stack){padding-top:0}
+/* Светлая секция со скруглённым краем (.stack) после светлой: скругления не видно — отступ тоже один */
+main > .sec.neutral + .sec.neutral.stack{padding-top:var(--overlap)}
+/* Тёмная шапка страницы и тёмный блок сразу за ней — один отступ */
+main > .blog-head.dark + .sec.dark{padding-top:0}
+/* Два тёмных блока подряд — тоже один отступ */
+main > .sec.dark + .sec.dark:not(.stack){padding-top:0}
+main > .sec.dark + .sec.dark.stack{padding-top:var(--overlap)}

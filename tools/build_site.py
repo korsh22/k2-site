@@ -1031,8 +1031,7 @@ def ev_card(o):
 
 def event_page(c, cn, t, img, dt, state=None):
     inf = EV_INFO[t]; cover, start, meet, mx = EV_MORE[t]
-    text = (''.join('<p>%s</p>' % x for x in inf['about'][1:]) +  # первый абзац — уже в шапке
-            '<h2 id="prog">Программа</h2>' + body_list(['<b>%s</b> %s' % x for x in inf['program']], True) +
+    text = ('<h2 id="prog">Программа</h2>' + body_list(['<b>%s</b> %s' % x for x in inf['program']], True) +
             '<h2 id="who">Кто может участвовать</h2>' + body_list(inf['who']) +
             '<h2 id="bring">Что взять с&nbsp;собой</h2>' + body_list(inf['bring']) +
             '<h2 id="route">Как добраться</h2><p>Место сбора&nbsp;— %s. От&nbsp;метро «Площадь Ленина» 7&nbsp;минут пешком, рядом есть парковка. '
@@ -1084,7 +1083,12 @@ for d0, t, who, img in ARCHIVE:
     A = ARC_STORY[t]; day, mon, year = d0.split(); kids = who == 'Для детей'
     text = (''.join('<p>%s</p>' % x for x in A['story']) +
             '<h2 id="prog">Как прошёл день</h2>' + body_list(['<b>%s</b> %s' % x for x in A['day']], True) +
-            '<h2 id="res">Итоги</h2>' + body_list(A['res']))
+            '<h2 id="res">Итоги</h2>' + body_list(A['res']) +
+            '<h2 id="people">Что говорили участники</h2><p>После мероприятия многие делились впечатлениями: понравились новые трассы, атмосфера и&nbsp;то, '
+            'что тренеры были рядом и&nbsp;подсказывали. Кто-то впервые прошёл трассу, которая раньше не&nbsp;получалась, а&nbsp;кто-то нашёл напарника для тренировок.</p>'
+            '<p>Нам важны отзывы: по&nbsp;ним мы&nbsp;меняем формат и&nbsp;программу следующих событий.</p>'
+            '<h2 id="next">Когда следующее</h2><p>Похожие мероприятия проходят несколько раз в&nbsp;год. Ближайшие даты&nbsp;— в&nbsp;блоке «Ближайшие мероприятия» ниже '
+            'и&nbsp;на&nbsp;странице всех мероприятий. Оставьте заявку&nbsp;— сообщим, когда откроется запись.</p>')
     item_page(arc_slug(d0, t), '%s, %s — архив мероприятий К2' % (t, d0), re.sub('<[^>]+>|&nbsp;', ' ', A['lead']), dict(
         kind='event', crumbs=[('О нас', 'o-skalodrome.html'), ('Мероприятия', 'meropriyatiya.html'), ('Архив', 'meropriyatiya.html#archive'), (t, '')],
         name=t, lead=A['lead'], cover=A['cover'], poster=img, day=day, month='%s %s' % (mon, year), when='прошло', kids=kids, start=A['start'], meet=A['meet'],
