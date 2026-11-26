@@ -921,6 +921,8 @@ def item_page(slug, title, desc, d):
     product: price, old, facts [(иконка, подпись, значение)]; event: day, month, when (время/день), kids (bool), start, meet, price, state"""
     ev = d['kind'] == 'event'
     nm = d['name'].replace('&nbsp;', ' ')
+    if d.get('gallery'):
+        d['text'] += '<h2 id="photos">Фотогалерея</h2><p class="itp__galhint">Нажмите на&nbsp;фото&nbsp;— откроется галерея</p>' + gal(d['gallery'])
     if ev:
         rng = ' ev__date--range' if '–' in d['day'] else ''
         top = '<div class="ev__date itp__date%s"><b class="d">%s</b><span><b>%s</b><small>%s</small></span></div>' % (rng, d['day'], d['month'], d['when'])
@@ -953,8 +955,6 @@ def item_page(slug, title, desc, d):
         d['name'], top.replace('itp__date', 'itp__date itp__date--s').replace('class="itp__price"', 'class="itp__price itp__price--s"'),
         ''.join('<li><span class="evp__ic">%s</span><span><small>%s</small><b>%s</b></span></li>' % f for f in facts), order_btn(d, 'btn btn--primary itp__go'),
         ASK_BOX % ask_link(nm, 'btn btn--sec btn--sm itp__ask-go'))
-    if d.get('gallery'):
-        b += sec(sechead('Фотогалерея', 'Нажмите на фото — откроется галерея') + '\n' + gal(d['gallery']), 'photos', cls='lp-alt')
     if d.get('faq'):
         b += faq_sec(d['faq'])
     if d.get('more'):
@@ -1114,7 +1114,7 @@ def course_card(s):  # карточка как на главной (блок п�
 
 for s, c in COURSE.items():
     p = PK[s]; t = re.sub('<[^>]+>', '', p['t']); pr, old = PACK_PRICE[s]
-    text = ('<p>%s.</p>' % p['d'] +
+    text = (
             '<h2 id="prog">Программа курса</h2>' + body_list(c['prog'], True) +
             '<h2 id="inc">Что входит</h2>' + body_list(['%s по&nbsp;%s с&nbsp;тренером' % (c['n'], c['dur']), 'Всё снаряжение: туфли, система, магнезия', 'Группа до&nbsp;6 человек или персонально', 'Допуск к&nbsp;самостоятельным посещениям после курса' if s != 'nizhnyaya-strahovka' else 'Допуск к&nbsp;лазанию с&nbsp;нижней страховкой']) +
             '<h2 id="after">После курса</h2><p>Вы&nbsp;сможете приходить в&nbsp;зал без&nbsp;тренера, лазать в&nbsp;паре и&nbsp;продолжить в&nbsp;школе скалолазания&nbsp;— в&nbsp;группе своего уровня.</p>')

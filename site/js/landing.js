@@ -227,6 +227,17 @@
     recalc();
   }
 
+  /* ---------- Шаблоны «Товар» / «Мероприятие»: правая карточка липкая. Помещается в экран — прилипает под шапкой;
+     выше экрана — прилипает так, чтобы была видна кнопка и «Возникли вопросы?» (низ карточки у нижнего края) ---------- */
+  var itpSide = $('.itp__side');
+  if (itpSide) {
+    var itpFit = function () {
+      var hd = $('#hdr'), topGap = (hd ? hd.offsetHeight : 64) + 24;
+      itpSide.style.top = Math.min(topGap, window.innerHeight - itpSide.offsetHeight - 24) + 'px';
+    };
+    itpFit(); window.addEventListener('resize', itpFit); window.addEventListener('load', itpFit);
+  }
+
   /* ---------- Форма «Покупка услуги» / «Запись на мероприятие» (шаблоны «Товар» и «Мероприятие») ----------
      Данные берутся из data-атрибутов .itp: kind (product|event), name, img, meta (дата или цена), price, who (adults|kids), max.
      Покупка: взрослые × цена, ФИО, телефон, почта → «Оплатить» (переход в банк подключит разработчик). Запись: дети или взрослые, имя, телефон, почта. */
