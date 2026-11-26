@@ -1466,7 +1466,7 @@ a.chip{display:inline-flex;align-items:center;text-decoration:none}
 .itp__body .lp-gal{grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:220px;margin-top:20px}
 .itp__body .lp-center{margin-top:24px}
 /* Правый блок: липкий; если выше экрана — js/landing.js поднимает его так, чтобы низ был виден (top < 0) */
-.itp__side{transition:top .2s}
+
 /* Форма покупки / записи */
 .order__item{display:flex;align-items:center;gap:14px;padding:12px;border-radius:var(--r-md);background:var(--grey-100)}
 .order__img{width:48px;height:64px;object-fit:cover;border-radius:var(--r-sm);flex:none}

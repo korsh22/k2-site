@@ -921,8 +921,6 @@ def item_page(slug, title, desc, d):
     product: price, old, facts [(иконка, подпись, значение)]; event: day, month, when (время/день), kids (bool), start, meet, price, state"""
     ev = d['kind'] == 'event'
     nm = d['name'].replace('&nbsp;', ' ')
-    if d.get('gallery'):
-        d['text'] += '<h2 id="photos">Фотогалерея</h2><p class="itp__galhint">Нажмите на&nbsp;фото&nbsp;— откроется галерея</p>' + gal(d['gallery'])
     if ev:
         rng = ' ev__date--range' if '–' in d['day'] else ''
         top = '<div class="ev__date itp__date%s"><b class="d">%s</b><span><b>%s</b><small>%s</small></span></div>' % (rng, d['day'], d['month'], d['when'])
@@ -955,6 +953,8 @@ def item_page(slug, title, desc, d):
         d['name'], top.replace('itp__date', 'itp__date itp__date--s').replace('class="itp__price"', 'class="itp__price itp__price--s"'),
         ''.join('<li><span class="evp__ic">%s</span><span><small>%s</small><b>%s</b></span></li>' % f for f in facts), order_btn(d, 'btn btn--primary itp__go'),
         ASK_BOX % ask_link(nm, 'btn btn--sec btn--sm itp__ask-go'))
+    if d.get('gallery'):  # следующий блок после текста: правая карточка прилипает только до него
+        b += sec(sechead('Фотогалерея', 'Нажмите на фото — откроется галерея') + '\n' + gal(d['gallery']), 'photos')
     if d.get('faq'):
         b += faq_sec(d['faq'])
     if d.get('more'):
@@ -1034,7 +1034,10 @@ def event_page(c, cn, t, img, dt, state=None):
     text = (''.join('<p>%s</p>' % x for x in inf['about'][1:]) +  # первый абзац — уже в шапке
             '<h2 id="prog">Программа</h2>' + body_list(['<b>%s</b> %s' % x for x in inf['program']], True) +
             '<h2 id="who">Кто может участвовать</h2>' + body_list(inf['who']) +
-            '<h2 id="bring">Что взять с&nbsp;собой</h2>' + body_list(inf['bring']))
+            '<h2 id="bring">Что взять с&nbsp;собой</h2>' + body_list(inf['bring']) +
+            '<h2 id="route">Как добраться</h2><p>Место сбора&nbsp;— %s. От&nbsp;метро «Площадь Ленина» 7&nbsp;минут пешком, рядом есть парковка. '
+            'Приходите за&nbsp;15&nbsp;минут до&nbsp;начала, чтобы спокойно переодеться и&nbsp;пройти регистрацию.</p>' % meet +
+            '<h2 id="note">Важно знать</h2>' + body_list(['Запись закрывается, когда заканчиваются места', 'Фото и&nbsp;видео с&nbsp;мероприятия опубликуем в&nbsp;соцсетях скалодрома', 'Если не&nbsp;сможете прийти, предупредите администратора за&nbsp;сутки']))
     others = [e for e in EVENTS if e[2] != t][:3]
     item_page(EV_SLUG[t], t + ' — мероприятия скалодрома К2', re.sub('<[^>]+>|&nbsp;', ' ', inf['about'][0]), dict(
         kind='event', crumbs=[('О нас', 'o-skalodrome.html'), ('Мероприятия', 'meropriyatiya.html'), (t, '')], name=t, lead=inf['about'][0],
@@ -1117,6 +1120,12 @@ for s, c in COURSE.items():
     text = (
             '<h2 id="prog">Программа курса</h2>' + body_list(c['prog'], True) +
             '<h2 id="inc">Что входит</h2>' + body_list(['%s по&nbsp;%s с&nbsp;тренером' % (c['n'], c['dur']), 'Всё снаряжение: туфли, система, магнезия', 'Группа до&nbsp;6 человек или персонально', 'Допуск к&nbsp;самостоятельным посещениям после курса' if s != 'nizhnyaya-strahovka' else 'Допуск к&nbsp;лазанию с&nbsp;нижней страховкой']) +
+            '<h2 id="how">Как проходят занятия</h2><p>Каждая тренировка начинается с&nbsp;разминки и&nbsp;короткого разбора: тренер объясняет, что сегодня отрабатываем и&nbsp;зачем. '
+            'Дальше&nbsp;— практика на&nbsp;трассах под ваш уровень, а&nbsp;в&nbsp;конце&nbsp;— заминка и&nbsp;советы, что повторить к&nbsp;следующему занятию.</p>'
+            '<p>Нагрузка растёт постепенно: никто не&nbsp;заставит лезть выше, чем комфортно. Если что-то не&nbsp;получается, тренер подберёт упражнение попроще и&nbsp;вернётся к&nbsp;трассе позже.</p>'
+            '<h2 id="bring">Что взять с&nbsp;собой</h2>' + body_list(['Удобную спортивную одежду, которая не&nbsp;сковывает движения', 'Воду', 'Сменную обувь для зала (скальные туфли выдадим)']) +
+            '<h2 id="sched">Расписание групп</h2><p>Группы стартуют каждую неделю: будни&nbsp;— вечером, выходные&nbsp;— днём. Удобное время подберёт администратор после покупки курса. '
+            'Если ни&nbsp;одна группа не&nbsp;подходит, курс можно пройти персонально.</p>'
             '<h2 id="after">После курса</h2><p>Вы&nbsp;сможете приходить в&nbsp;зал без&nbsp;тренера, лазать в&nbsp;паре и&nbsp;продолжить в&nbsp;школе скалолазания&nbsp;— в&nbsp;группе своего уровня.</p>')
     item_page(COURSE_SLUG[s], 'Курс «%s» — скалодром К2' % t, re.sub('<[^>]+>|&nbsp;', ' ', c['lead']), dict(
         kind='product', crumbs=[('Для взрослых', 'dlya-vzroslyh.html'), ('Базовые курсы', 'bazovye-kursy.html'), (t, '')], name='Курс «%s»' % t, lead=c['lead'],
