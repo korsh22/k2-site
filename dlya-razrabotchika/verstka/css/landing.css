@@ -1388,7 +1388,7 @@ a.chip{display:inline-flex;align-items:center;text-decoration:none}
 /* Шапка: слева название, описание, цена и кнопки; справа фото («Картинку оставляем» в ТЗ) */
 .itp .itp__head{padding:var(--sec) 0}
 .itp .itp__head .wrap{max-width:calc(var(--container) + var(--side) * 2)}
-.itp__hg{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:clamp(32px,5vw,72px);align-items:center}
+.itp__hg{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:clamp(32px,5vw,72px);align-items:start}
 .itp__hero{margin:0;aspect-ratio:4/3;border-radius:var(--r-xl);overflow:hidden;background:var(--graphite-raised)}
 .itp__hero img{width:100%;height:100%;object-fit:cover;display:block}
 .itp .art__wrap{padding-top:calc(var(--sec) * .6)}
