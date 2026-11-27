@@ -1620,3 +1620,59 @@ a.cart__name:hover{color:var(--red)}
 }
 /* Форма корзины — без подложки общей формы заявки */
 .cart__form.cform{background:none;padding:0;border-radius:0;box-shadow:none;display:block;overflow:visible}
+
+/* ---------- Магазин (magazin.html и страницы товаров) ---------- */
+.bgrid--shop{grid-template-columns:repeat(4,minmax(0,1fr))}
+.bgrid--shop3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.shopc .bcard__img{aspect-ratio:4/5;background:var(--stone-100)}
+.shopc .bcard__img img{width:100%;height:100%;object-fit:cover;transition:transform .6s var(--ease)}
+.shopc:hover .bcard__img img{transform:scale(1.04)}
+.shopc .bcard__b{gap:8px}
+.shopc__note{color:var(--grey-600);font-size:var(--t-small);line-height:var(--l-small)}
+.shopc__f{margin-top:auto;padding-top:12px;display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.shopc__f .price{display:flex;flex-direction:column}
+.shopc__f .price__new{font:800 20px/1.2 var(--font-display);color:var(--graphite)}
+.shopc__f .price__old{color:var(--stone-400);font-size:var(--t-small)}
+@media (max-width:1040px){.bgrid--shop,.bgrid--shop3{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:767px){.bgrid--shop,.bgrid--shop3{grid-template-columns:repeat(2,minmax(0,1fr))}.shopc__f .btn{width:100%;justify-content:center}}
+@media (max-width:339px){.bgrid--shop,.bgrid--shop3{grid-template-columns:1fr}}
+@media (max-width:767px){.shopc .bcard__b{padding:14px}.shopc .bcard__t{font-size:16px;line-height:21px}.shopc__note{font-size:12px;line-height:16px}.shopc__f .price__new{font-size:17px}}
+/* Варианты товара в шапке: размер, цвет, объём */
+.itp__vars{display:flex;flex-wrap:wrap;gap:16px 28px;margin-top:24px}
+.itp__var{border:0;margin:0;padding:0;min-width:0}
+.itp__var legend{padding:0;margin-bottom:8px;color:var(--stone-400);font-size:var(--t-small)}
+.vchips{display:flex;flex-wrap:wrap;gap:8px}
+.vchips input{position:absolute;opacity:0;width:1px;height:1px}
+.vchips span{display:inline-flex;align-items:center;justify-content:center;min-width:48px;height:42px;padding:0 14px;border-radius:var(--pill);border:1.5px solid rgba(255,255,255,.28);color:var(--white);font-weight:600;font-size:var(--t-small);cursor:pointer;transition:background .2s,border-color .2s,color .2s}
+.vchips label:hover span{border-color:var(--white)}
+.vchips input:checked + span{background:var(--white);border-color:var(--white);color:var(--graphite)}
+.vchips input:focus-visible + span{outline:2px solid var(--red);outline-offset:2px}
+.itp__vars.is-bad .itp__var:not(:has(input:checked)) span{border-color:var(--red)}
+.itp__vars-err{flex-basis:100%;margin:0;color:#ff9a92;font-size:var(--t-small);font-weight:600}
+.itp__vars-err[hidden]{display:none}
+/* Таблица размеров в описании */
+.itp__table{overflow-x:auto;border-radius:var(--r-md);background:var(--white)}
+.itp__table table{width:100%;border-collapse:collapse;font-size:var(--t-small)}
+.itp__table th,.itp__table td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--stone-200)}
+.itp__table th{color:var(--grey-600);font-weight:600}
+.itp__table tr:last-child td{border-bottom:0}
+/* Магазин: «Как получить заказ» — три шага во всю ширину + полоса с адресом и часами */
+.shopget{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--g);counter-reset:none}
+.shopget__i{position:relative;display:flex;flex-direction:column;gap:12px;padding:28px;border-radius:var(--r-xl);background:var(--graphite-raised);min-height:280px}
+.shopget__i:not(:last-child)::after{content:"";position:absolute;top:56px;right:calc(var(--g) * -1);width:var(--g);height:2px;background:var(--red)}
+.shopget__top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.shopget__ic{width:56px;height:56px;border-radius:18px;background:var(--red);color:var(--white);display:grid;place-items:center}
+.shopget__ic .ico{width:26px;height:26px}
+.shopget__n{font-size:56px;line-height:1;color:rgba(255,255,255,.14)}
+.shopget__t{font-size:var(--t-h4);line-height:var(--l-h4)}
+.shopget__i p{margin:0;color:var(--stone-300)}
+.shopget__tag{margin-top:auto;align-self:flex-start;display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:var(--pill);background:rgba(255,255,255,.08);color:var(--white);font-size:var(--t-small);font-weight:600}
+.shopget__tag .ico{width:16px;height:16px;color:var(--red)}
+.shopget__bar{margin-top:var(--g);display:flex;align-items:center;gap:20px 40px;flex-wrap:wrap;padding:22px 28px;border-radius:var(--r-xl);border:1px solid rgba(255,255,255,.14)}
+.shopget__where{display:flex;align-items:center;gap:14px}
+.shopget__where > .ico{flex:none;width:22px;height:22px;color:var(--red)}
+.shopget__where b{display:block}
+.shopget__where small{display:block;color:var(--stone-400);font-size:var(--t-small)}
+.shopget__bar .btn{margin-left:auto}
+@media (max-width:1040px){.shopget{grid-template-columns:1fr}.shopget__i{min-height:0}.shopget__i:not(:last-child)::after{top:auto;bottom:calc(var(--g) * -1);left:56px;right:auto;width:2px;height:var(--g)}}
+@media (max-width:767px){.shopget__i,.shopget__bar{padding:20px}.shopget__n{font-size:44px}.shopget__bar .btn{margin-left:0;width:100%;justify-content:center}}

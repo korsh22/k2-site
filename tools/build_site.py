@@ -926,6 +926,16 @@ def order_btn(d, cls='btn btn--primary'):
         return '<span class="%s itp__off" aria-disabled="true">%s</span>' % (cls.replace('btn--primary', 'btn--sec'), STATE_TXT[st])
     return cart_btn('В&nbsp;корзину' if d['kind'] == 'product' else 'Записаться', d['cart'], cls)
 
+def vars_html(d):
+    """Выбор вариантов товара: [(название, [значения], выбрать первое заранее)]. Выбранное уходит в корзину параметрами (js/cart.js)"""
+    if not d.get('vars'):
+        return ''
+    return ('<div class="itp__vars" data-vars>' + ''.join(
+        '<fieldset class="itp__var"><legend>%s</legend><div class="vchips">%s</div></fieldset>' % (k, ''.join(
+            '<label><input type="radio" name="v-%d" value="%s" data-k="%s"%s><span>%s</span></label>' % (gi, v, k, ' checked' if pre and i == 0 else '', v)
+            for i, v in enumerate(vals))) for gi, (k, vals, pre) in enumerate(d['vars'])) +
+        '<p class="itp__vars-err" role="alert" hidden></p></div>')
+
 def item_page(slug, title, desc, d):
     """d: kind ('product'|'event'), crumbs, name, lead, cover (горизонтальное), poster (вертикальное А4), text (html), gallery, faq, more_title, more (html карточек)
     product: price, old, facts [(иконка, подпись, значение)]; event: day, month, when (время/день), kids (bool), start, meet, price, state"""
@@ -943,10 +953,10 @@ def item_page(slug, title, desc, d):
         meta = rub(d['price'])
     st = d.get('state', 'open'); past = st == 'past'
     # позиция корзины: товар — «за участника» (курс), мероприятие — дата, время, для кого
-    d['cart'] = dict(id=slug.replace('.html', ''), kind='event' if ev else 'training', name=d['name'], img=d['poster'], url=slug,
+    d['cart'] = dict(id=slug.replace('.html', ''), kind='event' if ev else d.get('cart_kind', 'training'), name=d['name'], img=d.get('cart_img', d['poster']), url=slug,
                      price=d['price'], old=d.get('old') or 0, max=d.get('max', 6),
-                     unit='за ребёнка' if d.get('kids') else 'за участника',
-                     params=(['Дата: %s %s' % (d['day'], d['month']), 'Начало: %s' % d['start'], 'Место сбора: %s' % d['meet'], 'Для детей' if d.get('kids') else 'Для взрослых']
+                     unit=d.get('unit') or ('за ребёнка' if d.get('kids') else 'за участника'),
+                     params=d['cart_params'] if 'cart_params' in d else (['Дата: %s %s' % (d['day'], d['month']), 'Начало: %s' % d['start'], 'Место сбора: %s' % d['meet'], 'Для детей' if d.get('kids') else 'Для взрослых']
                              if ev else ['%s: %s' % (f[1], f[2]) for f in d.get('facts', [])[:2]]))
     badge = '<span class="badge itp__kids">Для детей</span>' if d.get('kids') else ''
     kb = badge  # на афише — только «Для детей»; что событие прошло, видно по плашке «Уже прошло»
@@ -957,14 +967,14 @@ def item_page(slug, title, desc, d):
     data = ' data-kind="%s" data-name="%s" data-img="%s" data-meta="%s" data-price="%d" data-who="%s" data-max="%d"' % (
         d['kind'], nm, d['poster'], re.sub('<[^>]+>|&nbsp;', ' ', meta), d['price'], 'kids' if d.get('kids') else 'adults', d.get('max', 6))
     b = ('<article class="art itp itp--%s%s"%s>\n<header class="art__head dark itp__head"><div class="wrap itp__hg"><div class="itp__ht">%s%s'
-         '<h1 class="d art__t">%s</h1><p class="art__lead">%s</p>'
+         '<h1 class="d art__t">%s</h1><p class="art__lead">%s</p>%s'
          '<div class="itp__buy">%s<div class="itp__act">%s%s</div></div></div>'
-         '<figure class="itp__hero"><img src="assets/img/%s" alt="" fetchpriority="high"></figure></div></header>\n'
+         '<figure class="itp__hero"%s><img src="assets/img/%s" alt="" fetchpriority="high"></figure></div></header>\n'
          '<div class="art__wrap wrap itp__wrap"><div class="art__body itp__body">%s</div>\n'
          '<aside class="itp__side"><div class="itp__card"><figure class="itp__poster"><img src="assets/img/%s" alt="Афиша: %s" loading="lazy">%s%s</figure>'
          '<b class="itp__name d">%s</b>%s<ul class="itp__facts">%s</ul>%s</div>%s</aside></div></article>\n') % (
-        d['kind'], ' itp--past' if past else '', data, crumbs(d['crumbs']), badge, d['name'], d['lead'], top, order_btn(d),
-        link_btn('Ближайшие мероприятия', 'meropriyatiya.html#list', 'itp__q') if past else ask_link(nm), d['cover'], d['text'],
+        d['kind'], ' itp--past' if past else '', data, crumbs(d['crumbs']), badge, d['name'], d['lead'], vars_html(d), top, order_btn(d),
+        link_btn('Ближайшие мероприятия', 'meropriyatiya.html#list', 'itp__q') if past else ask_link(nm), ' style="aspect-ratio:%s"' % d['hero_ratio'] if d.get('hero_ratio') else '', d['cover'], d['text'],
         d['poster'], nm, kb, '<span class="itp__state">%s</span>' % STATE_TXT[st] if st != 'open' else '',
         d['name'], top.replace('itp__date', 'itp__date itp__date--s').replace('class="itp__price"', 'class="itp__price itp__price--s"'),
         ''.join('<li><span class="evp__ic">%s</span><span><small>%s</small><b>%s</b></span></li>' % f for f in facts), order_btn(d, 'btn btn--primary itp__go'),
@@ -1591,6 +1601,105 @@ service_page('shablon-uslugi.html', 'Шаблон услуги — скалод�
          ('С&nbsp;какого возраста?', 'Взрослые программы&nbsp;— с&nbsp;16 лет, для детей есть отдельные услуги.'), ('Как записаться?', 'Оставьте заявку или позвоните&nbsp;— подберём время.')],
     cta=('Готовы попробовать?', 'Оставьте заявку&nbsp;— перезвоним и&nbsp;подберём удобное время.', join_btn('Оставить заявку', 'Запись на&nbsp;услугу', 'trial', 'btn btn--light'), 'оставьте заявку · перезвоним · '),
 ), notes=True)
+
+# ======================= МАГАЗИН =======================
+# Каталог (magazin.html) и страницы товаров на шаблоне «Товар» с выбором вариантов. Тексты, цены и картинки — ЗАГЛУШКИ:
+# иллюстрации из tools/shop_art.py (assets/img/shop/) заменить фото товаров. Фильтр по категориям — js/blog.js (как у мероприятий).
+def shop_img(pid, suf=''):
+    jpg = 'shop/%s%s.jpg' % (pid, suf)
+    return jpg if os.path.exists(os.path.join(ROOT, 'assets', 'img', jpg)) else 'shop/%s%s.svg' % (pid, suf)
+
+SHOP_CAT = {'merch': 'Мерч', 'gear': 'Снаряжение', 'cert': 'Сертификаты', 'sub': 'Абонементы'}
+SIZES = ['XS', 'S', 'M', 'L', 'XL', 'XXL']
+SHOP = [  # товары со своей страницей
+    dict(id='futbolka-k2', cat='merch', name='Футболка К2', price=2500, old=0, vars=[('Размер', SIZES, False), ('Цвет', ['Графит', 'Белый'], True)],
+         lead='Хлопковая футболка с&nbsp;логотипом К2&nbsp;— для тренировок и&nbsp;на&nbsp;каждый день.',
+         facts=[(I_GEAR, 'Материал', '100% хлопок'), (I_SPARK, 'Плотность', '180&nbsp;г/м²'), (I_PEOPLE, 'Посадка', 'Свободная'), (I_TIME, 'Уход', 'Стирка при&nbsp;30°')],
+         about='Мягкий плотный хлопок не&nbsp;сковывает движения на&nbsp;стене и&nbsp;хорошо держит форму после стирок. Логотип нанесён шелкографией&nbsp;— не&nbsp;трескается и&nbsp;не&nbsp;выцветает.'),
+    dict(id='hudi-k2', cat='merch', name='Худи К2', price=5900, old=6500, vars=[('Размер', SIZES, False), ('Цвет', ['Графит', 'Песочный'], True)],
+         lead='Тёплое худи с&nbsp;капюшоном и&nbsp;карманом-кенгуру: на&nbsp;разминку, на&nbsp;выезд и&nbsp;в&nbsp;город.',
+         facts=[(I_GEAR, 'Материал', 'Футер с&nbsp;начёсом'), (I_SPARK, 'Состав', '80% хлопок'), (I_PEOPLE, 'Посадка', 'Оверсайз'), (I_TIME, 'Уход', 'Стирка при&nbsp;30°')],
+         about='Плотный футер с&nbsp;начёсом держит тепло на&nbsp;скалах и&nbsp;в&nbsp;зале между подходами. Широкие манжеты, капюшон на&nbsp;шнурке, большой карман.'),
+    dict(id='meshochek-dlya-magnezii', cat='gear', name='Мешочек для&nbsp;магнезии К2', price=1500, old=0, vars=[('Цвет', ['Голубой', 'Графит'], True)],
+         lead='Удобный мешочек на&nbsp;пояс с&nbsp;жёстким краем и&nbsp;затяжкой&nbsp;— магнезия не&nbsp;просыпается.',
+         facts=[(I_GEAR, 'Материал', 'Деним'), (I_SPARK, 'Внутри', 'Флис'), (I_PEOPLE, 'Крепление', 'Петля под пояс'), (I_TIME, 'Объём', 'На&nbsp;2 руки')],
+         about='Жёсткий край держит горловину открытой, флис внутри равномерно распределяет магнезию. В&nbsp;комплекте пояс и&nbsp;держатель для щётки.'),
+    dict(id='butylka-k2', cat='merch', name='Бутылка К2', price=1200, old=0, vars=[('Объём', ['0,5&nbsp;л', '0,75&nbsp;л'], True)],
+         lead='Лёгкая бутылка для воды с&nbsp;логотипом К2: берите на&nbsp;тренировку и&nbsp;в&nbsp;поход.',
+         facts=[(I_GEAR, 'Материал', 'Тритан без BPA'), (I_SPARK, 'Крышка', 'С&nbsp;петлёй'), (I_PEOPLE, 'Вес', '120&nbsp;г'), (I_TIME, 'Уход', 'Можно в&nbsp;посудомойку')],
+         about='Не&nbsp;впитывает запахи, не&nbsp;течёт в&nbsp;рюкзаке. Петля на&nbsp;крышке&nbsp;— чтобы пристегнуть карабином к&nbsp;рюкзаку.'),
+    dict(id='magneziya', cat='gear', name='Магнезия, 200&nbsp;г', price=600, old=0, vars=[('Вид', ['Порошок', 'Шарик'], True)],
+         lead='Магнезия для сухих рук и&nbsp;уверенного хвата&nbsp;— та&nbsp;же, что мы&nbsp;используем в&nbsp;зале.',
+         facts=[(I_GEAR, 'Вес', '200&nbsp;г'), (I_SPARK, 'Помол', 'Средний'), (I_PEOPLE, 'Подходит', 'Зал и&nbsp;скалы'), (I_TIME, 'Хватает', 'На&nbsp;15–20 тренировок')],
+         about='Карбонат магния без добавок. Шарик пылит меньше&nbsp;— удобен в&nbsp;зале, порошок быстрее досыпать в&nbsp;мешочек.'),
+    dict(id='shoper-k2', cat='merch', name='Шопер К2', price=1300, old=0, vars=[],
+         lead='Вместительная сумка для формы, туфель и&nbsp;бутылки&nbsp;— с&nbsp;большим логотипом К2.',
+         facts=[(I_GEAR, 'Материал', 'Плотный хлопок'), (I_SPARK, 'Размер', '38 × 42&nbsp;см'), (I_PEOPLE, 'Ручки', '60&nbsp;см'), (I_TIME, 'Карман', 'Накладной спереди')],
+         about='Плотная ткань выдерживает тяжёлые туфли и&nbsp;систему. Длинные ручки&nbsp;— удобно носить на&nbsp;плече.'),
+]
+SHOP_SIMPLE = [  # позиции каталога без своей страницы (кнопка «В корзину» прямо в карточке или ссылка)
+    dict(id='cert-group', cat='cert', name='Сертификат: пробная в&nbsp;группе', price=1500, img='k2-12.jpg', url='sertifikaty.html', unit='за сертификат', note='60 минут · до&nbsp;8 человек', params=['Номинал: пробная в группе, 60 минут']),
+    dict(id='cert-personal', cat='cert', name='Сертификат: персональная пробная', price=2500, img='k2-first-3.jpg', url='sertifikaty.html', unit='за сертификат', note='1–3 участника', params=['Номинал: персональная пробная, 1–3 участника']),
+    dict(id='sub-8', cat='sub', name='Абонемент на&nbsp;8&nbsp;посещений', price=6400, img='k2-hall.jpg', url='samostoyatelno.html', unit='за абонемент', note='Срок 60 дней · для тех, кто умеет лазать', params=['Срок: 60 дней'], kind='training'),
+    dict(id='razovoe', cat='sub', name='Разовое посещение', price=900, img='p-blue.jpg', url='samostoyatelno.html', unit='за посещение', note='Боулдеринг и&nbsp;трудность', params=[], kind='training'),
+]
+
+def shop_card(x, simple=False):
+    if simple:
+        img, href = x['img'], x['url']
+        btn = cart_btn('В&nbsp;корзину', dict(id=x['id'], kind=x.get('kind', 'cert'), name=x['name'], img=x['img'], url=x['url'], price=x['price'], unit=x['unit'], params=x['params'], max=10), 'btn btn--sec btn--sm')
+        note = x['note']
+    else:
+        img, href = shop_img(x['id']), '%s.html' % x['id']
+        btn = link_btn('Выбрать', href, 'btn btn--sec btn--sm')
+        note = ' · '.join('%s: %s' % (k, '%s–%s' % (v[0], v[-1]) if k == 'Размер' else ('%d варианта' % len(v) if len(v) > 1 else v[0])) for k, v, _ in x['vars']) or 'Один вариант'
+    return ('<article class="bcard shopc reveal" data-cat="%s"><a class="bcard__img" href="%s" tabindex="-1" aria-hidden="true"><img src="assets/img/%s" alt="" loading="lazy"></a>'
+            '<span class="bcard__b"><span class="badge">%s</span><a class="bcard__t" href="%s">%s</a><span class="shopc__note">%s</span>'
+            '<span class="shopc__f">%s%s</span></span></article>') % (x['cat'], href, img, SHOP_CAT[x['cat']], href, x['name'], note, price(x['price'], x.get('old') or None, frm=False), btn)
+
+SHOP_CHIPS = ('<div class="chips" role="group" aria-label="Категории"><button type="button" class="chip" aria-pressed="true" data-f="all">Все</button>' +
+              ''.join('<button type="button" class="chip" aria-pressed="false" data-f="%s">%s</button>' % kv for kv in SHOP_CAT.items()) + '</div>')
+body = head([('Магазин', '')], 'Магазин скалодрома К2', 'Мерч, снаряжение, подарочные сертификаты и&nbsp;абонементы. Оплата онлайн, получение на&nbsp;ресепшене скалодрома.')
+body += sec(SHOP_CHIPS + '<div class="bgrid bgrid--shop">%s</div><p class="bempty" hidden>В&nbsp;этой категории пока нет товаров</p>' % (
+    ''.join(shop_card(x) for x in SHOP) + ''.join(shop_card(x, True) for x in SHOP_SIMPLE)) +
+    '\n<!-- Товары: категория, название, цена, старая цена, варианты (размер, цвет…), фото, описание; без страницы — кнопка «В корзину» прямо в карточке -->', 'catalog', cls='blog-list')
+# «Как получить заказ»: три шага во всю ширину (иконка, номер, заголовок, текст, деталь) + полоса с адресом и часами
+I_CARTS = ico('<path d="M3 4h2.2l2.3 11a2 2 0 0 0 2 1.6h7.6a2 2 0 0 0 2-1.5L21 8H6.1"/><circle cx="10" cy="20" r="1.3"/><circle cx="17" cy="20" r="1.3"/>')
+I_MAIL = ico('<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>')
+I_STORE = ico('<path d="M4 9l1.5-5h13L20 9"/><path d="M4 9v11h16V9"/><path d="M4 9a2.7 2.7 0 0 0 5.3 0 2.7 2.7 0 0 0 5.4 0 2.7 2.7 0 0 0 5.3 0"/><path d="M10 20v-5h4v5"/>')
+GET_STEPS = [(I_CARTS, 'Соберите корзину', 'Выберите товары, размер и&nbsp;цвет, добавьте в&nbsp;корзину и&nbsp;оплатите картой онлайн.', 'Чек&nbsp;— на&nbsp;почту сразу'),
+             (I_STORE, 'Заберите на&nbsp;ресепшене', 'Когда заказ соберём, пришлём сообщение. Назовите номер заказа на&nbsp;ресепшене&nbsp;— можно примерить.', 'Обычно в&nbsp;течение дня'),
+             (I_MAIL, 'Сертификат&nbsp;— сразу', 'Подарочный сертификат приходит на&nbsp;почту в&nbsp;PDF: распечатайте или перешлите получателю.', 'Через пару минут после оплаты')]
+body += sec(sechead('Как получить заказ', 'Оплата онлайн, получение&nbsp;— на&nbsp;скалодроме. Доставку курьером подключим позже.') +
+    '<ol class="shopget">' + ''.join(
+        '<li class="shopget__i reveal"><span class="shopget__top"><span class="shopget__ic">%s</span><span class="shopget__n d">%02d</span></span>'
+        '<b class="shopget__t d">%s</b><p>%s</p><span class="shopget__tag">%s%s</span></li>' % (ic, i + 1, t, d, I_TIME, tag) for i, (ic, t, d, tag) in enumerate(GET_STEPS)) + '</ol>'
+    '<div class="shopget__bar reveal"><span class="shopget__where">%s<span><b>Ресепшен скалодрома К2</b><small>ул.&nbsp;Скалистая, д.&nbsp;13 · 7 минут от&nbsp;м.&nbsp;Площадь Ленина</small></span></span>'
+    '<span class="shopget__where">%s<span><b>Ежедневно 7:00–23:00</b><small>Выдача и&nbsp;примерка в&nbsp;часы работы</small></span></span>%s</div>' % (
+        I_PIN, I_TIME, link_btn('Как добраться', 'kontakty.html#route', 'btn btn--light')), 'how', 'dark', 'stack')
+SHOP_FAQ = [('Как получить заказ?', 'Мерч и&nbsp;снаряжение&nbsp;— на&nbsp;ресепшене скалодрома в&nbsp;часы работы, сертификаты&nbsp;— на&nbsp;почту сразу после оплаты.'),
+            ('Есть ли доставка?', 'Пока только самовывоз. Доставку курьером по&nbsp;Петербургу планируем подключить.'),
+            ('Можно ли обменять размер?', 'Да, в&nbsp;течение 14 дней, если вещь не&nbsp;носили и&nbsp;сохранены бирки.'),
+            ('Как подобрать размер?', 'На&nbsp;странице каждой вещи есть таблица размеров. Можно примерить на&nbsp;ресепшене перед покупкой.')]
+body += faq_sec(SHOP_FAQ)
+page('magazin.html', 'Магазин — скалодром К2', 'Мерч, снаряжение, подарочные сертификаты и абонементы скалодрома К2. Оплата онлайн, получение на ресепшене.', body)
+
+SIZE_TABLE = ('<h2 id="sizes">Таблица размеров</h2><div class="itp__table"><table><thead><tr><th>Размер</th><th>Обхват груди, см</th><th>Длина, см</th></tr></thead><tbody>' +
+              ''.join('<tr><td>%s</td><td>%s</td><td>%s</td></tr>' % r for r in [('XS', '84–88', '66'), ('S', '88–92', '68'), ('M', '92–98', '70'), ('L', '98–104', '72'), ('XL', '104–110', '74'), ('XXL', '110–116', '76')]) +
+              '</tbody></table></div>')
+for x in SHOP:
+    t = plain(x['name'])
+    text = ('<h2 id="about">Описание</h2><p>%s</p>' % x['about'] + (SIZE_TABLE if any(k == 'Размер' for k, _, _ in x['vars']) else '') +
+            '<h2 id="get">Получение и&nbsp;оплата</h2>' + body_list(['Оплата онлайн картой&nbsp;— чек придёт на&nbsp;почту', 'Самовывоз с&nbsp;ресепшена скалодрома в&nbsp;часы работы', 'Можно примерить перед получением']) +
+            '<h2 id="return">Обмен и&nbsp;возврат</h2><p>Обменять или вернуть товар можно в&nbsp;течение 14 дней, если его не&nbsp;использовали и&nbsp;сохранены бирки и&nbsp;упаковка.</p>')
+    others = [o for o in SHOP if o['id'] != x['id']][:3]
+    item_page(x['id'] + '.html', '%s — магазин скалодрома К2' % t, re.sub('<[^>]+>|&nbsp;', ' ', x['lead']), dict(
+        kind='product', crumbs=[('Магазин', 'magazin.html'), (t, '')], name=x['name'], lead=x['lead'],
+        cover=shop_img(x['id'], '-h'), poster=shop_img(x['id'], '-a4'), price=x['price'],
+        hero_ratio='4/5' if shop_img(x['id']).endswith('.jpg') else '', old=x['old'], max=10, facts=x['facts'], vars=x['vars'],
+        cart_kind='merch', cart_img=shop_img(x['id']), unit='за штуку', cart_params=[],
+        text=text, faq=SHOP_FAQ, more_title='Другие товары', more_btn=link_btn('Весь магазин', 'magazin.html', 'btn btn--sec reveal'),
+        more='<div class="bgrid bgrid--shop bgrid--shop3">' + ''.join(shop_card(o) for o in others) + '</div>'))
 
 # ======================= КОРЗИНА =======================
 # Логика — js/cart.js. Таблица заполняется из корзины (localStorage). Оформление — на той же странице под таблицей:

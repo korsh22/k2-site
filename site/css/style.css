@@ -1216,3 +1216,8 @@ main > .sec.dark + .sec.dark.stack{padding-top:var(--overlap)}
 .js-cart-add.is-added{--fill:var(--graphite)}
 @media (max-width:767px){.cart-toast{left:16px;right:16px;bottom:16px;max-width:none;flex-wrap:wrap}.cart-toast .btn{width:100%;justify-content:center}}
 @media (prefers-reduced-motion:reduce){.cart-toast{transition:none}.hdr__cart.is-full .cart-n{animation:none}}
+/* Шапка со значком корзины: на узких экранах ноутбуков — чуть плотнее */
+@media (max-width:1500px){.hdr__aside{gap:8px}.nav>a,.dd__btn{padding:10px 7px}}
+@media (max-width:1420px){.phone{display:none}}
+.shopc .bcard__t{text-decoration:none}
+.shopc .bcard__t:hover{color:var(--red)}

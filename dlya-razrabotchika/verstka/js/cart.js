@@ -68,10 +68,38 @@
   $$('.js-cart-add').forEach(function (b) {
     b.addEventListener('click', function () {
       var it; try { it = JSON.parse(b.dataset.cart); } catch (e) { return; }
+      // Варианты товара (.itp__vars): каждая группа должна быть выбрана; выбранное — в параметры позиции
+      var vars = $('.itp__vars');
+      if (vars) {
+        var groups = $$('.itp__var', vars), miss = [], chosen = [];
+        groups.forEach(function (g) {
+          var c = $('input:checked', g), k = $('legend', g).textContent;
+          if (c) chosen.push(k + ': ' + c.value.replace(/\u00a0/g, ' ')); else miss.push(k.toLowerCase());
+        });
+        var err = $('.itp__vars-err', vars);
+        if (miss.length) {
+          err.textContent = 'Выберите ' + miss.join(' и ') + ', чтобы добавить в корзину';
+          err.hidden = false; vars.classList.add('is-bad');
+          vars.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          var first = $('.itp__var input:not(:checked)', vars); if (first) setTimeout(function () { first.focus({ preventScroll: true }); }, 400);
+          return;
+        }
+        err.hidden = true; vars.classList.remove('is-bad');
+        it.params = (it.params || []).concat(chosen);
+      }
       Cart.add(it, 1);
       showToast(it.name, base);
-      if (b.dataset.cartDone) { b.innerHTML = b.dataset.cartDone; }
+      if (b.dataset.cartDone) { if (!b.dataset.cartLabel) b.dataset.cartLabel = b.innerHTML; b.innerHTML = b.dataset.cartDone; }
       b.classList.add('is-added');
+    });
+  });
+
+  // выбор варианта убирает подсказку «Выберите размер»
+  $$('.itp__vars input').forEach(function (i) {
+    i.addEventListener('change', function () {
+      var v = $('.itp__vars'); if (!v || !$$('.itp__var', v).every(function (g) { return $('input:checked', g); })) return;
+      v.classList.remove('is-bad'); $('.itp__vars-err', v).hidden = true;
+      $$('.js-cart-add.is-added').forEach(function (b) { b.classList.remove('is-added'); if (b.dataset.cartLabel) b.innerHTML = b.dataset.cartLabel; });  // другой вариант — можно добавить снова
     });
   });
 

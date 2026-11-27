@@ -19,6 +19,7 @@
 | `arhiv-vyezd-na-skaly-30-avgusta-2026.html` | Выезд на скалы, 30 августа 2026 — архив мероприятий К2 | Мероприятие (прошло) | [открыть](https://korsh22.github.io/k2-site/arhiv-vyezd-na-skaly-30-avgusta-2026.html) |
 | `arhiv-vyezd-na-skaly-7-iyunya-2026.html` | Выезд на скалы, 7 июня 2026 — архив мероприятий К2 | Мероприятие (прошло) | [открыть](https://korsh22.github.io/k2-site/arhiv-vyezd-na-skaly-7-iyunya-2026.html) |
 | `bazovye-kursy.html` | Базовые курсы скалолазания для взрослых — скалодром К2 | Посадочная услуги / раздела | [открыть](https://korsh22.github.io/k2-site/bazovye-kursy.html) |
+| `butylka-k2.html` | Бутылка К2 — магазин скалодрома К2 | Посадочная услуги / раздела | [открыть](https://korsh22.github.io/k2-site/butylka-k2.html) |
 | `ceny.html` | Цены — скалодром К2 | Посадочная услуги / раздела | [открыть](https://korsh22.github.io/k2-site/ceny.html) |
 | `deti-pervyj-raz.html` | Детская пробная тренировка по скалолазанию — скалодром К2 | Посадочная услуги / раздела | [открыть](https://korsh22.github.io/k2-site/deti-pervyj-raz.html) |
 | `detskaya-sekciya.html` | Детская секция скалолазания от 5 до 16 лет — скалодром К2 | Посадочная услуги / раздела | [открыть](https://korsh22.github.io/k2-site/detskaya-sekciya.html) |
@@ -27,6 +28,8 @@
 | `dlya-vzroslyh.html` | Скалолазание для взрослых — скалодром К2 | Посадочная услуги / раздела | [открыть](https://korsh22.github.io/k2-site/dlya-vzroslyh.html) |
 | `dogovor-oferty.html` | Договор оферты — скалодром К2 | Текстовая страница | [открыть](https://korsh22.github.io/k2-site/dogovor-oferty.html) |
 | `dokumenty.html` | Документы — скалодром К2 | Посадочная услуги / раздела | [открыть](https://korsh22.github.io/k2-site/dokumenty.html) |
+| `futbolka-k2.html` | Футболка К2 — магазин скалодрома К2 | Посадочная услуги / раздела | [открыть](https://korsh22.github.io/k2-site/futbolka-k2.html) |
+| `hudi-k2.html` | Худи К2 — магазин скалодрома К2 | Посадочная услуги / раздела | [открыть](https://korsh22.github.io/k2-site/hudi-k2.html) |
 | `individualnye.html` | Индивидуальные тренировки по скалолазанию — скалодром К2 | Посадочная услуги / раздела | [открыть](https://korsh22.github.io/k2-site/individualnye.html) |
 | `kontakty.html` | Контакты и как добраться — скалодром К2 | Посадочная услуги / раздела | [открыть](https://korsh22.github.io/k2-site/kontakty.html) |
 | `korzina.html` | Корзина — скалодром К2 | Корзина / оплата | [открыть](https://korsh22.github.io/k2-site/korzina.html) |
@@ -34,7 +37,10 @@
 | `kurs-nizhnyaya-strahovka.html` | Курс «Нижняя страховка» — скалодром К2 | Товар | [открыть](https://korsh22.github.io/k2-site/kurs-nizhnyaya-strahovka.html) |
 | `kurs-rasshirennyj.html` | Курс «Расширенный» — скалодром К2 | Товар | [открыть](https://korsh22.github.io/k2-site/kurs-rasshirennyj.html) |
 | `kurs-start.html` | Курс «Старт» — скалодром К2 | Товар | [открыть](https://korsh22.github.io/k2-site/kurs-start.html) |
+| `magazin.html` | Магазин — скалодром К2 | Посадочная услуги / раздела | [открыть](https://korsh22.github.io/k2-site/magazin.html) |
+| `magneziya.html` | Магнезия, 200 г — магазин скалодрома К2 | Посадочная услуги / раздела | [открыть](https://korsh22.github.io/k2-site/magneziya.html) |
 | `meropriyatiya.html` | Мероприятия — скалодром К2 | Посадочная услуги / раздела | [открыть](https://korsh22.github.io/k2-site/meropriyatiya.html) |
+| `meshochek-dlya-magnezii.html` | Мешочек для магнезии К2 — магазин скалодрома К2 | Посадочная услуги / раздела | [открыть](https://korsh22.github.io/k2-site/meshochek-dlya-magnezii.html) |
 | `nochnoe-lazanie.html` | Ночное лазание — мероприятия скалодрома К2 | Мероприятие | [открыть](https://korsh22.github.io/k2-site/nochnoe-lazanie.html) |
 | `novogodnij-detskij-festival.html` | Новогодний детский фестиваль — мероприятия скалодрома К2 | Мероприятие | [открыть](https://korsh22.github.io/k2-site/novogodnij-detskij-festival.html) |
 | `o-skalodrome.html` | О скалодроме К2 — боулдеринг и трудность в центре Петербурга | Посадочная услуги / раздела | [открыть](https://korsh22.github.io/k2-site/o-skalodrome.html) |
@@ -47,6 +53,7 @@
 | `sertifikaty.html` | Подарочные сертификаты на скалодром — К2 | Посадочная услуги / раздела | [открыть](https://korsh22.github.io/k2-site/sertifikaty.html) |
 | `shablon-uslugi.html` | Шаблон услуги — скалодром К2 | Образец «Шаблон услуги» (14 блоков) | [открыть](https://korsh22.github.io/k2-site/shablon-uslugi.html) |
 | `shkola.html` | Школа скалолазания для взрослых — скалодром К2 | Посадочная услуги / раздела | [открыть](https://korsh22.github.io/k2-site/shkola.html) |
+| `shoper-k2.html` | Шопер К2 — магазин скалодрома К2 | Посадочная услуги / раздела | [открыть](https://korsh22.github.io/k2-site/shoper-k2.html) |
 | `sorevnovaniya-po-boulderingu.html` | Соревнования по боулдерингу — мероприятия скалодрома К2 | Мероприятие | [открыть](https://korsh22.github.io/k2-site/sorevnovaniya-po-boulderingu.html) |
 | `spasibo.html` | Спасибо за заказ — скалодром К2 | Корзина / оплата | [открыть](https://korsh22.github.io/k2-site/spasibo.html) |
 | `tehnika-bezopasnosti.html` | Техника безопасности — скалодром К2 | Текстовая страница | [открыть](https://korsh22.github.io/k2-site/tehnika-bezopasnosti.html) |
