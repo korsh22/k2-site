@@ -364,20 +364,12 @@ BOOK = '''<!-- ЕДИНАЯ форма бронирования с кальку�
           <div class="field"><input id="b-date" name="date" type="date" placeholder=" "><label for="b-date">Желаемая дата</label></div>
           <div class="field field--select"><select id="b-time" name="time"><option value="">Любое время</option><option>Утро (8–12)</option><option>День (12–17)</option><option>Вечер (17–23)</option></select><label for="b-time" class="is-up">Удобное время</label></div>
         </div>
-        <div class="cform__row">
-          <div class="field"><input id="b-name" name="name" type="text" autocomplete="given-name" placeholder=" " required><label for="b-name">Ваше имя</label><span class="field__err">Как к&nbsp;вам обращаться?</span></div>
-          <div class="field"><input id="b-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder=" " required><label for="b-phone">Телефон</label><span class="field__err">Проверьте номер&nbsp;— нужно 10&nbsp;цифр после +7</span></div>
-        </div>
         <div class="book__sum" aria-live="polite">
           <div class="book__rows"></div>
           <div class="book__total"><span>Итого</span><b class="book__total-v">1&nbsp;500&nbsp;₽</b></div>
         </div>
-        <div class="cform__agree">
-          <label class="agree"><input type="checkbox" name="agree" required><span class="agree__box"></span><span>Согласен на&nbsp;<a href="politika-personalnyh-dannyh.html">обработку персональных данных</a> и&nbsp;<a href="dogovor-oferty.html">условия оферты</a></span></label>
-          <span class="field__err field__err--agree">Нужно согласие, чтобы оформить запись</span>
-        </div>
-        <button class="btn btn--primary cform__go" type="submit">Перейти к&nbsp;оплате</button>
-        <p class="book__note">Оплата картой через банк. Запись подтвердим звонком или сообщением.</p>
+        <button class="btn btn--primary cform__go" type="submit">Добавить в&nbsp;корзину</button>
+        <p class="book__note">Контакты и&nbsp;оплата&nbsp;— в&nbsp;корзине. Запись подтвердим звонком или сообщением.</p>
       </div>
       <div class="cform__done" aria-live="polite" hidden>
         <svg class="done__ic" viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="29"/><path d="M19 33l9 9 17-19"/></svg>
@@ -422,6 +414,7 @@ html = '''<!doctype html>
 %(TIP)s
 
 <script src="js/search.js?v=%(V)s"></script>
+<script src="js/cart.js?v=%(V)s"></script>
 <script src="js/blog.js?v=%(V)s"></script>
 <script src="js/landing.js?v=%(V)s"></script>
 </body>

@@ -59,6 +59,7 @@
   }
   $$('form.cform').forEach(function (form) {
     var phone = $('[name="phone"]', form), name = $('[name="name"]', form), agree = $('[name="agree"]', form);
+    if (form.hasAttribute('data-own') || !phone || !name || !agree) return;  // корзина и окно пробной — со своей логикой
     phoneMask(phone);
     name.addEventListener('input', function () { if (name.value.trim()) name.parentNode.classList.remove('is-bad'); });
     agree.addEventListener('change', function () { if (agree.checked) $('.field__err--agree', form).classList.remove('is-on'); });
@@ -156,7 +157,7 @@
 
   /* ---------- Форма заявки в блоке «Нужно связаться с нами?» ---------- */
   $$('form.cform').forEach(function (form) {
-    if (form.closest('dialog')) return;
+    if (form.closest('dialog') || form.hasAttribute('data-own')) return;
     var seg = $('.seg', form);
     if (seg) $$('input', seg).forEach(function (inp, i) { inp.addEventListener('change', function () { seg.style.setProperty('--i', i); }); });
     form.addEventListener('submit', function (e) {
@@ -219,10 +220,18 @@
     $$('.js-book-close', book).forEach(function (b) { b.addEventListener('click', B.close); });
     bForm.addEventListener('submit', function (e) {
       e.preventDefault();
-      if (!validate(bForm)) return;
-      // Здесь разработчик: отправить заявку в CRM и перейти на страницу оплаты банка (new FormData(bForm) + сумма)
-      var who = cnt.adults + cnt.kids;
-      showDone(bForm, $('[name="name"]', bForm).value.trim() + ', записываем вас: ' + (type() === 'group' ? 'пробная в\u00a0группе' : 'персональная пробная') + ', участников\u00a0— ' + who + '. Сейчас откроется оплата.');
+      // Пробная тренировка → корзина: взрослые и дети — отдельными строками (у них разная цена); контакты и оплата — в корзине
+      if (!window.K2Cart) return;
+      var t = type(), fmt = t === 'group' ? 'В\u00a0группе' : 'Персонально';
+      var dv = $('[name="date"]', bForm).value, tv = $('[name="time"]', bForm).value;
+      var params = ['Формат: ' + fmt, 'Дата: ' + (dv ? dv.split('-').reverse().join('.') : 'подберём с\u00a0администратором'), 'Время: ' + (tv || 'любое')];
+      var name = t === 'group' ? 'Пробная тренировка в\u00a0группе' : 'Персональная пробная тренировка';
+      var page = location.pathname.split('/').pop() || 'pervyj-raz.html';
+      var pA = price(t === 'group' ? 'priceGroup' : 'pricePersonal'), pK = price(t === 'group' ? 'priceGroupKid' : 'pricePersonalKid');
+      if (cnt.adults) K2Cart.add({ id: 'trial-' + t, kind: 'training', name: name, img: 'k2-first-3.jpg', url: page, params: params.concat('Взрослые'), unit: 'за участника', price: pA || 0, max: LIMIT[t].max }, cnt.adults);
+      if (cnt.kids) K2Cart.add({ id: 'trial-' + t + '-kid', kind: 'training', name: name + ' (ребёнок)', img: 'k2-10.jpg', url: page, params: params.concat('Дети 5–16 лет'), unit: 'за ребёнка', price: pK || 0, max: LIMIT[t].max }, cnt.kids);
+      B.close();
+      window.location.href = 'korzina.html';
     });
     recalc();
   }

@@ -6,4 +6,5 @@
 !/.github/
 !/.gitignore
 !/README.md
+!/dlya-razrabotchika/
 __pycache__/

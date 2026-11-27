@@ -47,6 +47,15 @@ def book_btn(text, typ='', adults=None, kids=None, cls='btn btn--primary'):
     a = (' data-book-type="%s"' % typ if typ else '') + (' data-book-adults="%d"' % adults if adults is not None else '') + (' data-book-kids="%d"' % kids if kids is not None else '')
     return '<button class="%s js-book" type="button"%s>%s</button>' % (cls, a, text)
 
+def plain(t):
+    return re.sub(r'\s+', ' ', re.sub('<[^>]+>', '', t).replace('&nbsp;', ' ')).strip()
+
+def cart_btn(text, item, cls='btn btn--primary', done='В&nbsp;корзине ✓'):
+    """Кнопка «В корзину» (js/cart.js): item — позиция корзины {id, kind, name, img, url, params[], unit, price, old, max}"""
+    import json, html as _h
+    it = {k: (plain(v) if isinstance(v, str) else [plain(x) for x in v] if isinstance(v, list) else v) for k, v in item.items()}
+    return '<button class="%s js-cart-add" type="button" data-cart="%s" data-cart-done="%s">%s</button>' % (cls, _h.escape(json.dumps(it, ensure_ascii=False)), done, text)
+
 def link_btn(text, href, cls='btn btn--sec'):
     return '<a class="%s" href="%s">%s</a>' % (cls, href, text)
 
@@ -284,6 +293,7 @@ def page(slug, title, desc, body, book=False, fab='', gallery=False):
 %(TIP)s
 
 <script src="js/search.js?v=%(V)s"></script>
+<script src="js/cart.js?v=%(V)s"></script>
 <script src="js/blog.js?v=%(V)s"></script>
 <script src="js/landing.js?v=%(V)s"></script>
 </body>
@@ -787,8 +797,8 @@ body = hero([('Сертификаты', '')], 'Подарочные сертиф
             'k2-12.jpg', [(I_GIFT, 'Красивый подарок'), (I_SPARK, 'Опыт не нужен'), (I_GEAR, 'Снаряжение включено'), (I_CAL, 'Срок действия [__]')],
             join_btn('Заказать сертификат', 'Подарочный сертификат'), 'Вместе на скалодроме')
 body += sec(sechead('Выберите сертификат') + '\n' + offers([
-    offer('Пробная тренировка в группе', ['60 минут', 'группа до 8 человек', 'с инструктором', 'снаряжение включено'], 'Для того, кто хочет попробовать в компании таких же новичков.', price(1500, frm=False) + join_btn('Заказать', 'Сертификат: пробная в группе')),
-    offer('Персональная пробная тренировка', ['60 минут', 'для 1–3 участников', 'индивидуальный темп', 'снаряжение включено'], 'Подарок на двоих или на троих — для пары или друзей.', price(2500) + join_btn('Заказать', 'Сертификат: персональная пробная'), dark=True)]), 'formats')
+    offer('Пробная тренировка в группе', ['60 минут', 'группа до 8 человек', 'с инструктором', 'снаряжение включено'], 'Для того, кто хочет попробовать в компании таких же новичков.', price(1500, frm=False) + cart_btn('В&nbsp;корзину', dict(id='cert-group', kind='cert', name='Сертификат: пробная тренировка в группе', img='k2-12.jpg', url='sertifikaty.html', price=1500, unit='за сертификат', params=['Номинал: пробная в группе, 60 минут'], max=10))),
+    offer('Персональная пробная тренировка', ['60 минут', 'для 1–3 участников', 'индивидуальный темп', 'снаряжение включено'], 'Подарок на двоих или на троих — для пары или друзей.', price(2500) + cart_btn('В&nbsp;корзину', dict(id='cert-personal', kind='cert', name='Сертификат: персональная пробная тренировка', img='k2-12.jpg', url='sertifikaty.html', price=2500, unit='за сертификат', params=['Номинал: персональная пробная, 1–3 участника'], max=10)), dark=True)]), 'formats')
 body += sec(sechead('Как подарить') + '\n' + cards([('Оставьте заявку', 'Выберите сертификат — администратор свяжется и всё оформит.'), ('Оплатите', '[Способы оплаты и получения сертификата уточняются.]'),
                                                   ('Получатель записывается', 'В удобный ему день — по телефону или на сайте.')], 3), 'how', 'dark', 'stack')
 body += faq_sec([('Сколько действует сертификат?', '[Срок действия уточняется.]'), ('Можно ли подарить ребёнку?', 'Да, есть детские пробные тренировки — для детей от 5 лет.'),
@@ -914,7 +924,7 @@ def order_btn(d, cls='btn btn--primary'):
     st = d.get('state', 'open')
     if st != 'open':
         return '<span class="%s itp__off" aria-disabled="true">%s</span>' % (cls.replace('btn--primary', 'btn--sec'), STATE_TXT[st])
-    return '<button class="%s js-order" type="button" aria-haspopup="dialog" aria-controls="order">%s</button>' % (cls, 'Купить' if d['kind'] == 'product' else 'Записаться')
+    return cart_btn('В&nbsp;корзину' if d['kind'] == 'product' else 'Записаться', d['cart'], cls)
 
 def item_page(slug, title, desc, d):
     """d: kind ('product'|'event'), crumbs, name, lead, cover (горизонтальное), poster (вертикальное А4), text (html), gallery, faq, more_title, more (html карточек)
@@ -932,6 +942,12 @@ def item_page(slug, title, desc, d):
         facts = d['facts']
         meta = rub(d['price'])
     st = d.get('state', 'open'); past = st == 'past'
+    # позиция корзины: товар — «за участника» (курс), мероприятие — дата, время, для кого
+    d['cart'] = dict(id=slug.replace('.html', ''), kind='event' if ev else 'training', name=d['name'], img=d['poster'], url=slug,
+                     price=d['price'], old=d.get('old') or 0, max=d.get('max', 6),
+                     unit='за ребёнка' if d.get('kids') else 'за участника',
+                     params=(['Дата: %s %s' % (d['day'], d['month']), 'Начало: %s' % d['start'], 'Место сбора: %s' % d['meet'], 'Для детей' if d.get('kids') else 'Для взрослых']
+                             if ev else ['%s: %s' % (f[1], f[2]) for f in d.get('facts', [])[:2]]))
     badge = '<span class="badge itp__kids">Для детей</span>' if d.get('kids') else ''
     kb = badge  # на афише — только «Для детей»; что событие прошло, видно по плашке «Уже прошло»
     if past:
@@ -959,8 +975,6 @@ def item_page(slug, title, desc, d):
         b += faq_sec(d['faq'])
     if d.get('more'):
         b += sec(sechead(d['more_title'], '', d.get('more_btn', '')) + d['more'], 'more', cls='blog-list lp-alt')
-    if not past:
-        b += ORDER
     page(slug, title, desc, b, gallery=bool(d.get('gallery')))
 
 # Форма «Покупка услуги» / «Запись на мероприятие» — одна на обе страницы; данные подставляет js/landing.js из data-атрибутов .itp
@@ -1577,6 +1591,54 @@ service_page('shablon-uslugi.html', 'Шаблон услуги — скалод�
          ('С&nbsp;какого возраста?', 'Взрослые программы&nbsp;— с&nbsp;16 лет, для детей есть отдельные услуги.'), ('Как записаться?', 'Оставьте заявку или позвоните&nbsp;— подберём время.')],
     cta=('Готовы попробовать?', 'Оставьте заявку&nbsp;— перезвоним и&nbsp;подберём удобное время.', join_btn('Оставить заявку', 'Запись на&nbsp;услугу', 'trial', 'btn btn--light'), 'оставьте заявку · перезвоним · '),
 ), notes=True)
+
+# ======================= КОРЗИНА =======================
+# Логика — js/cart.js. Таблица заполняется из корзины (localStorage). Оформление — на той же странице под таблицей:
+# слева «Контакты покупателя», справа итог (промокод, скидки) и «Оплатить» → банк → spasibo.html.
+CART_PAGE = head([('Корзина', '')], 'Корзина', extra='<p class="lead blog-head__l cart__count" aria-live="polite"></p>') + sec(
+    '<div id="cart" class="cart" data-promo-action="">'
+    '<div class="cart__empty" hidden><b class="d">В&nbsp;корзине пока пусто</b><p>Добавьте тренировку, курс, сертификат или запишитесь на&nbsp;мероприятие.</p>'
+    '<div class="btns">' + link_btn('Базовые курсы', 'bazovye-kursy.html', 'btn btn--primary') + link_btn('Мероприятия', 'meropriyatiya.html') + link_btn('Сертификаты', 'sertifikaty.html') + '</div></div>'
+    '<div class="cart__full" hidden>'
+    '<div class="cart__table" role="table" aria-label="Состав заказа"><div class="cart__row cart__row--head" role="row">'
+    '<span role="columnheader">Название</span><span role="columnheader">Параметры</span><span role="columnheader">Цена</span><span role="columnheader">Количество</span>'
+    '<span role="columnheader">Сумма</span><span role="columnheader"><span class="sr">Удалить</span></span></div><div class="cart__list" role="rowgroup"></div></div>'
+    '<div class="cart__under"><form class="cart__promo" novalidate><label class="cart__promo-l" for="c-promo">Промокод</label>'
+    '<div class="cart__promo-row"><input id="c-promo" name="promo" type="text" autocomplete="off" placeholder="Например, K2-10"><button class="btn btn--sec" type="submit">Применить</button></div>'
+    '<p class="cart__promo-msg" role="status" hidden></p><button class="cart__promo-del" type="button">Убрать промокод</button></form>'
+    '<dl class="cart__tot"><div class="cart__line"><dt>Сумма без скидок</dt><dd class="js-t-base"></dd></div>'
+    '<div class="cart__line"><dt>Скидка на&nbsp;товары</dt><dd class="js-t-disc"></dd></div>'
+    '<div class="cart__line"><dt>Скидка по&nbsp;промокоду</dt><dd class="js-t-promo"></dd></div>'
+    '<div class="cart__line cart__line--total"><dt>Итого</dt><dd class="js-t-total d"></dd></div></dl></div>'
+    '<form class="cart__form cform" novalidate data-action="" data-own><h2 class="d h3">Оформление заказа</h2>'
+    '<div class="cart__cols"><fieldset class="cart__contacts"><legend class="cart__legend">Контакты покупателя</legend>'
+    '<div class="field"><input id="c-name" name="name" type="text" autocomplete="name" placeholder=" " required><label for="c-name">Имя</label><span class="field__err">Как к&nbsp;вам обращаться?</span></div>'
+    '<div class="field"><input id="c-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder=" "><label for="c-phone">Телефон <span class="cart__ph-opt">(необязательно)</span></label>'
+    '<small class="field__hint">Для связи по&nbsp;вашему заказу</small><span class="field__err">Проверьте номер&nbsp;— нужно 10&nbsp;цифр после +7</span></div>'
+    '<div class="field"><input id="c-mail" name="email" type="email" autocomplete="email" placeholder=" " required><label for="c-mail">Email</label>'
+    '<small class="field__hint">Для электронного чека и&nbsp;информации о&nbsp;заказе</small><span class="field__err">Проверьте адрес почты</span></div>'
+    '<button class="cart__more js-cart-comment" type="button">+ Добавить комментарий</button>'
+    '<div class="field cart__comment" hidden><textarea id="c-com" name="comment" rows="3" placeholder=" "></textarea><label for="c-com">Комментарий к&nbsp;заказу</label></div>'
+    '<div class="cform__agree"><label class="agree"><input type="checkbox" name="agree" required><span class="agree__box"></span><span>Согласен на&nbsp;<a href="politika-personalnyh-dannyh.html">обработку персональных данных</a> и&nbsp;с&nbsp;<a href="dogovor-oferty.html">договором оферты</a></span></label>'
+    '<span class="field__err field__err--agree">Нужно согласие, чтобы оформить заказ</span></div></fieldset>'
+    '<div class="cart__pay-box"><dl class="cart__tot cart__tot--s"><div class="cart__line"><dt>Скидка на&nbsp;товары</dt><dd class="js-t-disc"></dd></div>'
+    '<div class="cart__line"><dt>Скидка по&nbsp;промокоду</dt><dd class="js-t-promo"></dd></div>'
+    '<div class="cart__line cart__line--total"><dt>К&nbsp;оплате</dt><dd class="js-t-total d"></dd></div></dl>'
+    '<p class="cart__saved js-t-saved" hidden></p>'
+    '<button class="btn btn--primary cart__pay" type="submit">Оплатить</button>'
+    '<p class="cart__note">Вы&nbsp;перейдёте на&nbsp;страницу банка для оплаты заказа.</p>'
+    '<p class="cart__fail" role="alert" hidden>Не&nbsp;получилось создать заказ. Попробуйте ещё раз или позвоните нам.</p></div></div></form>'
+    '</div></div>', 'cart-sec')
+page('korzina.html', 'Корзина — скалодром К2', 'Корзина: тренировки, курсы, сертификаты и мероприятия скалодрома К2.', CART_PAGE)
+
+# Спасибо: сюда банк возвращает после оплаты (spasibo.html?order=…); номер и состав — из последнего заказа (js/cart.js)
+THANKS = head([('Корзина', 'korzina.html'), ('Заказ оплачен', '')], 'Спасибо! Заказ оплачен',
+              'Чек и&nbsp;детали заказа отправили на&nbsp;почту. Администратор свяжется с&nbsp;вами, чтобы подтвердить запись.') + sec(
+    '<div id="thanks" class="thanks"><div class="thanks__order" hidden><p class="thanks__k">Заказ <b class="thanks__n"></b></p>'
+    '<ul class="thanks__list"></ul><p class="thanks__sum">Оплачено: <b class="thanks__total d"></b></p>'
+    '<p class="thanks__k">Чек отправлен на&nbsp;<b class="thanks__mail"></b></p></div>'
+    '<div class="btns">' + link_btn('На&nbsp;главную', 'index.html', 'btn btn--primary') + link_btn('Мероприятия', 'meropriyatiya.html') + '</div></div>', 'thanks-sec')
+page('spasibo.html', 'Спасибо за заказ — скалодром К2', 'Заказ оплачен. Чек и детали заказа отправлены на почту.', THANKS)
 
 # ======================= 404 =======================
 body = head([('Страница не найдена', '')], 'Такой страницы нет', 'Возможно, её перенесли. Начните с главной или найдите нужное через поиск.',
