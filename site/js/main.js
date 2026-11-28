@@ -13,7 +13,9 @@
   };
 
   /* ---------- Разбивка заголовков на слова ---------- */
-  $$('.js-split').forEach(function (el) {
+  // В английской версии (автоперевод, js/lang.js ставит html.is-en) заголовки не разбиваем: переводчик переводит фразу целиком
+  var EN = document.documentElement.classList.contains('is-en');
+  if (!EN) $$('.js-split').forEach(function (el) {
     var i = 0;
     var nodes = Array.prototype.slice.call(el.childNodes);
     el.textContent = '';
@@ -37,6 +39,47 @@
       return w;
     }
   });
+
+  /* ---------- Лента ключевых зон (под цифрами): бесконечная, едет слева направо, листается мышью / пальцем / колесом ---------- */
+  (function setupLocs() {
+    var track = $('.zones__track'); if (!track) return;
+    var items = Array.prototype.slice.call(track.children);
+    // три копии карточек: прокрутку держим в средней и незаметно перескакиваем на ширину одного набора
+    [0, 1].forEach(function () { items.forEach(function (li) { var c = li.cloneNode(true); c.setAttribute('aria-hidden', 'true'); track.appendChild(c); }); });
+    var setW = 0, drag = null, hold = false, last = 0, SPEED = 0.03; // px за мс
+    var measure = function () { setW = track.scrollWidth / 3; track.scrollLeft = setW + (track.scrollLeft % setW || 0); };
+    var wrap = function () { if (track.scrollLeft < setW * 0.5) track.scrollLeft += setW; else if (track.scrollLeft > setW * 1.5) track.scrollLeft -= setW; };
+    measure(); window.addEventListener('resize', measure);
+    var autoOk = !(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
+    var tick = function (t) {
+      if (last && autoOk && !hold && !drag && !document.hidden) { track.scrollLeft -= (t - last) * SPEED; wrap(); }
+      last = t; requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+    track.addEventListener('scroll', wrap, { passive: true });
+    track.addEventListener('mouseenter', function () { hold = true; });
+    track.addEventListener('mouseleave', function () { hold = false; });
+    track.addEventListener('focus', function () { hold = true; });
+    track.addEventListener('blur', function () { hold = false; });
+    track.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') { e.preventDefault(); track.scrollBy({ left: (e.key === 'ArrowRight' ? 1 : -1) * items[0].offsetWidth, behavior: 'smooth' }); }
+    });
+    // перетаскивание мышью и пальцем
+    track.addEventListener('pointerdown', function (e) {
+      drag = { x: e.clientX, s: track.scrollLeft, id: e.pointerId, moved: false }; track.classList.add('is-drag');
+    });
+    window.addEventListener('pointermove', function (e) {
+      if (!drag || e.pointerId !== drag.id) return;
+      var dx = e.clientX - drag.x; if (Math.abs(dx) > 3) drag.moved = true;
+      track.scrollLeft = drag.s - dx; wrap(); drag.s = track.scrollLeft; drag.x = e.clientX;
+    });
+    var end = function () { if (!drag) return; drag = null; track.classList.remove('is-drag'); hold = false; };
+    window.addEventListener('pointerup', end); window.addEventListener('pointercancel', end);
+    track.addEventListener('touchstart', function () { hold = true; }, { passive: true });
+    track.addEventListener('touchend', function () { setTimeout(function () { hold = false; }, 1500); }, { passive: true });
+    // колесо мыши / тачпад: вертикальная прокрутка страницы не перехватывается, горизонтальная — листает ленту
+    track.addEventListener('wheel', function (e) { if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) { hold = true; clearTimeout(track._w); track._w = setTimeout(function () { hold = false; }, 1200); } }, { passive: true });
+  })();
 
   /* ---------- Кнопки: стрелка и заливка от курсора ---------- */
   var ARROW = '<svg class="ico" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
@@ -274,7 +317,7 @@
 
   /* ---------- Hero: буквы заголовка реагируют на курсор ---------- */
   var heroSec = $('.hero'), heroH1 = $('.hero .h1');
-  if (heroSec && heroH1 && finePointer && !reduce) {
+  if (heroSec && heroH1 && finePointer && !reduce && !EN) {
     // Каждую букву — в свой span (внутри слов, которые уже разбиты для появления)
     (function wrapChars(node) {
       Array.prototype.slice.call(node.childNodes).forEach(function (n) {

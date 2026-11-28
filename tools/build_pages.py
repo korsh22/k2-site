@@ -415,6 +415,7 @@ html = '''<!doctype html>
 
 <script src="js/search.js?v=%(V)s"></script>
 <script src="js/cart.js?v=%(V)s"></script>
+<script src="js/lang.js?v=%(V)s"></script>
 <script src="js/blog.js?v=%(V)s"></script>
 <script src="js/landing.js?v=%(V)s"></script>
 </body>

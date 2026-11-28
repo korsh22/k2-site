@@ -51,11 +51,12 @@ def page(title, desc, body, extra_class=''):
 %s
 <script src="../js/search.js?v=%s"></script>
 <script src="../js/cart.js?v=%s"></script>
+<script src="../js/lang.js?v=%s"></script>
 <script src="../js/blog.js?v=%s"></script>
 <script src="../js/landing.js?v=%s"></script>
 </body>
 </html>
-''' % (esc(title), esc(desc), VER, VER, extra_class, HEADER, MMENU, SEARCH, body, FOOTER, OCC, JOIN, VER, VER, VER, VER)
+''' % (esc(title), esc(desc), VER, VER, extra_class, HEADER, MMENU, SEARCH, body, FOOTER, OCC, JOIN, VER, VER, VER, VER, VER)
 
 def card(a, big=False):
     return ('<a class="bcard%s reveal" href="%s.html" data-cat="%s" data-tags="%s">'
